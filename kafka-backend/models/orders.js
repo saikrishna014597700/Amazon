@@ -16,7 +16,7 @@ var billingaddress = new Schema({
     trim: true,
   },
   zip_code: {
-    type: Number,
+    type: String,
     trim: true,
   },
 });
@@ -36,7 +36,7 @@ var shippingaddress = new Schema({
     trim: true,
   },
   zip_code: {
-    type: Number,
+    type: String,
     trim: true,
   },
 });
@@ -56,7 +56,7 @@ var trackingAddress = new Schema({
     trim: true,
   },
   zip_code: {
-    type: Number,
+    type: String,
     trim: true,
   },
 });

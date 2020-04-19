@@ -16,7 +16,7 @@ var address = new Schema({
     trim: true,
   },
   zip_code: {
-    type: Number,
+    type: String,
     trim: true,
   },
   createDate: { type: Date },
