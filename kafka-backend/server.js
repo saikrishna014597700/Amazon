@@ -3,17 +3,7 @@ var connection = new require("./kafka/connection");
 var connectMongoDB = require("./utils/dbConnection");
 
 //import topics files
-const signupService = require("./services/signup");
-const profileService = require("./services/profile");
-const followService = require("./services/follow");
-const tweetService = require("./services/tweets");
-const tweetActionService = require("./services/tweetActions");
-const messageService = require("./services/messages");
-const bookmarkService = require("./services/bookmark");
-const accountService = require("./services/account");
-const searchService = require("./services/search");
-const listService = require("./services/list");
-const analyticsService = require("./services/analytics");
+// const accountService = require("./services/account");
 
 //MongoDB connection
 connectMongoDB();
@@ -40,10 +30,10 @@ const response = (data, res, err, producer) => {
       messages: JSON.stringify({
         correlationId: data.correlationId,
         data: res,
-        err: err
+        err: err,
       }),
-      partition: 0
-    }
+      partition: 0,
+    },
   ];
   producer.send(payloads, function (err, data) {
     if (err) {
@@ -53,17 +43,7 @@ const response = (data, res, err, producer) => {
     }
   });
   return;
-}
+};
 
 // Topics
-handleTopicRequest("signup", signupService);
-handleTopicRequest("profile", profileService);
-handleTopicRequest("follow", followService);
-handleTopicRequest("tweets", tweetService);
-handleTopicRequest("tweet_actions", tweetActionService);
-handleTopicRequest("messages", messageService);
-handleTopicRequest("bookmarks", bookmarkService);
-handleTopicRequest("account", accountService);
-handleTopicRequest("search", searchService);
-handleTopicRequest("list", listService);
-handleTopicRequest("analytics", analyticsService);
+// handleTopicRequest("account", accountService);
