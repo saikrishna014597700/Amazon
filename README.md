@@ -2,7 +2,7 @@
 
 This website was developed solely for educational purposes.
 
-## How can I run Amazon Prototype?
+## How can I run the Amazon Prototype?
 
 - Run back-end using npm run server command in backend directory
 - Run kafka back-end using node server command in kafka_backend directory
