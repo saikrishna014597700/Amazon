@@ -1,7 +1,13 @@
 import React, { Component } from "react";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
+import { Redirect } from "react-router";
 
 class Home extends Component {
+  constructor() {
+    super();
+    this.state = {};
+  }
+
   render() {
     return (
       <div>
@@ -11,6 +17,7 @@ class Home extends Component {
           <li>WhatsApp</li>
           <li>Oculus</li>
           <Link to="signup">signup</Link>
+          <Link to="addProduct">Add Product</Link>
         </ul>
       </div>
     );

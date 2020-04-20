@@ -3,18 +3,18 @@ var connection = new require("./kafka/connection");
 var connectMongoDB = require("./utils/dbConnection");
 
 //import topics files
-// const accountService = require("./services/account");
+const productService = require("./services/product");
 
 //MongoDB connection
 connectMongoDB();
 
 //Handle topic request
 const handleTopicRequest = (topic_name, fname) => {
-  var consumer = connection.getConsumer(topic_name);
+  var consumer = connection.getConsumer("amazonTopic");
   var producer = connection.getProducer();
   console.log("Kafka Server is running ");
   consumer.on("message", function (message) {
-    console.log("Message received for " + topic_name);
+    console.log("Message received for " + "amazonTopic");
     var data = JSON.parse(message.value);
     fname.handle_request(data.data, (err, res) => {
       response(data, res, err, producer);
@@ -26,7 +26,8 @@ const handleTopicRequest = (topic_name, fname) => {
 const response = (data, res, err, producer) => {
   var payloads = [
     {
-      topic: data.replyTo,
+      // topic: data.replyTo,
+      topic: "amazon2Topic",
       messages: JSON.stringify({
         correlationId: data.correlationId,
         data: res,
@@ -45,5 +46,5 @@ const response = (data, res, err, producer) => {
   return;
 };
 
-// Topics
-// handleTopicRequest("account", accountService);
+// Topics;
+handleTopicRequest("product", productService);

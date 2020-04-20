@@ -34,7 +34,7 @@ KafkaRPC.prototype.makeRequest = function (topic_name, content, callback) {
   //create a request entry to store in a hash
   var entry = {
     callback: callback,
-    timeout: tId //the id for the timeout so we can clear it
+    timeout: tId, //the id for the timeout so we can clear it
   };
 
   //put the entry in the hash so we can match the response later
@@ -45,15 +45,16 @@ KafkaRPC.prototype.makeRequest = function (topic_name, content, callback) {
     //put the request on a topic
     var payloads = [
       {
-        topic: topic_name,
+        topic: "amazonTopic",
         messages: JSON.stringify({
           correlationId: correlationId,
-          replyTo: "response_topic",
-          data: content
+          replyTo: "amazonTopic",
+          data: content,
         }),
-        partition: 0
-      }
+        partition: 0,
+      },
     ];
+    console.log("payload::::", payloads);
     self.producer.send(payloads, function (err, data) {
       if (err) {
         console.log(err);
@@ -70,7 +71,7 @@ KafkaRPC.prototype.setupResponseQueue = function (producer, topic_name, next) {
   self = this;
 
   //subscribe to messages
-  var consumer = self.connection.getConsumer("response_topic");
+  var consumer = self.connection.getConsumer("amazon2Topic");
   consumer.on("message", function (message) {
     var data = JSON.parse(message.value);
     //get the correlationId
