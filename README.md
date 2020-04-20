@@ -1,8 +1,8 @@
 # Amazon Prototype Lab 2 CMPE 273
 
 This website was developed solely for educational purposes.
-
-## How can I run the Amazon Prototype?
+This change is from ordersBranch
+## How can I run Amazon Prototype?
 
 - Run back-end using npm run server command in backend directory
 - Run kafka back-end using node server command in kafka_backend directory
