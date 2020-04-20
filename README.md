@@ -1,7 +1,7 @@
 # Amazon Prototype Lab 2 CMPE 273
 
 This website was developed solely for educational purposes.
-This change is from ordersBranch
+This change is from kailash
 ## How can I run Amazon Prototype?
 
 - Run back-end using npm run server command in backend directory
