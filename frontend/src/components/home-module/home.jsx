@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {Link} from 'react-router-dom'
 
 class Home extends Component {
   render() {
@@ -9,6 +10,7 @@ class Home extends Component {
           <li>Instagram</li>
           <li>WhatsApp</li>
           <li>Oculus</li>
+          <Link to="signup">signup</Link>
         </ul>
       </div>
     );
