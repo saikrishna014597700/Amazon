@@ -3,6 +3,7 @@ import { Form, Button, FormGroup } from "react-bootstrap";
 import "./product.css";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
+import $ from "jquery";
 
 export default class AddProduct extends Component {
   constructor() {
@@ -16,7 +17,15 @@ export default class AddProduct extends Component {
     };
     this.addProduct = this.addProduct.bind(this);
     this.viewAllSellerProducts = this.viewAllSellerProducts.bind(this);
+    this.scroll = this.scroll.bind(this);
   }
+  scroll(direction, id) {
+    console.log("id here=>" + id);
+    let far = ($("#" + id).width() + 25) * direction;
+    let pos = $("#" + id).scrollLeft() + far;
+    $("#" + id).animate({ scrollLeft: pos }, 100);
+  }
+  our;
 
   async viewAllSellerProducts(event) {
     const payload = {
@@ -48,21 +57,82 @@ export default class AddProduct extends Component {
   render() {
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
       return (
-        <div class="ui card">
-          <div class="image">
-            <img src="https://react.semantic-ui.com/images/avatar/large/matthew.png" />
-          </div>
-          <div class="content">
-            <div class="header">{sellerProduct.productName}</div>
-            <div class="meta">{sellerProduct.price}</div>
-            <div class="meta">{sellerProduct.category}</div>
-            <div class="description">{sellerProduct.productDesc}</div>
-          </div>
-          <div class="extra content">
-            <a>
-              <i aria-hidden="true" class="user icon"></i>
-              Buy Product
-            </a>
+        <div className="col-md-3" style={{ margin: 5 }}>
+          <div class="ui card">
+            {/* <div class="image"> */}
+            <div className="row" style={{ margin: 10 }}>
+              <div className="col-md-1" style={{ paddingTop: "50px" }}>
+                <a
+                  className="prev"
+                  onClick={this.scroll.bind(null, -1, sellerProduct._id)}
+                >
+                  &#10094;
+                </a>
+              </div>
+              <div className="col-md-8">
+                <div className="image-container" id={sellerProduct._id}>
+                  <div className="image">
+                    <img
+                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                      style={{ maxWidth: "100%" }}
+                    />
+                  </div>
+                  <div className="image">
+                    <img
+                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                      style={{ maxWidth: "100%" }}
+                    />
+                  </div>
+                  <div className="image">
+                    <img
+                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                      style={{ maxWidth: "100%" }}
+                    />
+                  </div>
+                  <div className="image">
+                    <img
+                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                      style={{ maxWidth: "100%" }}
+                    />
+                  </div>
+                  <div className="image">
+                    <img
+                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                      style={{ maxWidth: "100%" }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-1" style={{ paddingTop: "50px" }}>
+                <a
+                  className="next"
+                  onClick={this.scroll.bind(null, 1, sellerProduct._id)}
+                >
+                  &#10095;
+                </a>
+              </div>
+            </div>
+            {/* </div> */}
+            <div class="content">
+              {/* <div class="row"> */}
+                <div className="row" style={{fontWeight:"bold",fontSize:"20",margin:10,textAlign:"center"}}>
+                  {sellerProduct.productName}
+                </div>
+                <div className="row" style={{margin:10,textAlign:"center"}}>
+                  {sellerProduct.productDesc}
+                </div>
+                <div className="row" style={{margin:10,textAlign:"center"}}>
+                  ${sellerProduct.price}
+                </div>
+              {/* </div> */}
+            </div>
+            <hr style={{height:"2px",backgroundColor:"gray"}}></hr>
+            <div class="extra content">
+              <a href="#" style={{fontSize:"15"}}>
+                {/* <i aria-hidden="true" class="user icon"></i> */}
+                View Product
+              </a>
+            </div>
           </div>
         </div>
       );
@@ -172,7 +242,7 @@ export default class AddProduct extends Component {
                 </Form>
               </div>
             </div>
-            {sellerProducts}
+            <div className="row">{sellerProducts}</div>
           </div>
         </div>
       </div>
