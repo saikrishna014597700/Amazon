@@ -8,7 +8,8 @@ module.exports = {
         INTERNAL_SERVER_ERROR: 500
     },
     MESSAGES: {
-        USER_ALREADY_EXISTS: "User Already Exists",
+        CUSTOMER_ALREADY_EXISTS: "Customer Already Exists",
+        SELLER_ALREADY_EXISTS: "Seller Already Exists",
         USER_NOT_EXIST: "User does not Exists",
         USER_NAME_ALREADY_EXISTS: "User Name already in use",
         INTERNAL_SERVER_ERROR: "Internal Server Error",

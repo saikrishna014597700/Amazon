@@ -13,7 +13,7 @@ function auth() {
   passport.use(
     new JwtStrategy(opts, function (jwt_payload, done) {
       const user_id = jwt_payload.user_id;
-      let sql = `CALL User_get('${user_id}')`;
+      let sql = `CALL users_get('${user_id}')`;
       pool.query(sql, (err, sqlResult) => {
         if (err) {
           return done(err, null);
