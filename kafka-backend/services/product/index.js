@@ -10,6 +10,7 @@ let handle_request = (msg, callback) => {
     case "view_seller_products":
       viewAllSellerProducts(msg, callback);
       break;
+    
   }
 };
 
