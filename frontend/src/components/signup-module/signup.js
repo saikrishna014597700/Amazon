@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import "../login-module/login.css"
 
 class SignUp extends Component {
   constructor(props) {
