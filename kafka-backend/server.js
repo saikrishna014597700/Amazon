@@ -5,6 +5,7 @@ var connectMongoDB = require("./utils/dbConnection");
 //import topics files
 const productService = require("./services/product");
 const orderService = require("./services/order")
+const authService= require("./services/auth")
 
 //MongoDB connection
 connectMongoDB();
@@ -50,3 +51,4 @@ const response = (data, res, err, producer) => {
 // Topics;
 handleTopicRequest("product", productService);
 handleTopicRequest("orders",orderService)
+handleTopicRequest("auth",authService)

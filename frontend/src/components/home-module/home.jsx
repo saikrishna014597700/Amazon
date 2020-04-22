@@ -19,6 +19,7 @@ class Home extends Component {
           <Link to="signup">signup</Link>
           <Link to="addProduct">Add Product</Link>
           <Link to="orders">Orders</Link>
+          <Link to="login">Add Product</Link>
         </ul>
       </div>
     );

@@ -1,7 +1,41 @@
 import React, { Component } from "react";
 import {Form,Button, FormGroup} from 'react-bootstrap'
+import axios from 'axios'
+import "./login.css"
 
 export default class Login extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+		  msg:""
+		};
+		this.login=this.login.bind(this)
+		this.handleChange=this.handleChange.bind(this)
+	  }
+
+	  async handleChange(e) {
+		this.setState({[e.target.name]: e.target.value});
+	  }
+
+	  async login(e)
+  {
+    e.preventDefault();
+        if(document.forms['signform'].reportValidity()){
+    const data= {  
+      email: this.state.email,
+      password: this.state.password,
+    }
+    axios
+      .post("http://localhost:3001/api/auth/signin/", data)
+      .then((response) => {
+        this.setState({
+          msg: response.data
+        })
+        console.log("line 34",response)
+      });
+    console.log("36",data)}
+  }
+	
     render() {
         return (
            <div >
@@ -14,22 +48,22 @@ export default class Login extends Component {
        
 			<div className="panel panel-primary">
 				<div className="panel-body">
-					<div className="form" style={{alignItems:"center"}}>
+					<form id="signform">
 						<div className="form-group">
 							<h1>Sign-In</h1>
 						</div>
 						<div className="form-group">
 							<strong>Email or mobile phone number</strong>
-							<input id="signinEmail" type="email" maxlength="50" className="form-control"/>
+							<input id="signinEmail" name="email" type="email" maxlength="50" className="form-control" onChange={this.handleChange} required/>
 						</div>
 						<div className="form-group">
 							<strong>Password</strong>
                             &nbsp;  
 							<span className="right"><a href="#">Forgot your password?</a></span>
-							<input id="signinPassword" type="password" maxlength="25" className="form-control"/>
+							<input id="signinPassword" name="password" type="password" maxlength="25" className="form-control" onChange={this.handleChange} required/>
 						</div>
 						<div className="form-group" style={{paddingTop: "12px"}}>
-                        <Button variant="warning"	>Sign In</Button>				
+                        <Button variant="warning" onClick={this.login} size="lg" block>Sign In</Button>				
                         		</div>
 					
 						<p className="form-group">By signing in you are agreeing to our <a href="#">Terms of Use</a> and our <a href="#">Privacy Policy</a>.</p>
@@ -37,7 +71,7 @@ export default class Login extends Component {
 							<hr className="left"/><small>New to Amazon?</small><hr className="right"/>
 						</div>
 						<p className="form-group"><a href="/signup" className="btn btn-light">Create your amazon account</a></p>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>

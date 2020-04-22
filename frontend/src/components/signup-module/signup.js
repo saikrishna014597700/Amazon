@@ -1,8 +1,45 @@
 import React, { Component } from "react";
 import { Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import "../login-module/login.css"
 
 class SignUp extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      msg:""
+    };
+    this.create=this.create.bind(this)
+    this.handleChange=this.handleChange.bind(this)
+  }
+
+  async handleChange(e) {
+    this.setState({[e.target.name]: e.target.value});
+    // console.log(e.target.value)
+  }
+
+  async create(e)
+  {
+    e.preventDefault();
+        if(document.forms['signupForm'].reportValidity()){
+    const data= {
+      name : this.state.name,
+      email: this.state.email,
+      password: this.state.password,
+      role: this.state.option
+    }
+    axios
+      .post("http://localhost:3001/api/auth/signup/", data)
+      .then((response) => {
+        this.setState({
+          msg: response.data
+        })
+        console.log("line 34",response)
+      });
+    console.log("36",data)}
+  }
+
   render() {
     return (
       <div>
@@ -10,6 +47,7 @@ class SignUp extends Component {
           <div className="auth-inner">
             <div className="container">
               <div className="row">
+              <p style={{color:"red"}}>{this.state.msg} </p>
                 <img
                   src={require("../../utils/logo.jpg")}
                   style={{
@@ -23,16 +61,19 @@ class SignUp extends Component {
 
                 <div className="panel panel-primary">
                   <div className="panel-body">
-                    <Form>
+                    <form id="signupForm">
                       <div className="form-group">
                         <h1>Create Account</h1>
                       </div>
                       <div className="form-group">
                         <strong>Your name</strong>
                         <input
+                        name="name"
+                        onChange={this.handleChange}
                           id="name"
                           type="text"
                           maxlength="50"
+                          required
                           className="form-control"
                         />
                       </div>
@@ -40,9 +81,13 @@ class SignUp extends Component {
                         <strong>Email</strong>
                         <input
                           id="signupEmail"
+                          name="email"
+                          onChange={this.handleChange}
                           type="email"
                           maxlength="50"
+                          // pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$'%&*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])$" 
                           className="form-control"
+                          required
                         />
                       </div>
                       <div className="form-group">
@@ -50,30 +95,40 @@ class SignUp extends Component {
                         <input
                           id="signupPassword"
                           type="password"
+                          name="password"
+                          onChange={this.handleChange}
+                          minLength="6"
                           maxlength="25"
                           placeholder="At least 6 characters"
                           className="form-control"
+                          required
                         />
                       </div>
                       <div className="form-group">
                       <Form.Check
           type="radio"
           label="Customer"
-          name="formHorizontalRadios"
+          name="option"
+          value="Customer"
+          onChange={this.handleChange}
           id="formHorizontalRadios1"
+          required
         />
         <Form.Check
           type="radio"
           label="Seller"
-          name="formHorizontalRadios"
+          value="Seller"
+          name="option"
+          onChange={this.handleChange}
           id="formHorizontalRadios2"
+          
         /> 
         </div>
                       <div
                         className="form-group"
                         style={{ paddingTop: "12px" }}
                       >
-                        <Button variant="warning" size="lg" block>
+                        <Button onClick={this.create} variant="warning" size="lg" block>
                           Create your Amazon account
                         </Button>
                       </div>
@@ -89,7 +144,7 @@ class SignUp extends Component {
                         <hr className="right" />
                         &nbsp; <Link to="/login">Sign-in →</Link>
                       </div>
-                    </Form>
+                    </form>
                   </div>
                 </div>
               </div>
