@@ -18,6 +18,7 @@ class Home extends Component {
           <li>Oculus</li>
           <Link to="signup">signup</Link>
           <Link to="addProduct">Add Product</Link>
+          <Link to="orders">Orders</Link>
         </ul>
       </div>
     );

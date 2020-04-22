@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Alert from "./components/common/alert";
 import SignUp from "./components/signup-module/signup";
 import Login from "./components/login-module/login";
+import Orders from "./components/Orders/orders"
 
 //Create a Main Component
 class Main extends Component {
@@ -20,6 +21,7 @@ class Main extends Component {
             <Route exact path="/signup" component={SignUp} />
             <Route exact path="login" component={Login} />
             <Route path="/addProduct" component={AddProduct} />
+            <Route path="/orders" component={Orders} />
           </Switch>
         </div>
       </Router>
