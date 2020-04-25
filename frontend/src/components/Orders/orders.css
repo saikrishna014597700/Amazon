@@ -1,0 +1,17 @@
+.list-group list-group-horizontal-xl{
+    border-bottom: 1px solid black;
+}
+
+.button{
+    width: 100px;
+    height:35px;
+    color:#e47911;
+    background-color: white;
+    border: 2px solid black;
+    border-radius:10px
+    
+}
+
+.button:focus {
+    outline: 0px auto -webkit-focus-ring-color ;
+}
