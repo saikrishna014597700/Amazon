@@ -76,18 +76,18 @@ var giftObj = new Schema({
 var trackingDetails = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   trackingStatus: { type: String },
-  trackingAddress: [trackingAddress],
+  trackingAddress: {type: trackingAddress},
   createDate: { type: Date },
 });
 
 var order = new Schema({
   userId: { type: Number, required: true },
-  billingAddress: [billingaddress],
-  shippingAddress: [shippingaddress],
+  billingAddress: {type:billingaddress},
+  shippingAddress: {type:shippingaddress},
   transactionAmount: { type: Number },
   status: { type: String },
   products: [product],
-  gift: [giftObj],
+  gift: {type:giftObj},
   paymentDetails: { type: String }, // card id from customer details
   trackingInfo: [trackingDetails],
   createDate: { type: Date },

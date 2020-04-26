@@ -3,6 +3,7 @@ import { Form, Button, FormGroup } from "react-bootstrap";
 import "./orders.css";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
+import ProductDetails from './productDetails';
 
 export default class Orders extends Component {
     constructor() {
@@ -51,14 +52,14 @@ export default class Orders extends Component {
     }
 
     async  fetchTrackingInfo(trackingInfo) {
-        ;
+
         console.log('trackingInfo::', trackingInfo)
         let trackingDetails = await trackingInfo.map(function (track) {
             console.log('jaffaaaa')
             return (
                 <div key={track._id} style={{ align: 'center' }}>
                     <p>Status: {track.trackingStatus}</p>
-                    <p>Location: {track.trackingStatus}</p>
+                    <p>Location: {track.trackingAddress.zip_code}</p>
                     <p>Time: {track.createDate}</p>
                 </div>
             )
@@ -76,35 +77,51 @@ export default class Orders extends Component {
 
         let orderDetails = this.state.orders.map((order) => {
             return (
-                <div key={order._id} className="row" style={{ marginTop: "50px" }}>
-                    <div className="col-sm" style={{ width: '30%' }}>
-                        <div className="ui card" style={{ marginLeft: "150px", border: "0px" }}>
-                            <div className="image">
-                                <img src="https://react.semantic-ui.com/images/icons/plugin.png" />
+                <div key={order._id} className="card" style={{ margin: "50px" }}>
+                    <div className="card-header">
+                        <div className="row">
+                            <div className="col-sm" style={{ width: '50%' }}>
+                                <div> Order ID: {order._id}</div>
+                                <div>Transaction Amount: $ {order.transactionAmount} </div>
+                            </div>
+                            <div className="col-sm" style={{ width: '50%' }}>
+                                <div>Payment Details: {order.paymentDetails}</div>
+                                <div>Ordered Date: {order.createDate}</div>
                             </div>
                         </div>
                     </div>
-                    <div className="col-sm" style={{ width: '30%' }}>
-                        <div className="ui card" style={{ border: "0px" }}>
-                            <div className="content">
-                                <div className="meta">Name: Plug</div>
-                                <div className="meta">Quantity : {order.products[0].quantity}</div>
-                                <div className="meta">Status : {order.status}</div>
-                            </div>
-                        </div>
-                        <button style={{ width: '150px' }} className="button" data-toggle="collapse" data-target="#demo" onClick={(event) => this.fetchTrackingInfo(order.trackingInfo)}>Tracking Details</button>
-                        <div id="demo" class="collapse">
-                            {/* status is here  */}
-                            {this.state.trackingInfo}
-                        </div>
 
-                    </div>
-                    <div className = "col-sm" style = {{width:'40%'}}>
-                    <div className="ui card" style={{ border: "0px" }}>
-                    <div className="meta">Cost: {order.transactionAmount} USD</div>
-                    <div className="meta">Payment Details: {order.paymentDetails}</div>
+                    
+
+                    <div className="card-body">
+                        <div className="row">
+                        <div className="col-sm" style={{ width: '60%' }}>
+                        <ProductDetails key={order._id} products={order.products}>
+                         </ProductDetails> 
+                         </div>
+                            
+
+                            <div className="col-sm" style={{ width: '40%' }}>
+                                <div className = "row" >
+                                <button style={{ width: '150px', borderRadius: '0px' }} className="button" data-toggle="collapse" data-target="#demo" onClick={(event) => this.fetchTrackingInfo(order.trackingInfo)}>Tracking Details</button>
+                                <div id="demo" style = {{fontSize:'12px'}} className="collapse">
+                                    {/* status is here  */}
+                                    {this.state.trackingInfo}
+                                </div>
+                                </div>
+                                <div className = "row" style = {{marginTop:'7px'}}>
+                                <button style={{ width: '150px', borderRadius: '0px' }} className="button" data-toggle="collapse" data-target="#demo1">Shipping Address</button>
+                                <div id="demo1" style = {{fontSize:'12px'}} className="collapse">
+                                    {/* status is here  */}
+                                   <div> {order.shippingAddress.street}</div>
+                                    <div>{order.shippingAddress.city}</div>
+                                    <div>{order.shippingAddress.state}</div>
+                                    <div>{order.shippingAddress.zip_code}</div>
+                                </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </div >
                 </div>
             )
         })
@@ -118,7 +135,7 @@ export default class Orders extends Component {
                             alt="hs"
                         />
                     </div>
-                    <ul class="list-group list-group-horizontal-xl">
+                    <ul className="list-group list-group-horizontal-xl">
                         <button className="button" onClick={(event) => this.fetchOrders(event)}>Orders</button>
                         <button className="button" style={{ width: '200px', marginLeft: '10px' }}>Cancelled Orders</button>
                     </ul>
@@ -126,10 +143,7 @@ export default class Orders extends Component {
                 <div>
                     {orderDetails}
                 </div>
-            </div>
+            </div >
         );
     }
 }
-
-
-
