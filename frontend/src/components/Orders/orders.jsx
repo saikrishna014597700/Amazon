@@ -51,28 +51,7 @@ export default class Orders extends Component {
             .then((response) => { });
     }
 
-    async  fetchTrackingInfo(trackingInfo) {
-
-        console.log('trackingInfo::', trackingInfo)
-        let trackingDetails = await trackingInfo.map(function (track) {
-            console.log('jaffaaaa')
-            return (
-                <div key={track._id} style={{ align: 'center' }}>
-                    <p>Status: {track.trackingStatus}</p>
-                    <p>Location: {track.trackingAddress.zip_code}</p>
-                    <p>Time: {track.createDate}</p>
-                </div>
-            )
-
-        })
-        console.log("tracking details::", trackingDetails)
-        this.setState({
-            trackingInfo: trackingDetails
-        })
-
-        //return trackingDetails
-    }
-
+    
     render() {
 
         let orderDetails = this.state.orders.map((order) => {
@@ -96,27 +75,32 @@ export default class Orders extends Component {
                     <div className="card-body">
                         <div className="row">
                         <div className="col-sm" style={{ width: '60%' }}>
-                        <ProductDetails key={order._id} products={order.products}>
+                        <ProductDetails key={order._id} products={order.products} order = {order}>
                          </ProductDetails> 
                          </div>
                             
 
                             <div className="col-sm" style={{ width: '40%' }}>
-                                <div className = "row" >
-                                <button style={{ width: '150px', borderRadius: '0px' }} className="button" data-toggle="collapse" data-target="#demo" onClick={(event) => this.fetchTrackingInfo(order.trackingInfo)}>Tracking Details</button>
-                                <div id="demo" style = {{fontSize:'12px'}} className="collapse">
-                                    {/* status is here  */}
-                                    {this.state.trackingInfo}
-                                </div>
-                                </div>
+                                
                                 <div className = "row" style = {{marginTop:'7px'}}>
-                                <button style={{ width: '150px', borderRadius: '0px' }} className="button" data-toggle="collapse" data-target="#demo1">Shipping Address</button>
+                                <Button variant = "warning" block style={{ width: '150px' }}  data-toggle="collapse" data-target="#demo1">Shipping Address</Button>
                                 <div id="demo1" style = {{fontSize:'12px'}} className="collapse">
                                     {/* status is here  */}
                                    <div> {order.shippingAddress.street}</div>
                                     <div>{order.shippingAddress.city}</div>
                                     <div>{order.shippingAddress.state}</div>
                                     <div>{order.shippingAddress.zip_code}</div>
+                                </div>
+                                </div>
+
+                                <div className = "row" style = {{marginTop:'7px'}}>
+                                <Button variant = "warning" block  style={{ width: '150px'}}  data-toggle="collapse" data-target="#demo1">Billing Address</Button>
+                                <div id="demo1" style = {{fontSize:'12px'}} className="collapse">
+                                    {/* status is here  */}
+                                   <div> {order.billingAddress.street}</div>
+                                    <div>{order.billingAddress.city}</div>
+                                    <div>{order.billingAddress.state}</div>
+                                    <div>{order.billingAddress.zip_code}</div>
                                 </div>
                                 </div>
                             </div>

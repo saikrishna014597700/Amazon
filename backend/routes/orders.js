@@ -12,11 +12,11 @@ const logger = require("../utils/logger");
  * to deactivate an account
  * @param req: user_id
  */
-router.post("/addProduct", async (req, res) => {
+router.post("/cancelOrder", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body);
-  msg.route = "add_product";
-  kafka.make_request("addProduct", msg, function (err, results) {
+  msg.route = "cancelOrder";
+  kafka.make_request("cancelOrder", msg, function (err, results) {
     if (err) {
       msg.error = err.data;
       logger.error(msg);
