@@ -128,9 +128,10 @@ class SignUp extends Component {
                         className="form-group"
                         style={{ paddingTop: "12px" }}
                       >
-                        <Button onClick={this.create} variant="warning" size="lg" block>
+                        <button className="Amazon" onClick={this.create} size="lg" block>
+                        <span></span>
                           Create your Amazon account
-                        </Button>
+                        </button>
                       </div>
 
                       <p className="form-group">

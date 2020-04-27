@@ -9,6 +9,7 @@ import Alert from "./components/common/alert";
 import SignUp from "./components/signup-module/signup";
 import Login from "./components/login-module/login";
 import Orders from "./components/Orders/orders"
+import Profile from "./components/profile-module/profile";
 
 //Create a Main Component
 class Main extends Component {
@@ -22,6 +23,7 @@ class Main extends Component {
             <Route exact path="/login" component={Login} />
             <Route path="/addProduct" component={AddProduct} />
             <Route path="/orders" component={Orders} />
+            <Route path="/Profile" component={Profile} />
           </Switch>
         </div>
       </Router>

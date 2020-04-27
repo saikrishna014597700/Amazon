@@ -63,7 +63,7 @@ export default class Login extends Component {
 							<input id="signinPassword" name="password" type="password" maxlength="25" className="form-control" onChange={this.handleChange} required/>
 						</div>
 						<div className="form-group" style={{paddingTop: "12px"}}>
-                        <Button variant="warning" onClick={this.login} size="lg" block>Sign In</Button>				
+                        <button className="Amazon" onClick={this.login} size="lg" block><span></span>Sign In</button>				
                         		</div>
 					
 						<p className="form-group">By signing in you are agreeing to our <a href="#">Terms of Use</a> and our <a href="#">Privacy Policy</a>.</p>
