@@ -102,24 +102,9 @@ html,
   flex-direction: column;
   justify-content: space-around;
 }
-/* h2 {
-    margin-top: 2px;
-    margin-bottom: 2px;
-  }
-  
-  .container { max-width: 360px; }
-  
-  .divider {
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 5px;
-  }
-  
-  .divider hr {
-    margin: 7px 0px;
-    width: 35%;
-  }
-  
-  .left { float: left; }
-  
-  .right { float: right; } */
+.scrollable-dropdown{
+  height: auto;
+  max-height:320px;  /* Increase / Decrease value as per your need */
+  overflow-x: hidden;
+}
+
