@@ -11,6 +11,8 @@ import Login from "./components/login-module/login";
 import Orders from "./components/Orders/orders"
 import Profile from "./components/profile-module/profile";
 import SearchProduct from "./components/common/searchProduct"
+import customerCards from "./components/customer/customerCards"
+import customerAddresses from "./components/customer/customerAddresses"
 
 //Create a Main Component
 class Main extends Component {
@@ -26,6 +28,8 @@ class Main extends Component {
             <Route path="/orders" component={Orders} />
             <Route path="/Profile" component={Profile} />
             <Route path="/search" component={SearchProduct}/>
+            <Route path="/customerCards" component={customerCards}/>
+            <Route path="/customerAddresses" component={customerAddresses}/>
           </Switch>
         </div>
       </Router>

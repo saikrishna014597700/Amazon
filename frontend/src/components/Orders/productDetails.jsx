@@ -54,14 +54,19 @@ export default class ProductDetails extends Component {
             return (
                 <div className = "row" key = {prod._id} >
                     <div className="col-sm" style={{ width: '50%' }}>
-                        <div className="image">
-                            <img src="https://react.semantic-ui.com/images/icons/plugin.png" />
+                        <div className="image" >
+                            <img style = {{height: '300px',width:'300px'}}src="https://media.gettyimages.com/photos/closeup-of-smart-phone-against-white-background-picture-id914276160?s=612x612" />
                         </div>
                     </div>
                     <div className="col-sm" style={{ width: '50%' }}>
-                    <div>Name: {prod.productDetails.productName}</div>
+                    <div>{prod.productDetails.productName}</div>
+                    <div>
+                        {prod.productDetails.productDesc}
+                    </div>
+                    <div></div>
                         <div>Quantity : {prod.quantity}</div>
                         <div>Status : {prod.status}</div>
+                        <div>Price: {prod.productDetails.price}</div>
                        <Button variant = "warning" style = {{width:'150px'}} block data-toggle="collapse" data-target="#demo" onClick={(event) => this.fetchTrackingInfo(prod.trackingInfo)}>Tracking Details</Button>
                                 <div id="demo" style = {{fontSize:'12px'}} className="collapse">
                                     {this.state.trackingDetails}
@@ -69,7 +74,9 @@ export default class ProductDetails extends Component {
                 
                         <Button variant = "light" hidden = {prod.status === "Delivered" || prod.status === "Cancelled"} style = {{width:'150px',marginTop:"7px",color:"#ffc107"}} block data-toggle="collapse" data-target="#demo" onClick={(event) => this.cancelProduct(prod.productId,this.props.order._id)}>Cancel Product</Button>
                     </div>
+                    <hr style = {{width:"100%",size:"2px"}}></hr>
                 </div>
+
             )
         })
         return (

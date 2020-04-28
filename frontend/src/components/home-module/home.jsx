@@ -21,6 +21,9 @@ class Home extends Component {
           <Link to="orders">Orders</Link>
           <Link to="login">Login</Link>
           <Link to="search">Search Product</Link>
+
+          <Link to="customerCards">Your Cards</Link>
+          <Link to="customerAddresses">Your Addresses</Link>
         </ul>
       </div>
     );
