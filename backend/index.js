@@ -8,6 +8,7 @@ const product = require("./routes/product");
 const orders = require("./routes/orders");
 const auth= require("./routes/auth");
 const common = require("./routes/common");
+const customerDetails = require("./routes/customerDetails")
 
 app.use("/api/account", account);
 app.use("/api/product", product);
@@ -16,6 +17,7 @@ app.use("/api/auth",auth)
 app.use("/api/account", account);
 app.use("/api/product", product);
 app.use("/api/common",common)
+app.use("/api/customerDetails",customerDetails)
 
 const port = process.env.PORT || 3001;
 
