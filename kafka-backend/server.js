@@ -4,10 +4,10 @@ var connectMongoDB = require("./utils/dbConnection");
 
 //import topics files
 const productService = require("./services/product");
-const orderService = require("./services/order")
-const authService= require("./services/auth")
-const commonService = require("./services/common")
-
+const orderService = require("./services/order");
+const authService = require("./services/auth");
+const commonService = require("./services/common");
+const sellerService = require("./services/seller");
 
 //MongoDB connection
 connectMongoDB();
@@ -52,6 +52,7 @@ const response = (data, res, err, producer) => {
 
 // Topics;
 handleTopicRequest("product", productService);
-handleTopicRequest("orders",orderService)
-handleTopicRequest("auth",authService)
-handleTopicRequest("common",commonService);
+handleTopicRequest("orders", orderService);
+handleTopicRequest("auth", authService);
+handleTopicRequest("common", commonService);
+handleTopicRequest("seller", sellerService);

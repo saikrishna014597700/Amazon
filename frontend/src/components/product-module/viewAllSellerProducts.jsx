@@ -4,16 +4,18 @@ import "./product.css";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import $ from "jquery";
+import { Redirect } from "react-router";
 
-export default class AddProduct extends Component {
-  constructor() {
-    super();
+export default class viewAllSellerProducts extends Component {
+  constructor(props) {
+    super(props);
     this.state = {
       productName: "",
       productDesc: "",
       price: "",
       category: "",
       sellerProducts: [],
+      redirect: null,
     };
     this.addProduct = this.addProduct.bind(this);
     this.viewAllSellerProducts = this.viewAllSellerProducts.bind(this);
@@ -25,7 +27,25 @@ export default class AddProduct extends Component {
     let pos = $("#" + id).scrollLeft() + far;
     $("#" + id).animate({ scrollLeft: pos }, 100);
   }
-  our;
+
+  editProductDetails = (event, id) => {
+    this.setState({ redirect: `/editProductDetails/${id}` });
+  };
+
+  async componentDidMount() {
+    const payload = {
+      sellerId: "123",
+    };
+    axios
+      .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
+      .then((response) => {
+        console.log("Pro are::", response);
+        this.setState({
+          sellerProducts: response.data,
+        });
+        console.log("Pro are::", this.state.sellerProducts);
+      });
+  }
 
   async viewAllSellerProducts(event) {
     const payload = {
@@ -55,6 +75,9 @@ export default class AddProduct extends Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
       return (
         <div className="col-md-3" style={{ margin: 5 }}>
@@ -140,125 +163,20 @@ export default class AddProduct extends Component {
                 {/* <i aria-hidden="true" class="user icon"></i> */}
                 View Product
               </a>
+              <button
+                class="btn success"
+                onClick={(event) =>
+                  this.editProductDetails(event, sellerProduct._id)
+                }
+              >
+                View Profile
+              </button>
             </div>
           </div>
         </div>
       );
     });
-    return (
-      <div>
-        <div className="auth-wrapper">
-          <div className="auth-inner">
-            <div className="container">
-              <div className="row2">
-                <div className="panel panel-primary">
-                  <div className="panel-body">
-                    <div className="form-group">
-                      <h3 style={{ float: "center" }}>Add Product</h3>
-                    </div>
-                    <Form>
-                      <div className="form-group">
-                        <strong>Product Name</strong>
-                        <input
-                          name="productName"
-                          type="text"
-                          maxlength="50"
-                          className="form-control"
-                          onChange={(e) =>
-                            this.setState({
-                              productName: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="form-group">
-                        <strong>Product Description</strong>
-                        <input
-                          name="productDesc"
-                          type="text"
-                          maxlength="100"
-                          className="form-control"
-                          onChange={(e) =>
-                            this.setState({
-                              productDesc: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="form-group">
-                        <strong>Price</strong>
-                        <input
-                          name="price"
-                          type="text"
-                          maxlength="100"
-                          className="form-control"
-                          onChange={(e) =>
-                            this.setState({
-                              price: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="form-group">
-                        <strong>Category</strong>
-                        <select
-                          placeholder="Select Category"
-                          defaultValue=""
-                          class="form-control"
-                          name="category"
-                          onChange={(e) =>
-                            this.setState({
-                              category: e.target.value,
-                            })
-                          }
-                        >
-                          <option value="Electronics">Electronics</option>
-                          <option value="Kitchen">Kitchen</option>
-                          <option value="Clothing">Clothing</option>
-                          <option value="Furniture">Furniture</option>
-                          <option value="Rentals">Rentals</option>
-                        </select>
-                      </div>
-                      <div
-                        className="form-group"
-                        style={{ paddingTop: "12px" }}
-                      >
-                        <Button
-                          variant="warning"
-                          size="lg"
-                          block
-                          onClick={(event) => this.addProduct(event)}
-                        >
-                          Add Product
-                        </Button>
-                      </div>
-                      <p className="form-group">
-                        By clicking here you are adding a product to{" "}
-                        <a href="#">Amazon</a> so that customers can buy
-                      </p>
-                      <div
-                        className="form-group"
-                        style={{ paddingTop: "12px" }}
-                      >
-                        <Button
-                          variant="warning"
-                          size="lg"
-                          block
-                          onClick={(event) => this.viewAllSellerProducts(event)}
-                        >
-                          View All Products
-                        </Button>
-                      </div>
-                    </Form>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row">{sellerProducts}</div>
-      </div>
-    );
+    return <div className="row">{sellerProducts}</div>;
   }
 }
 

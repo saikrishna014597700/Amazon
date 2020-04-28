@@ -11,20 +11,28 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <h1>Shopping List for </h1>
-        <ul>
-          <li>Instagram</li>
-          <li>WhatsApp</li>
-          <li>Oculus</li>
-          <Link to="signup">signup</Link>
-          <Link to="addProduct">Add Product</Link>
-          <Link to="orders">Orders</Link>
-          <Link to="login">Login</Link>
-          <Link to="search">Search Product</Link>
+        <div className="auth-wrapper">
+          <div className="auth-inner">
+            <h1>Menu</h1>
+            <ul>
+              <Link to="orders">Orders</Link>
+              <Link to="login">Login</Link>
+              <Link to="search">Search Product</Link>
 
-          <Link to="customerCards">Your Cards</Link>
-          <Link to="customerAddresses">Your Addresses</Link>
-        </ul>
+              <Link to="customerCards">Your Cards</Link>
+              <Link to="customerAddresses">Your Addresses</Link>
+              <Link to="signup">signup</Link>
+              <br />
+              <Link to="addProduct">Add Product</Link>
+              <br />
+              <Link to="viewAllSellerProducts">View All Seller Products</Link>
+              <br />
+              <Link to="sellerOrders">Seller Orders</Link>
+              <br />
+              <Link to="sellerReports">Seller Reports</Link>
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }

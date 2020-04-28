@@ -5,7 +5,7 @@ const {
   mysqlUser,
   mysqlPassword,
   mysqlDatabase,
-} = require("./config");
+} = require("../../backend/utils/config");
 const myPort = 3306;
 
 const pool = mysql.createPool({
@@ -19,6 +19,7 @@ const pool = mysql.createPool({
 
 pool.getConnection((err) => {
   if (err) {
+    console.log("Error", err);
     throw "Error occured: " + err;
   } else {
     console.log("SQL Database Connected");

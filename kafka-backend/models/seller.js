@@ -26,7 +26,7 @@ var address = new Schema({
 var seller = new Schema({
   userId: { type: Number, required: true },
   sellerName: { type: String, required: true },
-  sellerAddress: [address],
+  sellerAddress: { type: address },
   sellerProfilePic: { type: String },
   createDate: { type: Date },
   updateDate: { type: Date },

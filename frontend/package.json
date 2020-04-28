@@ -25,6 +25,7 @@
     "react-star-rating-component": "^1.4.1",
     "react-star-ratings": "^2.3.0",
     "react-toastify": "^5.4.1",
+    "react-vis": "^1.11.7",
     "save": "^2.4.0",
     "semantic-ui-react": "^0.88.2"
   },

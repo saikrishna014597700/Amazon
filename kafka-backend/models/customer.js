@@ -36,7 +36,7 @@ var cards = new Schema({
 var customer = new Schema({
   userId: { type: Number, required: true },
   customerName: { type: String, required: true },
-  customerAddress: [address],
+  customerAddress: { type: address },
   customerCards: [cards],
   sellerProfilePic: { type: String },
   createDate: { type: Date },

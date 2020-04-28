@@ -13,6 +13,7 @@ let viewAllSellerProducts = async (msg, callback) => {
     console.log("Seller Id:::", msg.sellerId);
     var sellerProducts = await Product.find({
       sellerId: msg.sellerId,
+      isDeleted: 0,
     });
     console.log("Seller Products:::", sellerProducts);
 
