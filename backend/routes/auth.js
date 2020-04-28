@@ -10,6 +10,7 @@ const { STATUS_CODE, MESSAGES } = require("../utils/constants");
 const logger = require("../utils/logger");
 const jwt = require('jsonwebtoken');
 const { auth } = require("../utils/passport");
+const cookie= require('react-cookies')
 auth();
 
 
@@ -17,12 +18,33 @@ auth();
  * to deactivate an account
  * @param req: user_id
  */
+
 router.post("/signup", async (req, res) => {
   let msg = req.body;
   console.log("Req body for signup", req.body);
   msg.route = "sign_up";
 
   kafka.make_request("signup", msg, function (err, results) {
+    console.log("Results are",results);
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.data);
+      
+    }
+  });
+});
+
+router.post("/profile", async (req, res) => {
+  let msg = req.body;
+  console.log("Req body for profile", req.body);
+  msg.route = "update_name";
+
+  kafka.make_request("updatename", msg, function (err, results) {
     console.log("Results are",results);
     if (err) {
       msg.error = err.data;
@@ -63,10 +85,10 @@ router.post("/signin", async (req, res) => {
           expiresIn: 900000 // in seconds
         });
         let jwtToken = 'JWT ' + token;
-        msg.status = STATUS_CODE.SUCCESS;
-        msg.token = jwtToken;
-        // logger.info(msg);
-        return res.status(STATUS_CODE.SUCCESS).send(jwtToken);
+        res.status = STATUS_CODE.SUCCESS;
+        res.token = jwtToken;
+  
+        return res.send({id:results.id,role:results.role,token:jwtToken,name:results.name})
 
       }
       

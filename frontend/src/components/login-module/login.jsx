@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import {Form,Button, FormGroup} from 'react-bootstrap'
+import {Link} from 'react-router-dom'
 import axios from 'axios'
 import "./login.css"
+import {Redirect} from 'react-router';
 
 export default class Login extends Component {
 	constructor(props) {
@@ -25,25 +27,46 @@ export default class Login extends Component {
       email: this.state.email,
       password: this.state.password,
     }
-    axios
+    await axios
       .post("http://localhost:3001/api/auth/signin/", data)
       .then((response) => {
         this.setState({
-          msg: response.data
+          msg: ""
         })
-        console.log("line 34",response)
-      });
-    console.log("36",data)}
+		if(response.data=="Invalid Inputs")
+		this.setState({
+			msg: "Invalid Username/password"
+		})
+		else
+		{
+			localStorage.setItem("id",response.data.id)
+			localStorage.setItem("role",response.data.role)
+			localStorage.setItem("name",response.data.name)
+			this.setState
+			({
+				msg: localStorage.getItem("role")
+			})
+			console.log(response.data)
+			
+		}
+	  });
+
+   }
   }
 	
     render() {
+		let redirectvar=null
+		if(this.state.msg=="Customer")
+		redirectvar= <Redirect to="/profile" />
+		
         return (
            <div >
+		  {redirectvar}
 		    <div className="auth-wrapper">
         <div className="auth-inner">
                  <div className="container">
 		<div className="row">
-       
+		<p style={{color:"red"}}>	{this.state.msg} </p>
         <img src ={require("../../utils/logo.jpg") } style={{marginLeft:"70px", float:"center",height:"100px",width:"200px"}} alt="hs"/>
        
 			<div className="panel panel-primary">
@@ -70,7 +93,7 @@ export default class Login extends Component {
 						<div className="form-group divider">
 							<hr className="left"/><small>New to Amazon?</small><hr className="right"/>
 						</div>
-						<p className="form-group"><a href="/signup" className="btn btn-light">Create your amazon account</a></p>
+						<p className="form-group"><Link to="/signup">Create your amazon account</Link></p>
 					</form>
 				</div>
 			</div>

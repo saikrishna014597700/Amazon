@@ -30,6 +30,8 @@ let signin = async (msg, callback) => {
             else if(result[0].role=="Seller")
             response.data =MESSAGES.SUCCESS;
 
+            response.name=result[0].name;
+            response.id=result[0].id
             response.role= result[0].role
             return callback(null, response);
                 }

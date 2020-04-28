@@ -3,8 +3,8 @@ const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const moment= require("moment")
 const pool = require("../../utils/mysqlConnection");
 const passwordHash = require('password-hash');
-// const bcrypt = require('bcrypt');
-// const saltRounds = 10;
+var mongoose = require("mongoose");
+
 
 let signup = async (msg, callback) => {
     console.log("in signup",msg)
@@ -56,7 +56,7 @@ let signup = async (msg, callback) => {
                   let hashedpass= passwordHash.generate(msg.password)
                   var Query = "insert into users (email,password,name,role) values ('" + msg.email + "','"+hashedpass+"','" + msg.name +
                  "','" + "Seller" + "')";
-             await pool.query(Query);  
+             pool.query(Query);  
              response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
              response.data = MESSAGES.CREATE_SUCCESSFUL;
              return callback(null, response);   } 
