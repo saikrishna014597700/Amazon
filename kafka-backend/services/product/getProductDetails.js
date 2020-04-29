@@ -10,14 +10,16 @@ let getProductDetails = async (msg, callback) => {
   let err = {};
   const today = moment();
   try {
-    // console.log("product is", product);
-    response.result = await Product.findById(msg.productId);
-    console.log("Par Product", response.result);
+    console.log("product Id:::", msg.productId);
+    let productId = mongoose.Types.ObjectId(msg.productId);
+    var products = await Product.find({
+      _id: productId 
+    });
+    console.log("search results:::", products);
+    response.result = products;
     response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
-    response.data = MESSAGES.CREATE_SUCCESSFUL;
+    response.data = MESSAGES.SUCCESS;
     return callback(null, response);
-    //   }
-    // }
   } catch (error) {
     console.log("Error occ while savong product" + error);
     err.status = STATUS_CODE.INTERNAL_SERVER_ERROR;

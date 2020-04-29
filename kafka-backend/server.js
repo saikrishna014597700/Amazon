@@ -9,6 +9,8 @@ const authService = require("./services/auth");
 const commonService = require("./services/common");
 const sellerService = require("./services/seller");
 const customerService = require("./services/customer")
+const cartService = require("./services/cart")
+
 
 //MongoDB connection
 connectMongoDB();
@@ -58,3 +60,4 @@ handleTopicRequest("auth", authService);
 handleTopicRequest("common", commonService);
 handleTopicRequest("seller", sellerService);
 handleTopicRequest("customerDetails",customerService);
+handleTopicRequest("cart",cartService);

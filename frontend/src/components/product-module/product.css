@@ -130,3 +130,37 @@ html,
   overflow-x: hidden;
 }
 
+.AddCart {
+  cursor: pointer;
+  background-color: #f5d47a;
+  color: #000;
+  text-align: center;
+  border: 1px solid #B38B22;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.SaveForLater{
+  cursor: pointer;
+  color: #000;
+  text-align: center;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+card.DelOptions{
+  cursor: pointer;
+  color: #000;
+  text-align: center;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin-top:"20px";
+  margin-left:"40px";
+  margin-right:"30px";
+}
