@@ -1,11 +1,34 @@
 "use strict";
 const { getCustomerCards } = require("./getCustomerCards");
+const { saveCustomerCards } = require("./saveCustomerCards");
+const {deleteCustomerCard} = require("./deleteCustomerCard")
+const { getCustomerAddresses } = require("./getCustomerAddresses");
+const { saveCustomerAddresses } = require("./saveCustomerAddresses");
+const {deleteCustomerAddress} = require("./deleteCustomerAddress")
 
 let handle_request = (msg, callback) => {
+    console.log('route::',msg.route)
   switch (msg.route) {
+   
     case "getCustomerCards":
         getCustomerCards(msg, callback);
       break;
+    case "saveCustomerCards":
+      saveCustomerCards(msg, callback);
+      break;
+      case "deleteCustomerCard":
+        deleteCustomerCard(msg, callback);
+        break;
+        case "getCustomerAddresses":
+          getCustomerAddresses(msg, callback);
+        break;
+      case "saveCustomerAddresses":
+        saveCustomerAddresses(msg, callback);
+        break;
+        case "deleteCustomerAddress":
+          deleteCustomerAddress(msg, callback);
+          break;
+
   }
 };
 

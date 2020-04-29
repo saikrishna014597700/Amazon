@@ -5,19 +5,29 @@ const moment = require("moment");
 var mongoose = require("mongoose");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 
-let getCustomerCards = async (msg, callback) => {
+let deleteCustomerCard = async (msg, callback) => {
 
     let response = {};
   let err = {};
   var cards = []
   const today = moment();
   try {
-    console.log("user Id:::", msg.userId);
-     await customerDetails.findOne({userId: msg.userId}).then((res)=>{
-         console.log("res", res)
-         cards = res.toObject().customerCards
-     });
-    console.log("card results:::", cards);
+   
+    
+    var id = mongoose.Types.ObjectId(msg._id);
+    //console.log("user Id:::", msg,"id::",id);
+
+
+      await customerDetails.updateOne({userId:parseInt(msg.userId)},
+      { "$pull": { "customerCards": { "_id": id } }},{ multi:true }).then(async function(res){
+            console.log("response in update",res)
+            await customerDetails.findOne({userId:msg.userId}).then((res)=>{
+                console.log("res", res)
+                cards = res.toObject().customerCards
+            })
+    });
+    
+        console.log("card results:::", cards);
     response.data = cards;
     response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
     //response.data = MESSAGES.CREATE_SUCCESSFUL;
@@ -30,4 +40,4 @@ let getCustomerCards = async (msg, callback) => {
   }
 }
 
-exports.getCustomerCards = getCustomerCards;
+exports.deleteCustomerCard = deleteCustomerCard;

@@ -3,7 +3,15 @@ var Schema = mongoose.Schema;
 
 var address = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  street: {
+  street1: {
+    type: String,
+    trim: true,
+  },
+  street2: {
+    type: String,
+    trim: true,
+  },
+  name: {
     type: String,
     trim: true,
   },
@@ -21,6 +29,13 @@ var address = new Schema({
   },
   createDate: { type: Date },
   updateDate: { type: Date },
+  phoneNo: {
+    type: String,
+    trim: true,
+  },country: {
+    type: String,
+    trim: true,
+  }
 });
 
 var card = new Schema({
@@ -47,8 +62,7 @@ var card = new Schema({
 
 var customerDetails = new Schema({
   userId: { type: Number, required: true },
-  firstName: { type: String },
-  lastName: { type: String},
+  name: { type: String },
   customerAddresses: [address],
   customerCards: [card],
   createDate: { type: Date },
@@ -56,4 +70,4 @@ var customerDetails = new Schema({
 });
 
 // Export the model
-module.exports = mongoose.model("customerDetails", customerDetails);
+module.exports = mongoose.model("CustomerDetails", customerDetails);

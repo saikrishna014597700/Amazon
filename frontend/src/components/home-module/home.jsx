@@ -16,11 +16,15 @@ class Home extends Component {
             <h1>Menu</h1>
             <ul>
               <Link to="orders">Orders</Link>
+              <br/>
               <Link to="login">Login</Link>
+              <br/>
               <Link to="search">Search Product</Link>
-
+            <br/>
               <Link to="customerCards">Your Cards</Link>
+              <br/>
               <Link to="customerAddresses">Your Addresses</Link>
+              <br/>
               <Link to="signup">signup</Link>
               <br />
               <Link to="addProduct">Add Product</Link>

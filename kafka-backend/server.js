@@ -8,6 +8,7 @@ const orderService = require("./services/order");
 const authService = require("./services/auth");
 const commonService = require("./services/common");
 const sellerService = require("./services/seller");
+const customerService = require("./services/customer")
 
 //MongoDB connection
 connectMongoDB();
@@ -56,3 +57,4 @@ handleTopicRequest("orders", orderService);
 handleTopicRequest("auth", authService);
 handleTopicRequest("common", commonService);
 handleTopicRequest("seller", sellerService);
+handleTopicRequest("customerDetails",customerService);
