@@ -1,14 +1,17 @@
+
 import React, { Component } from "react";
 import "./profile.css";
-import "./New folder/21taIyvn9cL._RC_71BsXVMRQcL.css,21TJB5pc5TL.css,31vGzsqCErL.css,21lRUdwotiL.css,41tc24mJIGL.css,11G4HxMtMSL.css,31OvHRW+XiL.css,01XHMOHpK1L.css_.css";
-import "./New folder/51AZ-Jz5kmL._RC_51da3H-4SUL.css,01evdoiemkL.css,01K+Ps1DeEL.css,31pdJv9iSzL.css,01W6EiNzKkL.css,11UGC+GXOPL.css,21LK7jaicML.css,11L58Qpo0GL.css,21kyTi1FabL.css,01ruG+gDPFL.css,01YhS3Cs-hL.css,21GwE3cR-yL.css,019.css";
-import "./New folder/customer-profile-website._V433198964_.css";
-import "./New folder/redirect-overlay-nav-https-20200206._CB423514839_.css";
+import "./New folder/profile1.css";
+import "./New folder/profile1.css";
+import "./New folder/profile1.css";
+import "./New folder/profile1.css";
+import axios from "axios"
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      cname:"",
       showModal: false,
       logout: false,
     };

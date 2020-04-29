@@ -11,6 +11,7 @@ const common = require("./routes/common");
 const customerDetails = require("./routes/customerDetails");
 const seller = require("./routes/seller");
 
+
 app.use("/api/account", account);
 app.use("/api/product", product);
 app.use("/api/orders", orders);

@@ -22,6 +22,7 @@ import customerAddresses from "./components/customer/customerAddresses";
 import Navbar from "./components/common/navbar";
 import ProductDescription from "./components/product-module/productDescription";
 
+
 //Create a Main Component
 class Main extends Component {
   render() {
