@@ -30,6 +30,8 @@ class Home extends Component {
               <Link to="sellerOrders">Seller Orders</Link>
               <br />
               <Link to="sellerReports">Seller Reports</Link>
+              <br />
+              <Link to="/inventory-listings">Inventory Listings</Link>
             </ul>
           </div>
         </div>

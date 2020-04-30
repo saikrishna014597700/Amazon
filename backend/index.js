@@ -10,6 +10,7 @@ const auth = require("./routes/auth");
 const common = require("./routes/common");
 const customerDetails = require("./routes/customerDetails");
 const seller = require("./routes/seller");
+const admin = require("./routes/admin");
 
 app.use("/api/account", account);
 app.use("/api/product", product);
@@ -18,6 +19,7 @@ app.use("/api/auth", auth);
 app.use("/api/common", common);
 app.use("/api/customerDetails", customerDetails);
 app.use("/api/seller", seller);
+app.use("/api/admin", admin);
 
 const port = process.env.PORT || 3001;
 
