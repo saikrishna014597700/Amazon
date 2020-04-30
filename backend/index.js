@@ -22,6 +22,7 @@ app.use("/api/common", common);
 app.use("/api/customerDetails", customerDetails);
 app.use("/api/cart", cart);
 app.use("/api/admin", admin);
+app.use("/api/seller", seller);
 
 const port = process.env.PORT || 3001;
 

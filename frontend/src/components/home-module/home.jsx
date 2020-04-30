@@ -16,15 +16,15 @@ class Home extends Component {
             <h1>Menu</h1>
             <ul>
               <Link to="orders">Orders</Link>
-              <br/>
+              <br />
               <Link to="login">Login</Link>
-              <br/>
+              <br />
               <Link to="search">Search Product</Link>
-            <br/>
+              <br />
               <Link to="customerCards">Your Cards</Link>
-              <br/>
+              <br />
               <Link to="customerAddresses">Your Addresses</Link>
-              <br/>
+              <br />
               <Link to="signup">signup</Link>
               <br />
               <Link to="addProduct">Add Product</Link>
@@ -35,7 +35,12 @@ class Home extends Component {
               <br />
               <Link to="sellerReports">Seller Reports</Link>
               <br />
+              <Link to="sellerProfile">Seller Profile</Link>
+              {/* <Route path="/sellerProfile" component={SellerProfile} /> */}
+              <br />
               <Link to="/inventory-listings">Inventory Listings</Link>
+              <br />
+              <Link to="/seller-listings">Seller Listings</Link>
             </ul>
           </div>
         </div>

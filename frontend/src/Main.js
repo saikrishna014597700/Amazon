@@ -6,6 +6,8 @@ import SellerOrders from "./components/seller-module/sellerOrders";
 import SellerReports from "./components/seller-module/sellerReports";
 import OrderDetailPage from "./components/seller-module/orderDetailPage";
 import ProductTrackingDetails from "./components/seller-module/productTrackingDetails";
+import SellerProfile from "./components/seller-module/sellerProfile";
+
 import EditProductDetails from "./components/product-module/editProductDetails";
 // import SignIn from "./components/signin-module/login";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
@@ -20,9 +22,11 @@ import SearchProduct from "./components/common/searchProduct";
 import customerCards from "./components/customer/customerCards";
 import customerAddresses from "./components/customer/customerAddresses";
 import Navbar from "./components/common/navbar";
+import ProductView from "./components/common/productView";
 import ProductDescription from "./components/product-module/productDescription";
 import Cart from "./components/cart-module/cart";
 import InventoryListings from "./components/admin-module/InventoryListings";
+import SellerListings from "./components/admin-module/SellerListings";
 
 //Create a Main Component
 class Main extends Component {
@@ -44,6 +48,7 @@ class Main extends Component {
           <Route path="/cart" component={Cart} />
           <Route path="/sellerOrders" component={SellerOrders} />
           <Route path="/sellerReports" component={SellerReports} />
+          <Route path="/sellerProfile" component={SellerProfile} />
           <Route path="/orderDetailPage/:id" component={OrderDetailPage} />
           <Route
             path="/productTrackingDetails/:id/:id"
@@ -58,6 +63,8 @@ class Main extends Component {
             component={EditProductDetails}
           />
           <Route path="/inventory-listings" component={InventoryListings} />
+          <Route path="/seller-listings" component={SellerListings} />
+          <Route path="/product-view" component={ProductView} />
         </div>
       </Router>
     );
