@@ -16,3 +16,18 @@
   width: 800px;
   height: 800px
 }
+
+.seller-listings {
+  width: 850px;
+  margin: auto;
+  /* background: #ffffff; */
+  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+  padding: 40px 55px 45px 55px;
+  border-radius: 15px;
+  transition: all 0.3s;
+  margin-top: 100px;
+}
+
+.amazon-link {
+  color: #05444d !important
+}

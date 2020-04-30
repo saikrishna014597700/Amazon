@@ -81,4 +81,49 @@ router.get("/products/:categoryId", async (req, res) => {
   });
 });
 
+router.get("/all-sellers", async (req, res) => {
+  let msg = req.body;
+  msg.searchTerm = req.query.searchTerm;
+  msg.route = "get_all_sellers";
+  console.log("msg.searchTerm from backend:::", msg.searchTerm);
+  kafka.make_request("getAllSellers", msg, function (err, results) {
+    if (err) {
+      console.log("Errorrr", err);
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Success", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results);
+    }
+  });
+});
+
+router.get("/products-by-seller/:sellerId", async (req, res) => {
+  let msg = req.body;
+  msg.route = "products_by_seller";
+  msg.sellerId = req.params.sellerId;
+  // msg.searchTerm = req.query.searchTerm;
+
+  //   const { error } = validateAccount(req.body);
+  //   if (error) {
+  //     msg.error = error.details[0].message;
+  //     logger.error(msg);
+  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
+  //   }
+
+  kafka.make_request("getProductsBySeller", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      console.log("Result is", results.result);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
+
 module.exports = router;

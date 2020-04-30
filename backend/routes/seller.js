@@ -219,4 +219,83 @@ router.get("/sellerReports/:sellerId", async (req, res) => {
   });
 });
 
+router.put("/updateProfile/:sellerId", async (req, res) => {
+  let msg = {};
+  msg.body = req.body;
+  console.log("Req ody for add Pr", req.body, req.params);
+  msg.route = "update_profile";
+  msg.sellerId = req.params.sellerId;
+
+  //   const { error } = validateAccount(req.body);
+  //   if (error) {
+  //     msg.error = error.details[0].message;
+  //     logger.error(msg);
+  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
+  //   }
+
+  kafka.make_request("updateProfile", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      console.log("Result is", results.result);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
+
+router.post("/addAddress/:sellerId", async (req, res) => {
+  let msg = {};
+  msg.body = req.body;
+  console.log("Req ody for add Pr", req.body, req.params);
+  msg.route = "add_address";
+  msg.sellerId = req.params.sellerId;
+
+  //   const { error } = validateAccount(req.body);
+  //   if (error) {
+  //     msg.error = error.details[0].message;
+  //     logger.error(msg);
+  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
+  //   }
+
+  kafka.make_request("addAddress", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      console.log("Result is", results.result);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
+
+router.get("/profile/:sellerId", async (req, res) => {
+  let msg = req.body;
+  msg.route = "seller_profile";
+  msg.sellerId = req.params.sellerId;
+
+  //   const { error } = validateAccount(req.body);
+  //   if (error) {
+  //     msg.error = error.details[0].message;
+  //     logger.error(msg);
+  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
+  //   }
+
+  kafka.make_request("getSellerProfile", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      console.log("Result is", results.result);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
+
 module.exports = router;
