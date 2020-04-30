@@ -96,5 +96,25 @@ router.post("/signin", async (req, res) => {
   });
 });
 
+router.post("/userprofile", async (req, res) => {
+  let msg = req.body;
+  console.log("Req body for user profile", req.body);
+  msg.route = "user_profile";
+
+  kafka.make_request("userprofile", msg, function (err, results) {
+    console.log("Results are",results);
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+      
+    }
+  });
+});
+
 
 module.exports = router;

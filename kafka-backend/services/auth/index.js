@@ -2,6 +2,7 @@
 const { signup } = require("./signup");
 const {signin} = require("./signin")
 const {updatename} =require("./profile")
+const {userprofile}=require("./userprofile")
 
 let handle_request = (msg, callback) => {
   switch (msg.route) {
@@ -15,6 +16,10 @@ let handle_request = (msg, callback) => {
 
     case "update_name":
         updatename(msg,callback)
+        break;
+
+    case "user_profile":
+        userprofile(msg,callback)
         break;
 
     

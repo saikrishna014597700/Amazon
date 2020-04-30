@@ -2,21 +2,59 @@
 import React, { Component } from "react";
 import "./profile.css";
 import "./New folder/profile1.css";
-import "./New folder/profile1.css";
-import "./New folder/profile1.css";
-import "./New folder/profile1.css";
+import "./New folder/profile2.css";
+import "./New folder/profile3.css";
+import "./New folder/profile4.css";
 import axios from "axios"
+import {Card} from 'react-bootstrap'
+import {Link} from 'react-router-dom'
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
       cname:"",
+      trating:"",
+      treview:"",
       showModal: false,
       logout: false,
+      arr:[]
     };
     this.handleChange=this.handleChange.bind(this)
+    this.savename=this.savename.bind(this)
   }
+
+  async componentDidMount()
+  {
+    const data=
+    {
+      id: localStorage.getItem("id")
+    }
+    let ra=0
+    let rv=0
+    await axios
+    .post("http://localhost:3001/api/auth/userprofile/", data)
+    .then((response) => {
+      var x=response.data
+      var k=[]
+      console.log(x)
+      for(let i=0;i<x.length;i++)
+      {
+        k.push(x[i].reviewAndRatings)
+        if(x[i].reviewAndRatings.rating!=="")
+        ra+=1
+        if(x[i].reviewAndRatings.review!=="")
+        rv+=1
+      }
+      // console.log(ra," ",rv)
+      this.setState({
+        trating: ra,
+        treview: rv,
+        arr: response.data
+      })
+      console.log(this.state.arr)
+  });
+  };
 
   async handleChange(e) {
     this.setState({
@@ -47,6 +85,23 @@ class Profile extends Component {
   };
 
   render() {
+
+    let candr= this.state.arr.map((msg)=> 
+    {
+      // <p>List of Comments added:</p>
+      return(
+        <div class="card" style={{width:"500px",marginLeft:"500px"}}>
+        <div class="card-header">
+          Comment added on: {msg.productName}
+        </div>
+        <div class="card-body">
+          <p style={{fontWeight:"bold"}}><Link>{msg.reviewAndRatings[0].review} </Link></p>
+         
+        </div>
+      </div>
+
+      )
+    });
     return (
       <div>
        
@@ -97,6 +152,7 @@ class Profile extends Component {
             <div
               data-reactroot
               className="a-section profile-v5-desktop-background"
+              style={{marginTop:"15px"}}
             >
               <div className="a-section profile-v5-desktop">
                 <div
@@ -461,7 +517,7 @@ class Profile extends Component {
                        
                           <span className="a-button a-button-normal a-button-primary name-header-edit-profile-button">
                             <span className="a-button-inner">
-                              <button className="a-button-text" type="button" style={{width:"25%"}}>
+                              <button className="a-button-text" type="button" style={{width:"10px"}}>
                                 Edit your profile
                               </button>
                             </span>
@@ -601,7 +657,7 @@ class Profile extends Component {
             left: "0px",
           }}
         >
-          ...
+          
         </span>
         <span
           style={{
@@ -611,8 +667,25 @@ class Profile extends Component {
             left: "0px",
           }}
         >
-          ...
         </span>
+        <div class="card" style={{width:"500px",marginLeft:"500px"}}>
+  <div class="card-header">
+    Insights
+  </div>
+  <div class="card-body">
+    <table>
+    <tr>
+    <th style={{fontWeight:"bold"}}>  {this.state.trating}  </th>
+    <th style={{fontWeight:"bold"}}>   {this.state.treview}</th>
+</tr>
+    <tr><td><p>Votes</p></td>
+    <td><p>Comments</p> </td></tr>
+    </table>
+  </div>
+</div>
+{/* <p>List of comments:</p> */}
+{candr}
+
       </div>
     );
   }

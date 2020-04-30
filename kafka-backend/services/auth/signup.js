@@ -54,7 +54,7 @@ let signup = async (msg, callback) => {
       if(msg.role=="Seller")
       {
           
-          pool.query('SELECT * FROM `users` WHERE `name` = ? AND `role` = ?  AND `email` = ?', [msg.name, msg.role,msg.email],async function(error,result)
+          pool.query('SELECT * FROM `users` WHERE `name` = ?  OR `email` = ? AND `role` = ?', [msg.name, msg.email,msg.role],async function(error,result)
           {
              
               if(result.length)

@@ -346,7 +346,7 @@ a.a-link-emphasis:after {
   height: 6px;
   margin-top: -3px;
   background-position: -346px -86px;
-  vertical-align: top;
+  /* vertical-align: top; */
 }
 .a-hires a.a-icon-link-emphasis:after,
 .a-hires a.a-link-emphasis:after {
@@ -5481,7 +5481,7 @@ dl:last-child {
 dl dd,
 dl dt {
   display: inline-block;
-  float: left;
+  /* float: left; */
   padding: 0;
   margin: 0;
 }
@@ -6405,9 +6405,9 @@ ol.a-carousel {
 }
 .a-carousel-transition-slide .a-carousel,
 .a-carousel-transition-slide .a-carousel-card,
-.a-carousel-transition-slide .a-carousel-viewport {
+/* .a-carousel-transition-slide .a-carousel-viewport {
   -webkit-backface-visibility: hidden;
-}
+} */
 /* ******** */
 .a-viewoptions-section {
   position: relative;
@@ -7928,7 +7928,7 @@ ul.a-box-list a.a-switch-control {
 }
 .a-cardui[data-a-card-type="peekToggle"] .a-cardui-content {
   opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; */
   visibility: hidden;
 }
 .a-cardui[data-a-card-type="peekToggle"]
@@ -7939,7 +7939,7 @@ ul.a-box-list a.a-switch-control {
 }
 .a-cardui[data-a-card-type="peekToggle"] .a-cardui-teaser {
   opacity: 1;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; */
   visibility: visible;
   transition-delay: 0.2s;
 }
@@ -7950,7 +7950,7 @@ ul.a-box-list a.a-switch-control {
 .a-cardui[data-a-card-type="peekToggle"][data-a-expanded="true"]
   .a-cardui-content {
   opacity: 1;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; */
   visibility: visible;
   transition-delay: 0.2s;
 }
@@ -7961,7 +7961,7 @@ ul.a-box-list a.a-switch-control {
 .a-cardui[data-a-card-type="peekToggle"][data-a-expanded="true"]
   .a-cardui-teaser {
   opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  /* -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; */
   visibility: hidden;
   transition-delay: 0s;
 }
