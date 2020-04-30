@@ -142,4 +142,22 @@ router.post("/viewAllSellerProducts", async (req, res) => {
   });
 });
 
+router.get("/getProductDetails", async (req, res) => {
+  let msg = req.body;
+  msg.productId = req.query.productId;
+  console.log("request for get product details->", msg);
+  msg.route = "get_product_details";
+  kafka.make_request("getProductDetais", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
 module.exports = router;

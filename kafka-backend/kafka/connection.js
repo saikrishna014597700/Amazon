@@ -3,15 +3,15 @@ var kafka = require("kafka-node");
 const { kafkaURI } = require("../utils/config");
 
 function ConnectionProvider() {
-  this.getConsumer = function(topic_name) {
+  this.getConsumer = function (topic_name) {
     this.client = new kafka.KafkaClient(kafkaURI);
     this.kafkaConsumerConnection = new kafka.Consumer(this.client, [
       {
         topic: topic_name,
-        partition: 0
-      }
+        partition: 0,
+      },
     ]);
-    this.client.on("ready", function() {
+    this.client.on("ready", function () {
       console.log("Client ready!");
     });
 
@@ -19,7 +19,7 @@ function ConnectionProvider() {
   };
 
   //Code will be executed when we start Producer
-  this.getProducer = function() {
+  this.getProducer = function () {
     if (!this.kafkaProducerConnection) {
       this.client = new kafka.KafkaClient(kafkaURI);
       var HighLevelProducer = kafka.HighLevelProducer;

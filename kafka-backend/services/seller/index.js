@@ -4,6 +4,9 @@ const { getDeliveredOrderDetails } = require("./getDeliveredOrderDetails");
 const { getCancelledOrderDetails } = require("./getCancelledOrderDetails");
 const { getOpenOrderDetails } = require("./getOpenOrderDetails");
 const { sellerReports } = require("./sellerReports");
+const {
+  updateSellerTrackingDetails,
+} = require("./updateSellerTrackingDetails");
 const { productTrackingDetails } = require("./productTrackingDetails");
 const { getParticularOrderDetails } = require("./getParticularOrderDetails");
 
@@ -29,6 +32,9 @@ let handle_request = (msg, callback) => {
       break;
     case "seller_reports":
       sellerReports(msg, callback);
+      break;
+    case "update_seller_tracking_details":
+      updateSellerTrackingDetails(msg, callback);
       break;
   }
 };

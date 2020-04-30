@@ -21,7 +21,7 @@ let handle_request = (msg, callback) => {
       break;
     case "delete_product":
       deleteProduct(msg, callback);
-      break;
+      break;    
   }
 };
 

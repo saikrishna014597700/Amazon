@@ -21,7 +21,8 @@ import customerCards from "./components/customer/customerCards";
 import customerAddresses from "./components/customer/customerAddresses";
 import Navbar from "./components/common/navbar";
 import ProductDescription from "./components/product-module/productDescription";
-
+import Cart from "./components/cart-module/cart";
+import InventoryListings from "./components/admin-module/InventoryListings";
 
 //Create a Main Component
 class Main extends Component {
@@ -40,7 +41,7 @@ class Main extends Component {
           <Route path="/customerCards" component={customerCards} />
           <Route path="/customerAddresses" component={customerAddresses} />
           <Route path="/product" component={ProductDescription} />
-          {/* </Switch> */}
+          <Route path="/cart" component={Cart} />
           <Route path="/sellerOrders" component={SellerOrders} />
           <Route path="/sellerReports" component={SellerReports} />
           <Route path="/orderDetailPage/:id" component={OrderDetailPage} />
@@ -56,6 +57,7 @@ class Main extends Component {
             path="/editProductDetails/:id"
             component={EditProductDetails}
           />
+          <Route path="/inventory-listings" component={InventoryListings} />
         </div>
       </Router>
     );

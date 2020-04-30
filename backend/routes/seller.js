@@ -113,6 +113,35 @@ router.get("/getOpenOrderDetails/:sellerId", async (req, res) => {
   });
 });
 
+router.post("/updateSellerTrackingDetails", async (req, res) => {
+  let msg = req.body;
+  console.log("Req ody for add Pr", req.body, req.params);
+  msg.route = "update_seller_tracking_details";
+  msg.orderId = req.query.orderId;
+  msg.productId = req.query.productId;
+
+  //   const { error } = validateAccount(req.body);
+  //   if (error) {
+  //     msg.error = error.details[0].message;
+  //     logger.error(msg);
+  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
+  //   }
+
+  kafka.make_request("updateSellerTrackingDetails", msg, function (
+    err,
+    results
+  ) {
+    if (err) {
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
+
 router.get("/productTrackingDetails", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);

@@ -46,8 +46,8 @@ html,
   text-align: left;
 }
 
-.auth-inner {
-  width: 850px;
+.auth-inner1 {
+  width: 850px !important;
   margin: auto;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
@@ -124,9 +124,43 @@ html,
   flex-direction: column;
   justify-content: space-around;
 }
-.scrollable-dropdown{
+.scrollable-dropdown {
   height: auto;
-  max-height:320px;  /* Increase / Decrease value as per your need */
+  max-height: 320px; /* Increase / Decrease value as per your need */
   overflow-x: hidden;
 }
 
+.AddCart {
+  cursor: pointer;
+  background-color: #f5d47a;
+  color: #000;
+  text-align: center;
+  border: 1px solid #b38b22;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.SaveForLater {
+  cursor: pointer;
+  color: #000;
+  text-align: center;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+card.DelOptions {
+  cursor: pointer;
+  color: #000;
+  text-align: center;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  margin-top: "20px";
+  margin-left: "40px";
+  margin-right: "30px";
+}

@@ -6,14 +6,7 @@ import { Card, Icon, Image } from "semantic-ui-react";
 import $ from "jquery";
 import { Redirect } from "react-router";
 import logo from "./shoe.jpg";
-import { Link } from "react-router-dom";
-import {
-  XYPlot,
-  XAxis, // Shows the values on x axis
-  YAxis, // Shows the values on y axis
-  VerticalBarSeries,
-  LabelSeries,
-} from "react-vis";
+import { Bar, Line, Pie } from "react-chartjs-2";
 
 export default class SellerReports extends Component {
   constructor() {
@@ -22,11 +15,13 @@ export default class SellerReports extends Component {
       sellerReports: [],
       redirect: null,
       analyticsArrayState: [],
+      chartData: [],
     };
   }
 
   async componentDidMount() {
     var sellerId = "123";
+    console.log("componentDidMount");
     // console.log("orderId::", orderId);
     axios
       .get(`http://localhost:3001/api/seller/sellerReports/${sellerId}`)
@@ -50,8 +45,64 @@ export default class SellerReports extends Component {
         this.setState({
           analyticsArrayState: analyticsArray,
         });
+        console.log("componentWillMount");
+        var labels = [];
+        var data = [];
+        var backgroundColor = [];
+        // let report = this.state.sellerReports.map((order) => {});
+        this.state.sellerReports.map((order) => {
+          labels.push(order.product_name);
+          // labels.push("Hi");
+          data.push(order.product_sales_um);
+          backgroundColor.push("rgba(255,99,132,0.6)");
+        });
+
+        var state = {};
+        var datasets = [];
+        state.labels = labels;
+        var x = {};
+        x.label = "Productwise Sales Sum";
+        x.data = data;
+        x.backgroundColor = backgroundColor;
+        datasets.push(x);
+        state.datasets = datasets;
+        console.log("State is", state);
+        this.setState({
+          chartData: state,
+        });
+        console.log("State iss", this.state.chartData);
       });
   }
+
+  // async componentWillMount() {
+  //   console.log("componentWillMount");
+  //   var labels = [];
+  //   var data = [];
+  //   var backgroundColor = [];
+  //   // let report = this.state.sellerReports.map((order) => {});
+  //   this.state.sellerReports.map((order) => {
+  //     labels.push(order.product_name);
+  //     data.push(order.product_sales_um);
+  //     backgroundColor.push("rgba(255,99,132,0.6");
+  //   });
+
+  //   var state = {};
+  //   var datasets = [];
+  //   state.labels = labels;
+  //   var x = {};
+  //   x.label = "Productwise Sales Sum";
+  //   x.data = data;
+  //   x.backgroundColor = backgroundColor;
+  //   datasets.push(x);
+  //   state.datasets = datasets;
+  //   console.log("State is", state);
+  //   this.setState({
+  //     chartData: state,
+  //   });
+  //   console.log("State iss", this.state.chartData);
+  // }
+
+  getChartData() {}
 
   async redirectToProductsPage(event) {
     this.setState({ redirect: `/viewAllsellerOrders` });
@@ -62,7 +113,54 @@ export default class SellerReports extends Component {
       return <Redirect to={this.state.redirect} />;
     }
 
-    // let report = this.state.sellerReports.map((order) => {});
+    let graph = (
+      <div>
+        <Bar
+          data={this.state.chartData}
+          options={{
+            title: {
+              display: "Product wise Seller Sales SUm Graph",
+              text: "Seller Sales SUm Graph",
+              fontSize: 25,
+            },
+            // legend: {
+            //   display: "xx",
+            //   position: "yy",
+            // },
+          }}
+        />
+
+        <Line
+          data={this.state.chartData}
+          options={{
+            title: {
+              display: this.props.displayTitle,
+              text: "Largest Cities In " + this.props.location,
+              fontSize: 25,
+            },
+            legend: {
+              display: this.props.displayLegend,
+              position: this.props.legendPosition,
+            },
+          }}
+        />
+
+        <Pie
+          data={this.state.chartData}
+          options={{
+            title: {
+              display: this.props.displayTitle,
+              text: "Largest Cities In " + this.props.location,
+              fontSize: 25,
+            },
+            legend: {
+              display: this.props.displayLegend,
+              position: this.props.legendPosition,
+            },
+          }}
+        />
+      </div>
+    );
 
     let report = this.state.sellerReports.map((order) => {
       return (
@@ -128,6 +226,7 @@ export default class SellerReports extends Component {
 
             {report}
           </div>
+          {graph}
         </div>
       </div>
     );
