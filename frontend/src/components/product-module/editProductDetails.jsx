@@ -89,7 +89,7 @@ export default class EditProductDetails extends Component {
       console.log("P name", sellerProduct.productName);
       return (
         <div className="auth-wrapper">
-          <div className="auth-inner">
+          <div className="auth-inner1">
             <div className="container">
               <div className="row2">
                 <div className="panel panel-primary">

@@ -109,9 +109,6 @@ export default class SellerOrders extends Component {
                         marginLeft: "20px",
                       }}
                     >
-                      <h5 class="card-title">
-                        {orderProduct.productTracking.status}
-                      </h5>
                       <p class="card-text">
                         <a href="#" class="card-link">
                           {orderProduct.product.productName}
@@ -272,9 +269,6 @@ export default class SellerOrders extends Component {
                         marginLeft: "20px",
                       }}
                     >
-                      <h5 class="card-title">
-                        {orderProduct.productTracking.status}
-                      </h5>
                       <p class="card-text">
                         <a href="#" class="card-link">
                           {orderProduct.product.productName}
@@ -435,9 +429,6 @@ export default class SellerOrders extends Component {
                         marginLeft: "20px",
                       }}
                     >
-                      <h5 class="card-title">
-                        {orderProduct.productTracking.status}
-                      </h5>
                       <p class="card-text">
                         <a href="#" class="card-link">
                           {orderProduct.product.productName}

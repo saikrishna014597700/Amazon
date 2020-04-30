@@ -148,7 +148,7 @@ export default class AddProduct extends Component {
     return (
       <div>
         <div className="auth-wrapper">
-          <div className="auth-inner">
+          <div className="auth-inner1">
             <div className="container">
               <div className="row2">
                 <div className="panel panel-primary">

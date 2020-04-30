@@ -15,6 +15,10 @@ export default class ProductTrackingDetails extends Component {
       sellerOrder: [],
       redirect: null,
       productDetail: [],
+      productId: "",
+      orderId: "",
+      editTrackingFlag: false,
+      trackingStatus: "",
     };
   }
 
@@ -24,7 +28,13 @@ export default class ProductTrackingDetails extends Component {
     var res = patt.exec(this.props.match.url);
     console.log("Reg res are::", res[1]);
     if (res[1]) var productId = res[1];
-    if (orderId && productId)
+    if (orderId && productId) {
+      this.setState({
+        orderId: orderId,
+      });
+      this.setState({
+        productId: productId,
+      });
       axios
         .get(
           `http://localhost:3001/api/seller/productTrackingDetails/?orderId=${orderId}&productId=${productId}`
@@ -40,10 +50,51 @@ export default class ProductTrackingDetails extends Component {
             ),
           });
         });
+    }
   }
+
+  editTrackingDetails = (event, pid, orderId) => {
+    this.setState({
+      editTrackingFlag: true,
+    });
+  };
 
   async redirectToProductsPage(event) {
     this.setState({ redirect: `/viewAllsellerOrders` });
+  }
+
+  handleTrackingStatusChange = (e) => {
+    this.setState({
+      trackingStatus: e.target.value,
+    });
+  };
+
+  updateTrackingDetails() {
+    const data = {
+      trackingStatus: this.state.trackingStatus,
+    };
+    axios
+      .post(
+        `http://localhost:3001/api/seller/updateSellerTrackingDetails/?orderId=${this.state.orderId}&productId=${this.state.productId}`,
+        data
+      )
+      .then((response) => {
+        console.log("Pro are::", response.data);
+        this.setState({
+          sellerOrder: [],
+        });
+        this.setState({
+          productDetail: [],
+        });
+        this.setState({
+          sellerOrder: this.state.sellerOrder.concat(response.data),
+        });
+        this.setState({
+          productDetail: this.state.productDetail.concat(
+            response.data.products[0].trackingInfo
+          ),
+        });
+      });
   }
 
   render() {
@@ -51,7 +102,70 @@ export default class ProductTrackingDetails extends Component {
       return <Redirect to={this.state.redirect} />;
     }
 
+    let editTDetails = null;
+    if (this.state.editTrackingFlag) {
+      editTDetails = (
+        <div className="card">
+          <div className="card-header">
+            <p>Update Tracking Details:</p>
+          </div>
+          <div className="card-body" style={{ marginLeft: "5px" }}>
+            <div className="row">
+              <br />
+              <br />
+              <select
+                style={{
+                  width: "200px",
+                  height: "50px",
+                  backgroundColor: "#e7eae8",
+                  borderTopLeftRadius: "5px",
+                  borderBottomLeftRadius: "5px",
+                  fontSize: "16px",
+                  marginLeft: "10px",
+                }}
+                placeholder="Tracking Detail"
+                defaultValue="Select a status"
+                name="trackingStatus"
+                onChange={(e) => this.handleTrackingStatusChange(e)}
+              >
+                <option value="Packing">Packing</option>
+                <option value="Out for Shipping">Out for Shipping</option>
+              </select>
+            </div>
+            <button
+              className="Amazon"
+              onClick={(e) => this.setState({ editTrackingFlag: false })}
+              style={{
+                float: "right",
+                marginBottom: "5px",
+                width: "80px",
+                fontSize: "20px",
+              }}
+            >
+              {" "}
+              Cancel
+            </button>
+            <button
+              className="Amazon"
+              onClick={(e) => this.updateTrackingDetails()}
+              style={{
+                float: "right",
+                marginBottom: "5px",
+                marginRight: "5px",
+                width: "80px",
+                fontSize: "20px",
+              }}
+            >
+              {" "}
+              Update
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     let trackingDetails = this.state.productDetail.map((order) => {
+      console.log("Exce", order);
       return (
         <div>
           <br />
@@ -61,9 +175,10 @@ export default class ProductTrackingDetails extends Component {
           >
             <br />
             <h6 class="card-title">{order.trackingStatus}</h6>
+
             <h6 class="card-text">
-              {order.trackingAddress.street} + {order.trackingAddress.city} +{" "}
-              {order.trackingAddress.state}+ {order.trackingAddress.zip_code}
+              {order.trackingAddress?.street} {order.trackingAddress?.city}{" "}
+              {order.trackingAddress?.state} {order.trackingAddress?.zip_code}
             </h6>
             <h6 class="card-text">{order.createDate}</h6>
             <br />
@@ -146,7 +261,29 @@ export default class ProductTrackingDetails extends Component {
       <div>
         <div className="auth-wrapper">
           <div className="auth-inner">
-            <h4>Tracking Details</h4>
+            <h4>
+              Tracking Details
+              <button
+                className="Amazon"
+                onClick={(e) =>
+                  this.editTrackingDetails(
+                    this.state.orderId,
+                    this.state.productId
+                  )
+                }
+                style={{
+                  float: "right",
+                  marginRight: "5px",
+                  width: "80px",
+                  fontSize: "20px",
+                }}
+              >
+                {" "}
+                Edit
+              </button>
+            </h4>
+            <br />
+            {editTDetails}
             <br />
             {order}
           </div>

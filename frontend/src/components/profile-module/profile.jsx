@@ -1,43 +1,40 @@
-
 import React, { Component } from "react";
 import "./profile.css";
 import "./New folder/profile1.css";
 import "./New folder/profile1.css";
 import "./New folder/profile1.css";
 import "./New folder/profile1.css";
-import axios from "axios"
+import axios from "axios";
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cname:"",
+      cname: "",
       showModal: false,
       logout: false,
     };
-    this.handleChange=this.handleChange.bind(this)
+    this.handleChange = this.handleChange.bind(this);
   }
 
   async handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
     });
-    console.log(e.target.value)
-  };
+    console.log(e.target.value);
+  }
 
-  async savename()
-  {
-    const data=
-    {
-      name: this.state.name
-    }
+  async savename() {
+    const data = {
+      name: this.state.name,
+    };
     await axios
-    .post("http://localhost:3001/api/auth/profile/", data)
-    .then((response) => {
-      this.setState({
-        msg: "Updated"
-      })
-  });
+      .post("http://localhost:3001/api/auth/profile/", data)
+      .then((response) => {
+        this.setState({
+          msg: "Updated",
+        });
+      });
   }
 
   handleImageChange = (e) => {
@@ -49,7 +46,6 @@ class Profile extends Component {
   render() {
     return (
       <div>
-       
         <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
         {/* sp:feature:cs-optimization */}
         <meta httpEquiv="x-dns-prefetch-control" content="on" />
@@ -347,7 +343,7 @@ class Profile extends Component {
                           >
                             <img
                               alt=""
-                              src={require("../product-module/shoe.jpg") }
+                              src={require("../product-module/shoe.jpg")}
                               id="avatar-image"
                             />
                             <div className="a-section">
@@ -439,9 +435,8 @@ class Profile extends Component {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="desktop padded card name-header-card">
-                 
                   <div className="a-row">
                     <div
                       id="customer-profile-name-header"
@@ -450,28 +445,33 @@ class Profile extends Component {
                       <div className="a-row header" />
                       <div className="a-row a-spacing-none name-container">
                         <span className="a-size-extra-large">
-                          <input type="text" name="name" defaultValue={localStorage.getItem("name") } onChange={this.handleChange} />
+                          <input
+                            type="text"
+                            name="name"
+                            defaultValue={localStorage.getItem("name")}
+                            onChange={this.handleChange}
+                          />
                           <button onClick={this.savename}>Save</button>
                         </span>
-                       
                       </div>
                       <div className="a-section desktop inline-edit-container" />
                       <div className="name-header-footer-placeholder" />
                       <div className="a-row name-header-footer-container">
-                       
-                          <span className="a-button a-button-normal a-button-primary name-header-edit-profile-button">
-                            <span className="a-button-inner">
-                              <button className="a-button-text" type="button" style={{width:"25%"}}>
-                                Edit your profile
-                              </button>
-                            </span>
+                        <span className="a-button a-button-normal a-button-primary name-header-edit-profile-button">
+                          <span className="a-button-inner">
+                            <button
+                              className="a-button-text"
+                              type="button"
+                              style={{ width: "25%" }}
+                            >
+                              Edit your profile
+                            </button>
                           </span>
-                     
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
-               
               </div>
             </div>
           </div>
@@ -480,7 +480,7 @@ class Profile extends Component {
             type="text/css"
             href="./profile_files/customer-profile-website._V433198964_.css"
           />
-        
+
           <style
             type="text/css"
             dangerouslySetInnerHTML={{

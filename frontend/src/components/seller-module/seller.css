@@ -39,6 +39,25 @@ html,
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
 }
 
+.Amazon {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  display: inline-flex;
+  text-decoration: none;
+  background-color: #f5d47a;
+  color: #000;
+  text-align: center;
+  width: 350px;
+  border: 1px solid #b38b22;
+  border-radius: 3px;
+  font-weight: 400;
+  line-height: 28px;
+  justify-content: center;
+  align-items: center;
+}
+
 .auth-wrapper {
   display: flex;
   justify-content: center;
@@ -47,7 +66,7 @@ html,
 }
 
 .auth-inner {
-  width: 1200px;
+  width: 1200px !important;
   margin: auto;
   background: #ffffff;
   box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);

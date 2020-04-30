@@ -13,13 +13,16 @@ let getSellerOrders = async (msg, callback) => {
   const today = moment();
   var ordersProductsIdArray = [];
 
+  //order the orders by create_date
+
   try {
     var resultArray = [];
     pool.query(
       `SELECT order_Id, GROUP_CONCAT(product_id) as product_id,GROUP_CONCAT(quantity) as quantity
     FROM map_order_product
     WHERE sellerId = "123"
-    GROUP BY order_Id`,
+    GROUP BY order_Id
+      ORDER BY create_date ASC`,
       async (err, sqlResult) => {
         if (sqlResult && sqlResult.length > 0) {
           Object.keys(sqlResult).forEach(function (key) {
