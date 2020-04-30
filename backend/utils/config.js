@@ -12,6 +12,10 @@ const config = {
   awsAccessKey: "",
   awsSecretAccessKey: "",
   awsPermission: "public-read",
+  redisHost: "54.173.125.207",
+  redisPort: 6379,
+  mongoDBURI:
+    "mongodb+srv://amazonuser:amazonuser@amazoncluster-zqunn.mongodb.net/amazonDB?retryWrites=true&w=majority",
 };
 
 module.exports = config;
