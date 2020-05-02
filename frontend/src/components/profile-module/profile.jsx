@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import "./profile.css";
 import "./New folder/profile1.css";
 import "./New folder/profile2.css";

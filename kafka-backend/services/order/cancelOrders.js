@@ -5,7 +5,7 @@ const moment = require("moment");
 var mongoose = require("mongoose");
 // const redisClient = require("../../utils/redisConfig");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
-
+const pool = require("../../utils/mysqlConnection");
 
 
 let cancelOrders = async (msg, callback) => {
@@ -13,9 +13,17 @@ let cancelOrders = async (msg, callback) => {
     let err = {};
     const today = moment();
     try {
-      console.log("msg iss", msg )
+      console.log("msg iss", msg , "Queryy::", `update map_order_product set status = "Cancelled" where order_Id =  "${msg.orderId}" and product_id = "${msg.prodId}"`)
      await orders.updateOne({_id:msg.orderId,  products: { $elemMatch: { productId: msg.prodId } }},
      {$set:{"products.$.status": "Cancelled" }}).then(async function (error, res){
+        pool.query(`update map_order_product set status = "Cancelled" where order_Id =  "${msg.orderId}" and product_id = "${msg.prodId}"` , async(err,sqlResult) =>{
+          if(!err){
+          console.log("updated mysql")
+          }else{
+            console.log("error, error !!", err)
+          }
+        })
+
          console.log('resssss', res, "Error:", error )
           response.data = "Cancelled the Product!"
           
