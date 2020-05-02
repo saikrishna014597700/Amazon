@@ -11,6 +11,14 @@ const logger = require("../utils/logger");
 const jwt = require('jsonwebtoken');
 const { auth } = require("../utils/passport");
 const cookie= require('react-cookies')
+const multer = require('multer');
+const path = require('path');
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, '..') + '/uploads',
+  filename: (req, file, callback) => {
+      callback(null, file.originalname);
+  }
+});
 auth();
 
 
@@ -42,8 +50,10 @@ router.post("/signup", async (req, res) => {
 router.post("/profile", async (req, res) => {
   let msg = req.body;
   console.log("Req body for profile", req.body);
+  console.log("tye",typeof(msg.user_image))
   msg.route = "update_name";
-
+  if(req.body.files)
+  console.log("Files here")
   kafka.make_request("updatename", msg, function (err, results) {
     console.log("Results are",results);
     if (err) {
@@ -103,6 +113,8 @@ router.post("/userprofile", async (req, res) => {
 
   kafka.make_request("userprofile", msg, function (err, results) {
     console.log("Results are",results);
+    if(req.files)
+    console.log("Files here")
     if (err) {
       msg.error = err.data;
       logger.error(msg);

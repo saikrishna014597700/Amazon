@@ -30,9 +30,7 @@ export default class Login extends Component {
     await axios
       .post("http://localhost:3001/api/auth/signin/", data)
       .then((response) => {
-        this.setState({
-          msg: ""
-        })
+       
 		if(response.data=="Invalid Inputs")
 		this.setState({
 			msg: "Invalid Username/password"
@@ -58,6 +56,19 @@ export default class Login extends Component {
 		let redirectvar=null
 		if(this.state.msg=="Customer")
 		redirectvar= <Redirect to="/profile" />
+	// 	if(this.state.msg="Invalid Username/password")
+	// {
+	// 	redirectvar= (<div class="a-section a-spacing-base auth-pagelet-container">
+	// 	<div class="a-section">
+	// 		<div id="auth-error-message-box" class="a-box a-alert a-alert-error auth-server-side-message-box a-spacing-base"><div class="a-box-inner a-alert-container"><h4 class="a-alert-heading">Important Message!</h4><i class="a-icon a-icon-alert"></i><div class="a-alert-content">
+	// 			<ul class="a-unordered-list a-nostyle a-vertical a-spacing-none">
+	// 				<li><span class="a-list-item">
+	// 					Invalid credentials. Please check your username and password.
+	// 		</span></li>
+	// 			</ul>
+	// 		</div></div></div>
+	// 	</div>
+	// </div>)}
 		
         return (
            <div >
