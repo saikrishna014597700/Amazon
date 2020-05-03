@@ -4,6 +4,7 @@ import { Form, Button, FormGroup } from "react-bootstrap";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import "./style.css"
+import { Redirect } from "react-router";
 
 export default class customerAddresses extends Component {
   constructor() {

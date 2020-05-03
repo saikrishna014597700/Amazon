@@ -3,6 +3,8 @@ import { Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "../login-module/login.css"
+import { Redirect } from "react-router";
+
 
 class SignUp extends Component {
   constructor(props) {
@@ -44,7 +46,7 @@ class SignUp extends Component {
 
     let redirectVar = null
     if(localStorage.getItem("id")){
-      redirectvar= <Redirect to="/home" />
+      redirectVar= <Redirect to="/home" />
     }
     return (
       <div>
