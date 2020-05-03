@@ -24,7 +24,7 @@ export default class customerAddresses extends Component {
       }
     }
     console.log("selectedAddress::", selectedAddress)
-    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerAddresses/?userId=" + 29, selectedAddress).then((res) => {
+    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerAddresses/?userId=" + localStorage.getItem("id"), selectedAddress).then((res) => {
 
       console.log("addresses::", res.data)
       this.setState({
@@ -43,7 +43,7 @@ export default class customerAddresses extends Component {
         selectedAddress = address;
       }
     }
-    await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerAddress/?userId=" + 29, selectedAddress).then((res) => {
+    await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerAddress/?userId=" + localStorage.getItem("id"), selectedAddress).then((res) => {
 
       console.log("addresses::", res.data)
       this.setState({
@@ -88,7 +88,7 @@ export default class customerAddresses extends Component {
   }
   async componentDidMount() {
 
-    var data = 29;
+    var data = localStorage.getItem("id");
 
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" + data).then((res) => {
 
@@ -101,7 +101,7 @@ export default class customerAddresses extends Component {
   }
 
   async cancelAddress(){
-    var data = 29;
+    var data = localStorage.getItem("id");
 
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" + data).then((res) => {
 
@@ -131,6 +131,13 @@ export default class customerAddresses extends Component {
 
   render() {
 
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }
+    else if (localStorage.getItem("id") && !(localStorage.getItem("role") === "Customer")){
+      redirectVar = <Redirect to= "/login"/>
+    }
 
     let customerAddresses = this.state.addresses.map((address) => {
       return (
@@ -209,9 +216,10 @@ export default class customerAddresses extends Component {
 
     return (
       <div style={{ marginTop: "50px" }}>
-        <h4>Your payment options</h4>
+        {redirectVar}
+        <h4>Your Saved Addresses</h4>
         <div className="auth-wrapper">
-            <div className="auth-inner">
+            <div className="auth-innerStyle">
         {customerAddresses}
 
         <button  className = "Amazon" style = {{width:"130px"}}onClick={e => this.addAddress()}> Add Address

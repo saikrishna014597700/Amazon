@@ -41,8 +41,14 @@ class SignUp extends Component {
   }
 
   render() {
+
+    let redirectVar = null
+    if(localStorage.getItem("id")){
+      redirectvar= <Redirect to="/home" />
+    }
     return (
       <div>
+        {redirectVar}
         <div className="auth-wrapper">
           <div className="auth-inner">
             <div className="container">

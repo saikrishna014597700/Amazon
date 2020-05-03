@@ -24,7 +24,7 @@ export default class customerCards extends Component {
       }
     }
     console.log("selectedCard::", selectedCard)
-    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" + 29, selectedCard).then((res) => {
+    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" + localStorage.getItem("id"), selectedCard).then((res) => {
 
       console.log("cards::", res.data)
       this.setState({
@@ -43,7 +43,7 @@ export default class customerCards extends Component {
         selectedCard = card;
       }
     }
-    await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerCard/?userId=" + 29, selectedCard).then((res) => {
+    await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerCard/?userId=" + localStorage.getItem("id"), selectedCard).then((res) => {
 
       console.log("cards::", res.data)
       this.setState({
@@ -84,7 +84,7 @@ export default class customerCards extends Component {
   }
   async componentDidMount() {
 
-    var data = 29;
+    var data = localStorage.getItem("id");
 
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" + data).then((res) => {
 
@@ -97,7 +97,7 @@ export default class customerCards extends Component {
   }
 
   async cancelCard(){
-    var data = 29;
+    var data = localStorage.getItem("id");
 
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" + data).then((res) => {
 
@@ -127,6 +127,13 @@ export default class customerCards extends Component {
 
   render() {
 
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }
+    else if (localStorage.getItem("id") && !(localStorage.getItem("role") === "Customer")){
+      redirectVar = <Redirect to= "/login"/>
+    }
 
     let customerCards = this.state.cards.map((card) => {
       return (
@@ -189,9 +196,10 @@ export default class customerCards extends Component {
 
     return (
       <div style={{ marginTop: "50px" }}>
+        {redirectVar}
         <h4>Your payment options</h4>
         <div className="auth-wrapper">
-            <div className="auth-inner">
+            <div className="auth-innerStyle">
         {customerCards}
 
         <button  className = "Amazon" style = {{width:"100px"}}onClick={e => this.addCard()}> Add Card

@@ -10,7 +10,7 @@ const {
 const { productTrackingDetails } = require("./productTrackingDetails");
 const { getParticularOrderDetails } = require("./getParticularOrderDetails");
 const { updateProfile } = require("./updateProfile");
-const { addAddress } = require("./addAddress");
+//const { addAddress } = require("./addAddress");
 const { getSellerProfile } = require("./sellerProfile");
 
 let handle_request = (msg, callback) => {
@@ -42,9 +42,9 @@ let handle_request = (msg, callback) => {
     case "update_profile":
       updateProfile(msg, callback);
       break;
-    case "add_address":
-      addAddress(msg, callback);
-      break;
+    // case "add_address":
+    //   addAddress(msg, callback);
+    //   break;
     case "seller_profile":
       getSellerProfile(msg, callback);
       break;

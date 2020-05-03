@@ -5,9 +5,9 @@ import "./New folder/profile1.css";
 import "./New folder/profile2.css";
 import "./New folder/profile3.css";
 import "./New folder/profile4.css";
-import axios from "axios"
 import {Card,Button} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
+import { Redirect } from "react-router";
 
 class Profile extends Component {
   constructor(props) {
@@ -89,6 +89,11 @@ class Profile extends Component {
 
   render() {
 
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+        
+    }
     let candr= this.state.arr.map((msg)=> 
     {
       // <p>List of Comments added:</p>
@@ -107,6 +112,7 @@ class Profile extends Component {
     });
     return (
       <div>
+        {redirectVar}
         <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
         {/* sp:feature:cs-optimization */}
         <meta httpEquiv="x-dns-prefetch-control" content="on" />

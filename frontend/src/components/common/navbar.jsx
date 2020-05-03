@@ -16,14 +16,25 @@ class Navbar extends Component {
       searchCategory: "All",
       searchTerm: "",
       rating: 4.3,
-      active:false
+      active:false,
+      redirectVar :null
     };
     this.onMenuClick = this.onMenuClick.bind(this)
+    this.handleLogout = this.handleLogout.bind(this);
   }
   
   onMenuClick(){
       const currentState = this.state.active;
       this.setState({active:!currentState});
+  }
+
+  handleLogout(){
+    localStorage.removeItem("id");
+    localStorage.removeItem("role");
+    localStorage.removeItem("name");
+    this.setState({
+      redirectVar : <Redirect to= "/login"/>
+    })
   }
 
   componentDidMount() {}
@@ -59,9 +70,10 @@ class Navbar extends Component {
   render() {
     let navLogin = null;
     let image = null;
-
+    let navBar = null
     let headers = this.state.headerArray.map((header) => {
       return (
+       
         <ul className="nav navbar-nav" key={header.tab_name}>
           <li>
             <Link
@@ -72,6 +84,7 @@ class Navbar extends Component {
             </Link>
           </li>
         </ul>
+
       );
     });
 
@@ -81,8 +94,11 @@ class Navbar extends Component {
         src ={require("../../utils/navBarLogo.jpg") }
       />
     );
-
-   let navBar = (
+    if(!localStorage.getItem("id")){
+      navBar = ""
+      
+  }else{
+    navBar = (
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style={{backgroundColor:"#232f3e",marginTop:"2px"}}>
      <div class="collapse navbar-collapse" id="navbarSupportedContent" style={{backgroundColor:"#232f3e",margin:"-20px"}}>
       
@@ -146,16 +162,19 @@ class Navbar extends Component {
         <li className="nav-item dropdown" style={{marginTop:-4}}>
           <a className="nav-link" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style={{color:"white",width:"150%",marginTop:"20px",fontSize:"12px",fontWeight:"bold",fontFamily:"sans-serif"}}>
             <div style={{fontSize:11.5,color:"#cccccc",fontWeight:"normal"}}>
-            Hello, KailashNath<br></br></div>
+            Hello, {localStorage.getItem("name")}<br></br></div>
             <div style={{fontSize:13,fontWeight:"bold"}}>
             Account & Lists<span class="caret" style={{color:"#cccccc"}}></span>
             </div>
           </a>
           <div className="dropdown-menu" aria-labelledby="navbarDropdown" style={{marginTop:-25,marginLeft:15}}>
-            <a className="dropdown-item" href="#">Action</a>
+             <a className="dropdown-item" href="/profile"> Your Profile</a>
+            <a className="dropdown-item" href="/orders"> Your Orders</a>
+            <a className="dropdown-item" href="/customerCards"> Your Cards</a>
+            <a className="dropdown-item" href="/customerAddresses"> Your Addresses</a>
             <a className="dropdown-item" href="#">Another action</a>
             <div className="dropdown-divider"></div>
-            <a className="dropdown-item" href="#">Something else here</a>
+            <a className="dropdown-item" onClick = {this.handleLogout}>Logout</a>
           </div>
         </li>
 
@@ -179,9 +198,10 @@ class Navbar extends Component {
      
     </div>
   </nav>);
-   
+  }
     return (
       <div>
+        {this.state.redirectVar}
         {navBar}
         {/* </nav> */}
       </div>

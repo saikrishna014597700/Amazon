@@ -27,7 +27,7 @@ export default class orders extends Component {
   async componentDidMount() {
     var sellerId = "123";
     axios
-      .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + 1)
+      .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
       .then((response) => {
         console.log("Pro are::", response);
         this.setState({
@@ -36,7 +36,7 @@ export default class orders extends Component {
         //console.log("Pro are::", this.state.orders);
       });
       axios
-      .get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + 1)
+      .get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
       .then((response) => {
         console.log("Cncelled orders are::", response);
         
@@ -56,7 +56,7 @@ export default class orders extends Component {
     await axios.post("http://localhost:3001/api/orders/cancelOrder", payload).then(async (res) => {
         console.log('response is::', res)
         alert(res.data)
-       await axios.get("http://localhost:3001/api/orders/getAllOrders/?userId=" + 1)
+       await axios.get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
       .then((response) => {
         console.log("Pro are::", response);
         this.setState({
@@ -394,7 +394,7 @@ export default class orders extends Component {
     return (
       <div>
         <div className="auth-wrapper">
-          <div className="auth-inner">
+          <div className="auth-inner3">
             <h3>Your Orders</h3>
             <br />
             <br />
