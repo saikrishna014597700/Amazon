@@ -54,6 +54,10 @@ export default class Login extends Component {
 	
     render() {
 		let redirectvar=null
+
+		if(localStorage.getItem("id")){
+			redirectvar= <Redirect to="/home" />
+		}
 		if(this.state.msg=="Customer")
 		redirectvar= <Redirect to="/home" />
 	// 	if(this.state.msg="Invalid Username/password")

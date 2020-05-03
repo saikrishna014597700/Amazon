@@ -20,7 +20,7 @@ export default class SellerReports extends Component {
   }
 
   async componentDidMount() {
-    var sellerId = "123";
+    var sellerId = localStorage.getItem("id");
     console.log("componentDidMount");
     // console.log("orderId::", orderId);
     axios
@@ -113,6 +113,14 @@ export default class SellerReports extends Component {
       return <Redirect to={this.state.redirect} />;
     }
 
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }else{
+      if(localStorage.getItem("role") != "Seller"){
+        redirectVar = <Redirect to= "/login"/>
+      }
+    }
     let graph = (
       <div>
         <Bar
@@ -199,6 +207,7 @@ export default class SellerReports extends Component {
 
     return (
       <div className="auth-wrapper">
+        {redirectVar}
         <div className="auth-inner">
           <div class="card text-center">
             <div class="card-header">

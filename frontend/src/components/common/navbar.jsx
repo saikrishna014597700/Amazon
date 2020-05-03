@@ -88,6 +88,39 @@ class Navbar extends Component {
       );
     });
 
+    let dropdowns = null;
+
+    if(localStorage.getItem("id")){
+
+      if(localStorage.getItem("role")==="Customer"){
+        dropdowns = (
+          <div>
+          <a className="dropdown-item" href="/profile"> Your Profile</a>
+            <a className="dropdown-item" href="/orders"> Your Orders</a>
+            <a className="dropdown-item" href="/customerCards"> Your Cards</a>
+            <a className="dropdown-item" href="/customerAddresses"> Your Addresses</a>
+            <a className="dropdown-item" href="#">Another action</a>
+            </div>)
+      }else if (localStorage.getItem("role")==="Seller"){
+        dropdowns = (
+          <div>
+          <a className="dropdown-item" href="/sellerProfile"> Your Profile</a>
+            <a className="dropdown-item" href="/viewAllSellerProducts"> Your Inventory</a>
+            <a className="dropdown-item" href="/addProduct"> Add Products</a>
+            <a className="dropdown-item" href="/sellerOrders"> Your Orders</a>
+            <a className="dropdown-item" href="/sellerReports"> Your Reports</a>
+            <a className="dropdown-item" href="#">Another action</a>
+            </div>)
+
+      }else{
+        dropdowns = (
+          <div>
+          <a className="dropdown-item" href="/inventory-listings"> Inventory Listings</a>
+          </div>
+        )
+      }
+    }
+
     image = (
       <img
         style={{width:"120px",height:"40px", marginRight:"20px"}}
@@ -168,11 +201,7 @@ class Navbar extends Component {
             </div>
           </a>
           <div className="dropdown-menu" aria-labelledby="navbarDropdown" style={{marginTop:-25,marginLeft:15}}>
-             <a className="dropdown-item" href="/profile"> Your Profile</a>
-            <a className="dropdown-item" href="/orders"> Your Orders</a>
-            <a className="dropdown-item" href="/customerCards"> Your Cards</a>
-            <a className="dropdown-item" href="/customerAddresses"> Your Addresses</a>
-            <a className="dropdown-item" href="#">Another action</a>
+            {dropdowns}
             <div className="dropdown-divider"></div>
             <a className="dropdown-item" onClick = {this.handleLogout}>Logout</a>
           </div>

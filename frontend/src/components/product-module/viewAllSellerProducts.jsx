@@ -34,7 +34,7 @@ export default class viewAllSellerProducts extends Component {
 
   async componentDidMount() {
     const payload = {
-      sellerId: "123",
+      sellerId: localStorage.getItem("id"),
     };
     axios
       .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
@@ -49,7 +49,7 @@ export default class viewAllSellerProducts extends Component {
 
   async viewAllSellerProducts(event) {
     const payload = {
-      sellerId: "123",
+      sellerId: localStorage.getItem("id"),
     };
     axios
       .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
@@ -75,6 +75,14 @@ export default class viewAllSellerProducts extends Component {
   }
 
   render() {
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }else{
+      if(localStorage.getItem("role") != "Seller"){
+        redirectVar = <Redirect to= "/login"/>
+      }
+    }
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
@@ -176,7 +184,9 @@ export default class viewAllSellerProducts extends Component {
         </div>
       );
     });
-    return <div className="row">{sellerProducts}</div>;
+    return <div className="row">
+      {redirectVar}
+      {sellerProducts}</div>;
   }
 }
 

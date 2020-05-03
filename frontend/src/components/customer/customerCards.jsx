@@ -155,6 +155,7 @@ export default class customerCards extends Component {
                   </p>
                 </div>
                 <div className="card-body" style={{ marginLeft: "5px" }}>
+                  <form id = "cardForm">
                   <div className="row">
                     <div className="col-sm">
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>Card Number</p>
@@ -184,6 +185,7 @@ export default class customerCards extends Component {
                   <button hidden={!card.editFlag} className = "Amazon" onClick={e => this.saveCard(card._id)} style={{ float: "right", marginBottom: "5px",marginRight:"5px",width:"50px" }}> Save
                   </button>
 
+                </form>
                   
                 </div>
 
