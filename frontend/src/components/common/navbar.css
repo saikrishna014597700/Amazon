@@ -170,3 +170,7 @@ html,
 .menu-btn.open .menu-toggler::after {
   transform: rotate(-45deg) translate(13px, 13px);
 }
+input[type="text"]{
+  border-radius: 0px !important;
+  border-width: 0px !important;
+}

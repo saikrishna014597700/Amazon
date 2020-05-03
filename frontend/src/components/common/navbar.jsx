@@ -22,10 +22,10 @@ class Navbar extends Component {
     this.onMenuClick = this.onMenuClick.bind(this)
     this.handleLogout = this.handleLogout.bind(this);
   }
-  
-  onMenuClick(){
-      const currentState = this.state.active;
-      this.setState({active:!currentState});
+
+  onMenuClick() {
+    const currentState = this.state.active;
+    this.setState({ active: !currentState });
   }
 
   handleLogout(){
@@ -65,7 +65,6 @@ class Navbar extends Component {
       searchTerm: e.target.value,
     });
   }
-
 
   render() {
     let navLogin = null;
@@ -122,10 +121,12 @@ class Navbar extends Component {
     }
 
     image = (
-      <img
-        style={{width:"120px",height:"40px", marginRight:"20px"}}
-        src ={require("../../utils/navBarLogo.jpg") }
-      />
+      <Link to={"/home"} style={{ color: "white", fontWeight: "bold" }}>
+        <img
+          style={{ width: "120px", height: "40px", marginRight: "20px" }}
+          src={require("../../utils/navBarLogo.jpg")}
+        />
+      </Link>
     );
     if(!localStorage.getItem("id")){
       navBar = ""
@@ -141,47 +142,28 @@ class Navbar extends Component {
             <div className={this.state.active? "menu-btn open": "menu-btn"} onClick={this.onMenuClick} style={{marginLeft:"15px"}}>
                 <div className="menu-toggler">
                 </div>
-            </div>
-        </li>
-        <li>
-            <div style={{margin:"20px"}}>{image}</div>
-            
-        </li>
-        <li>
-          <div className="input-group"style={{margin:"20px"}}>
-            <select
-              style={{
-                width: `${8 * this.state.searchCategory.length + 25}px`,
-                height: "40px",
-                backgroundColor: "#e7eae8",
-                borderTopLeftRadius:"5px",
-                borderBottomLeftRadius:"5px",
-                fontSize:"12px"
-              }}
-              
-              onChange={(e) => {
-                this.changeHandler(e);
-              }}
-            >
-              <option value="ALL">All</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Fashion">Fashion</option>
-              <option value="Furniture">Furniture</option>
-            </select>
-            <input
-              type="text"
-              onChange={(e) => {
-                this.changeHandlerTerm(e);
-              }}
-              id="search"
-              style={{
-                width: `${650 - 8 * this.state.searchCategory.length + 30}px`,
-              }}
-            ></input>
-            <button
-              type="button"
-              style={{width:"40px",backgroundColor:"#febe62",border:0,borderTopRightRadius:"5px",borderBottomRightRadius:"5px"}}
-              height="40px"
+                <div style={{ fontSize: 13, fontWeight: "bold" }}>
+                  Account & Lists
+                  <span class="caret" style={{ color: "#cccccc" }}></span>
+                </div>
+              {/* </a> */}
+              <div
+                className="dropdown-menu"
+                aria-labelledby="navbarDropdown"
+                style={{ marginTop: -25, marginLeft: 15 }}
+              >
+                <a className="dropdown-item" href="#">
+                  Action
+                </a>
+                <a className="dropdown-item" href="#">
+                  Another action
+                </a>
+                <div className="dropdown-divider"></div>
+                <a className="dropdown-item" href="#">
+                  Something else here
+                </a>
+              </div>
+            {/* </li> */}
 
               onClick={(e) => {
                 this.viewSeachResults();
@@ -189,7 +171,7 @@ class Navbar extends Component {
               
             >
               <i className="glyphicon glyphicon-search" style={{width:"25px"}}></i>
-            </button>
+            {/* </button> */}
           </div>
         </li>
         <li className="nav-item dropdown" style={{marginTop:-4}}>
@@ -239,4 +221,3 @@ class Navbar extends Component {
 }
 
 export default Navbar;
-		

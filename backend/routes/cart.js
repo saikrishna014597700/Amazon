@@ -95,4 +95,94 @@ router.post("/getCompleteCart", async (req, res) => {
   });
 });
 
+router.post("/getSaveForLater", async (req, res) => {
+  let msg = req.body;
+  console.log("get complete cart ==> ", req.body);
+  msg.route = "get_save_for_later";
+  kafka.make_request("getSaveForLater", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.data);
+    }
+  });
+});
+
+router.post("/postSaveForLater", async (req, res) => {
+  let msg = req.body;
+  console.log("get complete cart ==> ", req.body);
+  msg.route = "post_save_for_later";
+  kafka.make_request("postSaveForLater", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.data);
+    }
+  });
+});
+
+router.post("/deleteSaveForLater", async (req, res) => {
+  let msg = req.body;
+  console.log("delete save for later ==> ", req.body);
+  msg.route = "delete_save_for_later";
+  kafka.make_request("deleteSaveForLater", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.data);
+    }
+  });
+});
+
+router.post("/saveOrder", async (req, res) => {
+  let msg = req.body;
+  console.log("saveOrder ==> ", req.body);
+  msg.route = "save_order";
+  kafka.make_request("saveOrder", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
+
+router.post("/deleteCompleteCart", async (req, res) => {
+  let msg = req.body;
+  console.log("deleteCompleteCart ==> ", req.body);
+  msg.route = "delete_complete_cart";
+  kafka.make_request("deleteCompleteCart", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
+
 module.exports = router;

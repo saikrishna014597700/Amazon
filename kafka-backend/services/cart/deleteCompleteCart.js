@@ -2,13 +2,13 @@
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const pool = require("../../utils/mysqlConnection");
 
-let deleteFromCart = async (msg, callback) => {
+let deleteCompleteCart = async (msg, callback) => {
   console.log("in addtocart", msg);
   let response = {};
   let err = {};
   try {
-    await pool.query("delete from cart_details where user_id = ? and product_id = ?",
-    [msg.userId,msg.productId], async function (err, result) {
+    await pool.query("delete from cart_details where user_id = ? ",
+    [msg.userId], async function (err, result) {
       console.log("Result is", result);
     });
     response.status = STATUS_CODE.SUCCESS;
@@ -22,4 +22,4 @@ let deleteFromCart = async (msg, callback) => {
   }
 };
 
-exports.deleteFromCart = deleteFromCart;
+exports.deleteCompleteCart = deleteCompleteCart;

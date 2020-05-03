@@ -29,5 +29,21 @@ router.post("/search", async (req, res) => {
     }
   });
 });
-
+router.post("/createPro", async (req, res) => {
+  let msg = req.body;
+  console.log("createPro ==> ", req.body);
+  msg.route = "createPro";
+  kafka.make_request("createPro", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
 module.exports = router;

@@ -27,6 +27,9 @@ import ProductDescription from "./components/product-module/productDescription";
 import Cart from "./components/cart-module/cart";
 import InventoryListings from "./components/admin-module/InventoryListings";
 import SellerListings from "./components/admin-module/SellerListings";
+import AddressDetails from "./components/cart-module/selectAddress";
+import SelectCard from "./components/cart-module/selectCard";
+import Checkout from "./components/cart-module/checkout";
 
 //Create a Main Component
 class Main extends Component {
@@ -44,27 +47,21 @@ class Main extends Component {
           <Route path="/search" component={SearchProduct} />
           <Route path="/customerCards" component={customerCards} />
           <Route path="/customerAddresses" component={customerAddresses} />
-          <Route path="/product" component={ProductDescription} />
+          <Route path="/product/:id" component={ProductDescription} />
           <Route path="/cart" component={Cart} />
           <Route path="/sellerOrders" component={SellerOrders} />
           <Route path="/sellerReports" component={SellerReports} />
           <Route path="/sellerProfile" component={SellerProfile} />
           <Route path="/orderDetailPage/:id" component={OrderDetailPage} />
-          <Route
-            path="/productTrackingDetails/:id/:id"
-            component={ProductTrackingDetails}
-          />
-          <Route
-            path="/viewAllSellerProducts"
-            component={ViewAllSellerProducts}
-          />
-          <Route
-            path="/editProductDetails/:id"
-            component={EditProductDetails}
-          />
+          <Route path="/productTrackingDetails/:id/:id" component={ProductTrackingDetails}/>
+          <Route path="/viewAllSellerProducts" component={ViewAllSellerProducts}/>
+          <Route path="/editProductDetails/:id" component={EditProductDetails}/>
           <Route path="/inventory-listings" component={InventoryListings} />
           <Route path="/seller-listings" component={SellerListings} />
           <Route path="/product-view" component={ProductView} />
+          <Route path="/selectAddress" component={AddressDetails}/>
+          <Route path="/selectCard" component={SelectCard}/>
+          <Route path="/checkout" component={Checkout}/>
         </div>
       </Router>
     );
