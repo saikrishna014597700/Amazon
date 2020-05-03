@@ -24,6 +24,7 @@ export default class customerAddresses extends Component {
         selectedAddress = address;
       }
     }
+    if(document.forms[id].reportValidity()){
     console.log("selectedAddress::", selectedAddress)
     await axios.post("http://localhost:3001/api/customerDetails/saveCustomerAddresses/?userId=" + localStorage.getItem("id"), selectedAddress).then((res) => {
 
@@ -32,7 +33,7 @@ export default class customerAddresses extends Component {
         addresses: res.data
       })
     })
-
+  }
   }
 
   async deleteAddress(id){
@@ -160,6 +161,7 @@ export default class customerAddresses extends Component {
                   </p>
                 </div>
                 <div className="card-body" style={{ marginLeft: "5px" }}>
+                  <form id = {address._id}>
                   <div className="row">
                     <div className="col-sm">
                     <p style={{ marginBottom: "0px", marginTop: "3px" }}>Name</p>
@@ -172,7 +174,7 @@ export default class customerAddresses extends Component {
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>state </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={address.state} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "state")} />
+                        <input style={{ width: "90%" }} type="text" defaultValue={address.state} disabled={!address.editFlag} pattern = "^(?:(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]))$" required onChange={e => this.handleChange(e, address._id, "state")} />
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>Country</p>
                       <div className="form-group">
@@ -190,11 +192,11 @@ export default class customerAddresses extends Component {
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}> Zip Code </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={address.zip_code} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "zip_code")} />
+                        <input style={{ width: "90%" }} type="text" pattern = "^[0-9]{5}(?:-[0-9]{4})?$" required defaultValue={address.zip_code} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "zip_code")} />
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}> Phone Number </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={address.phoneNo} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "phoneNo")} />
+                        <input style={{ width: "90%" }} type="text" pattern = "[\d]{10}" required defaultValue={address.phoneNo} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "phoneNo")} />
                       </div>
                     </div>
 
@@ -205,9 +207,9 @@ export default class customerAddresses extends Component {
                   <button hidden={!address.editFlag} className = "Amazon" onClick={e => this.saveAddress(address._id)} style={{ float: "right", marginBottom: "5px",marginRight:"5px",width:"50px" }}> Save
                   </button>
 
-                  
+                  </form>
                 </div>
-
+               
               </div>
             </div>
           

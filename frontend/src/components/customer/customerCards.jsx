@@ -24,6 +24,7 @@ export default class customerCards extends Component {
         selectedCard = card;
       }
     }
+    if(document.forms[id].reportValidity()){
     console.log("selectedCard::", selectedCard)
     await axios.post("http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" + localStorage.getItem("id"), selectedCard).then((res) => {
 
@@ -31,8 +32,9 @@ export default class customerCards extends Component {
       this.setState({
         cards: res.data
       })
+  
     })
-
+  }
   }
 
   async deleteCard(id){
@@ -156,12 +158,12 @@ export default class customerCards extends Component {
                   </p>
                 </div>
                 <div className="card-body" style={{ marginLeft: "5px" }}>
-                  <form id = "cardForm">
+                  <form id = {card._id}>
                   <div className="row">
                     <div className="col-sm">
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>Card Number</p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={card.cardNo} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "cardNo")} />
+                        <input style={{ width: "90%" }} pattern ="[\d]{16}" required type="text" defaultValue={card.cardNo} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "cardNo")} />
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>Name on Card </p>
                       <div className="form-group">
@@ -171,11 +173,11 @@ export default class customerCards extends Component {
                     <div className="col-sm">
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>CVV </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={card.cvv} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "cvv")} />
+                        <input style={{ width: "90%" }} type="text" pattern ="[\d]{3}" required defaultValue={card.cvv} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "cvv")} />
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}> Expiry Date </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={card.expirationDate} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "expirationDate")} />
+                        <input style={{ width: "90%" }} type="text" pattern = "[\d]{4}[\/\.\-]*0[1-9]|1[0-2]" required defaultValue={card.expirationDate} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "expirationDate")} />
                       </div>
                     </div>
 
