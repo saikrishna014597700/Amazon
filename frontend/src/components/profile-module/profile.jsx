@@ -32,28 +32,37 @@ class Profile extends Component {
     }
     let ra=0
     let rv=0
+    var k=[]
     await axios
     .post("http://localhost:3001/api/auth/userprofile/", data)
     .then((response) => {
       var x=response.data
-      var k=[]
-      console.log(x)
+      console.log("x is",x)
+      
       for(let i=0;i<x.length;i++)
       {
-        k.push(x[i].reviewAndRatings)
-        if(x[i].reviewAndRatings.rating!=="")
+        // k.push(x[i])
+        
+        for(let j=0;j<x[i].reviewAndRatings.length;j++)
+        {
+          if(x[i].reviewAndRatings[j].review)
+          k.push({"id":x[i]._id,"productName":x[i].productName,"review":x[i].reviewAndRatings[j].review})
+          
+        if(x[i].reviewAndRatings[j].rating)
         ra+=1
-        if(x[i].reviewAndRatings.review!=="")
+        if(x[i].reviewAndRatings[j].review)
         rv+=1
+        }
       }
-      // console.log(ra," ",rv)
+      console.log(k)
       this.setState({
         trating: ra,
         treview: rv,
-        arr: response.data
+        arr: k
       })
-      console.log(this.state.arr)
+     
   });
+  console.log("arr",this.state.arr)
   };
 
   async handleChange(e) {
@@ -97,7 +106,7 @@ class Profile extends Component {
           Comment added on: {msg.productName}
         </div>
         <div class="card-body">
-          <p style={{fontWeight:"bold"}}><Link>{msg.reviewAndRatings[0].review} </Link></p>
+          <p style={{fontWeight:"bold"}}><Link to={"/product/"+msg.id} >{msg.review} </Link></p>
          
         </div>
       </div>

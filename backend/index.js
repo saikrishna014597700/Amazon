@@ -25,11 +25,8 @@ app.use("/api/customerDetails", customerDetails);
 app.use("/api/cart", cart);
 app.use("/api/admin", admin);
 app.use("/api/seller", seller);
-<<<<<<< HEAD
 
 app.use("/api/testRoute", testRoute);
-=======
->>>>>>> thanmai_dev
 
 const port = process.env.PORT || 3001;
 
