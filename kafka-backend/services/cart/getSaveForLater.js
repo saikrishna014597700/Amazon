@@ -2,16 +2,16 @@
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const pool = require("../../utils/mysqlConnection");
 
-let getCompleteCart = async (msg, callback) => {
+let getSaveForLater = async (msg, callback) => {
   console.log("in get Cart", msg);
   let response = {};
   let err = {};
   try {
     await pool.query(
-      "select * from cart_details where user_id = ?",
+      "select * from save_for_later where user_id = ?",
       [msg.userId],
       async function (err, result) {
-        console.log("Result from get cart", result);
+        console.log("Result is", result);
         response.status = STATUS_CODE.SUCCESS;
         let data = result;
         console.log("data=>" + JSON.stringify(data));
@@ -27,4 +27,4 @@ let getCompleteCart = async (msg, callback) => {
   }
 };
 
-exports.getCompleteCart = getCompleteCart;
+exports.getSaveForLater = getSaveForLater;

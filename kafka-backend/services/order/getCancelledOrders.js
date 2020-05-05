@@ -6,7 +6,7 @@ var mongoose = require("mongoose");
 // const redisClient = require("../../utils/redisConfig");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 
-let getOrders = async (msg, callback) => {
+let getCancelledOrders = async (msg, callback) => {
   let response = {};
   let err = {};
   const today = moment();
@@ -14,8 +14,8 @@ let getOrders = async (msg, callback) => {
   var resultArray = []
   try {
     
-   await orders.find({userId:parseInt(msg.userId)}).then(async function (res){
-       //console.log('resssss',res)
+   await orders.find({userId:parseInt(msg.userId),products:{status:"Cancelled"}}).then(async function (res){
+       console.log('response in cancelled orders',res)
       
       
        var data = res
@@ -31,7 +31,7 @@ let getOrders = async (msg, callback) => {
         
         var productsArr =  await modifyOrdersData(prods,productDetails)
         result.productsArr = productsArr
-        console.log('productsArr returning::',productsArr )
+        console.log('productsArr returning in cancelled::',productsArr )
         resultArray.push(result);
        }
        
@@ -53,7 +53,7 @@ let getOrders = async (msg, callback) => {
   }
 };
 
-exports.getOrders = getOrders;
+exports.getCancelledOrders = getCancelledOrders;
 
 
 async function modifyOrdersData(prods,productDetails){

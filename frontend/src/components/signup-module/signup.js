@@ -3,6 +3,8 @@ import { Form, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "../login-module/login.css"
+import { Redirect } from "react-router";
+
 
 class SignUp extends Component {
   constructor(props) {
@@ -41,8 +43,14 @@ class SignUp extends Component {
   }
 
   render() {
+
+    let redirectVar = null
+    if(localStorage.getItem("id")){
+      redirectVar= <Redirect to="/home" />
+    }
     return (
       <div>
+        {redirectVar}
         <div className="auth-wrapper">
           <div className="auth-inner">
             <div className="container">

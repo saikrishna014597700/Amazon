@@ -7,3 +7,39 @@
     margin-top:40px;
     margin-left: 30px;
 }
+.row.deliveryMessage{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+}
+.row.pickupheading{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 17px;
+    font-weight: bold;
+}
+.row.shippingSelect{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 28px;
+}
+.row.addAddressHeading{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 21px;
+    font-weight: bold;
+}
+.Amazon {
+    cursor: pointer;
+    display: inline-flex;
+    background-color: #f5d47a;
+    color: #000;
+    text-align: center;
+    /* width: 350px; */
+    border: 1px solid #B38B22;
+    border-radius: 3px;
+    font-weight: 400;
+    line-height: 20px;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+}
+input[type=text], select {
+    border: 1px solid #ccc !important;
+  }

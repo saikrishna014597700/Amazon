@@ -103,7 +103,7 @@ export default class ProductTrackingDetails extends Component {
     }
 
     let editTDetails = null;
-    if (this.state.editTrackingFlag) {
+    if (this.state.editTrackingFlag ) {
       editTDetails = (
         <div className="card">
           <div className="card-header">
@@ -257,13 +257,11 @@ export default class ProductTrackingDetails extends Component {
       );
     });
 
-    return (
-      <div>
-        <div className="auth-wrapper">
-          <div className="auth-inner">
-            <h4>
-              Tracking Details
-              <button
+    let editButton ; 
+
+    if(localStorage.getItem("role") === "Seller"){
+    editButton = (
+      <button
                 className="Amazon"
                 onClick={(e) =>
                   this.editTrackingDetails(
@@ -281,6 +279,16 @@ export default class ProductTrackingDetails extends Component {
                 {" "}
                 Edit
               </button>
+    )
+              }
+
+    return (
+      <div>
+        <div className="auth-wrapper">
+          <div className="auth-inner">
+            <h4>
+              Tracking Details
+              {editButton}
             </h4>
             <br />
             {editTDetails}

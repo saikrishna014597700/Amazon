@@ -5,7 +5,7 @@ const pool = require("../../utils/mysqlConnection");
 const passwordHash = require('password-hash');
 var mongoose = require("mongoose");
 const customerDetails = require("../../models/customerDetails");
-// const sellers= require("../../models/c")
+const sellers= require("../../models/seller")
 
 
 let signup = async (msg, callback) => {
@@ -69,7 +69,17 @@ let signup = async (msg, callback) => {
                   let hashedpass= passwordHash.generate(msg.password)
                   var Query = "insert into users (email,password,name,role) values ('" + msg.email + "','"+hashedpass+"','" + msg.name +
                  "','" + "Seller" + "')";
-             pool.query(Query);  
+                 pool.query(Query,async function(err,result){
+             const today=moment()
+             var x=result.insertId
+             var sNew = new sellers({
+              userId: x,
+              sellerName: msg.name,
+              createDate: today.format(),
+              updateDate: today.format(),
+            });
+            await sNew.save() 
+          })
              response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
              response.data = MESSAGES.CREATE_SUCCESSFUL;
              return callback(null, response);   } 

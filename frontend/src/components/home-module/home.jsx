@@ -9,8 +9,15 @@ class Home extends Component {
   }
 
   render() {
+
+    let redirectVar = null;
+        if(!localStorage.getItem("id")){
+            redirectVar = <Redirect to= "/login"/>
+            
+        }
     return (
       <div>
+        {redirectVar}
         <div className="auth-wrapper">
           <div className="auth-inner">
             <h1>Menu</h1>

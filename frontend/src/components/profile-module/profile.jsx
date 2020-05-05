@@ -1,12 +1,13 @@
 import React, { Component } from "react";
+import axios from "axios";
 import "./profile.css";
 import "./New folder/profile1.css";
 import "./New folder/profile2.css";
 import "./New folder/profile3.css";
 import "./New folder/profile4.css";
-import axios from "axios"
-import {Card} from 'react-bootstrap'
+import {Card,Button} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
+import { Redirect } from "react-router";
 
 class Profile extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class Profile extends Component {
     };
     this.handleChange=this.handleChange.bind(this)
     this.savename=this.savename.bind(this)
+    this.handleImageChange=this.handleImageChange.bind(this)
   }
 
   async componentDidMount()
@@ -62,10 +64,13 @@ class Profile extends Component {
     console.log(e.target.value);
   }
 
-  async savename() {
-    const data = {
+  async savename()
+  {
+    const data=
+    {
       name: this.state.name,
-    };
+      user_image: this.state.user_image
+    }
     await axios
       .post("http://localhost:3001/api/auth/profile/", data)
       .then((response) => {
@@ -75,14 +80,20 @@ class Profile extends Component {
       });
   }
 
-  handleImageChange = (e) => {
+  async handleImageChange(e)  {
     this.setState({
       [e.target.name]: e.target.files[0],
     });
+    console.log(e.target.name," ",e.target.value)
   };
 
   render() {
 
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+        
+    }
     let candr= this.state.arr.map((msg)=> 
     {
       // <p>List of Comments added:</p>
@@ -101,6 +112,7 @@ class Profile extends Component {
     });
     return (
       <div>
+        {redirectVar}
         <meta httpEquiv="Content-Type" content="text/html; charset=UTF-8" />
         {/* sp:feature:cs-optimization */}
         <meta httpEquiv="x-dns-prefetch-control" content="on" />
@@ -199,6 +211,7 @@ class Profile extends Component {
                           backgroundImage:
                             'url("//d1k8kvpjaf8geh.cloudfront.net/gp/profile/assets/default_desktop_cover_photo_small-fa94c636796d18ebee73e32e4076d119a52366660d5660b5b2e49f62e036575a.png")',
                           backgroundSize: "contain",
+                          height:"305px"
                         }}
                       >
                         <img
@@ -258,46 +271,7 @@ class Profile extends Component {
                           className="a-popover-preload"
                           id="a-popover-cover-photo-delete-popover"
                         >
-                          <div className="a-section desktop delete-modal-content">
-                            <div className="a-row delete-modal-message">
-                              <span>
-                                Are you sure you want to delete your cover
-                                photo?
-                              </span>
-                            </div>
-                            <div className="a-row delete-modal-footer">
-                              <div className="a-section desktop delete-modal-buttons">
-                                <span className="a-button desktop cancel-button-delete-modal">
-                                  <span className="a-button-inner">
-                                    <input
-                                      type="submit"
-                                      className="a-button-input"
-                                    />
-                                    <span
-                                      className="a-button-text"
-                                      aria-hidden="true"
-                                    >
-                                      <span>Cancel</span>
-                                    </span>
-                                  </span>
-                                </span>
-                                <span className="a-button a-button-primary desktop delete-button-delete-modal">
-                                  <span className="a-button-inner">
-                                    <input
-                                      type="submit"
-                                      className="a-button-input"
-                                    />
-                                    <span
-                                      className="a-button-text"
-                                      aria-hidden="true"
-                                    >
-                                      <span>Delete</span>
-                                    </span>
-                                  </span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
+                        
                         </div>
                         <div
                           className="a-popover-preload"
@@ -402,96 +376,20 @@ class Profile extends Component {
                               src={require("../product-module/shoe.jpg")}
                               id="avatar-image"
                             />
-                            <div className="a-section">
-                              <div className="a-row image-edit-popover-trigger-holder">
-                                <img
-                                  alt=""
-                                  src="./profile_files/camera-desktop-4aba2c5ff428bad7bee93a2e61a2ad5128cbdd58b770618a1fd108abca1e2f31.png"
-                                />
-                              </div>
-                              <div
-                                className="a-popover-preload"
-                                id="a-popover-avatar-edit-image-popover"
-                              >
-                                <div className="a-section a-spacing-none">
-                                  <div className="a-section a-spacing-none">
-                                    <div className="a-row">
-                                      <label
-                                        className="imageUploadLabel"
-                                        htmlFor="avatarUploadInput"
-                                      >
-                                        <span className="a-size-small a-color-base upload-photo">
-                                          Upload
-                                        </span>
-                                      </label>
-                                    </div>
-                                  </div>
-                                  <div className="a-row a-spacing-top-small">
-                                    <span
-                                      className="a-declarative"
-                                      data-action="a-modal"
-                                      data-a-modal='{"name":"avatar-delete-popover","dataStrategy":"preload","padding":"none","header":"Delete Profile Photo","closeButtonLabel":"avatar-delete-popover-close"}'
-                                    >
-                                      <span className="a-size-small a-color-base desktop delete-photo">
-                                        Delete
-                                      </span>
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                              <div
-                                className="a-popover-preload"
-                                id="a-popover-avatar-delete-popover"
-                              >
-                                <div className="a-section desktop delete-modal-content">
-                                  <div className="a-row delete-modal-message">
-                                    <span>
-                                      Are you sure you want to delete your
-                                      profile picture?
-                                    </span>
-                                  </div>
-                                  <div className="a-row delete-modal-footer">
-                                    <div className="a-section desktop delete-modal-buttons">
-                                      <span className="a-button desktop cancel-button-delete-modal">
-                                        <span className="a-button-inner">
-                                          <input
-                                            type="submit"
-                                            className="a-button-input"
-                                          />
-                                          <span
-                                            className="a-button-text"
-                                            aria-hidden="true"
-                                          >
-                                            <span>Cancel</span>
-                                          </span>
-                                        </span>
-                                      </span>
-                                      <span className="a-button a-button-primary desktop delete-button-delete-modal">
-                                        <span className="a-button-inner">
-                                          <input
-                                            type="submit"
-                                            className="a-button-input"
-                                          />
-                                          <span
-                                            className="a-button-text"
-                                            aria-hidden="true"
-                                          >
-                                            <span>Delete</span>
-                                          </span>
-                                        </span>
-                                      </span>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
+
                           </div>
                         </div>
                       </span>
                     </div>
                   </div>
                 </div>
-
+                <hr></hr>
+                <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
+                <hr></hr>
+                <button variant="primary" type="submit">
+                                    <b>Update</b>
+                                </button>
+                
                 <div className="desktop padded card name-header-card">
                   <div className="a-row">
                     <div

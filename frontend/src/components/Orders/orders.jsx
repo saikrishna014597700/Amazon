@@ -3,173 +3,451 @@ import { Form, Button, FormGroup } from "react-bootstrap";
 import "./orders.css";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
-import ProductDetails from './productDetails';
+import $ from "jquery";
+import { Redirect } from "react-router";
+import logo from "./shoe.jpg";
+import { Link } from "react-router-dom";
 
-export default class Orders extends Component {
-    constructor() {
-        super();
-        this.state = {
-            orders: []
-        };
-        this.addProduct = this.addProduct.bind(this);
-        this.viewAllSellerProducts = this.viewAllSellerProducts.bind(this);
+export default class orders extends Component {
+  constructor() {
+    super();
+    this.state = {
+      productName: "",
+      productDesc: "",
+      price: "",
+      category: "",
+      orders: [],
+      deliveredOrders: [],
+      cancelledOrders: [],
+      openOrders: [],
+      redirect: null,
+    };
+  }
+
+  async componentDidMount() {
+    var sellerId = "123";
+    axios
+      .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
+      .then((response) => {
+        console.log("Pro are::", response);
+        this.setState({
+            orders: response.data,
+        });
+        //console.log("Pro are::", this.state.orders);
+      });
+      axios
+      .get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
+      .then((response) => {
+        console.log("Cncelled orders are::", response);
+        
+        this.setState({
+            cancelledOrders: response.data,
+        });
+        //console.log("Pro are::", this.state.orders);
+      });
+  }
+
+  async cancelProduct(e,orderId,prodId){
+    console.log('cancel this prod', prodId ,'from order ', orderId)
+    var payload = {
+        prodId : prodId,
+        orderId:orderId
+    }
+    await axios.post("http://localhost:3001/api/orders/cancelOrder", payload).then(async (res) => {
+        console.log('response is::', res)
+        alert(res.data)
+       await axios.get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
+      .then((response) => {
+        console.log("Pro are::", response);
+        this.setState({
+            orders: response.data,
+        });
+        //console.log("Pro are::", this.state.orders);
+      });
+    })
+  }
+
+  async redirectToProductsPage(event) {
+    this.setState({ redirect: `/viewAllsellerOrders` });
+  }
+  // productsDisplay = (productsDiv) => {
+  //   this.productsDiv.style.display = "block";
+  // };
+
+  render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
     }
 
-    async componentDidMount() {
-        await axios.get("http://localhost:3001/api/orders/getAllOrders/?userId=" + 1).then((res) => {
-            console.log('response is::', res)
-            this.setState({
-                orders: res.data
-            })
-        })
-    }
-
-    async viewAllSellerProducts(event) {
-        const payload = {
-            sellerId: "123",
-        };
-        axios
-            .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
-            .then((response) => {
-                console.log("Pro are::", response);
-                this.setState({
-                    sellerProducts: response.data,
-                });
-                console.log("Pro are::", this.state.sellerProducts);
-            });
-    }
-
-    async addProduct(event) {
-        const payload = {
-            productName: this.state.productName,
-            productDesc: this.state.productDesc,
-            price: this.state.price,
-            category: this.state.category,
-        };
-        axios
-            .post("http://localhost:3001/api/product/addProduct/", payload)
-            .then((response) => { });
-    }
-
-    render() {
-
-        let orderDetails = this.state.orders.map((order) => {
-            return (
-                <div key={order._id} className="card" style={{ }}>
-
-            
-                    <div className="card-header">
-                    <table style= {{width:"100%"}}>
-            <tr>
-            <th>Order #</th>
-             <th>Transaction Amount</th> 
-                <th>Ordered Date</th>
-             </tr>
-             <tr>
-            <td>{order._id}</td>
-             <td> $ {order.transactionAmount}</td> 
-                <td>{order.createDate.toString().substring(1,10)}</td>
-             </tr>
-             </table>
-                        {/* <div className="row">
-                            <div className="col-sm" style={{ width: '50%' }}>
-                                <div> Order ID: {order._id}</div>
-                                <div>Transaction Amount: $ {order.transactionAmount} </div>
-                            </div>
-                            <div className="col-sm" style={{ width: '50%' }}>
-                                <div>Payment Details: {order.paymentDetails}</div>
-                                <div>Ordered Date: {order.createDate}</div>
-                            </div>
-                        </div> */}
-                    </div>
-
-
-
-                    <div className="card-body">
-                        <div className="row">
-                            <div className="col-sm-9" >
-                                <ProductDetails key={order._id} products={order.products} order={order}>
-                                </ProductDetails>
-                                
-                            </div>
-
-
-                            <div className="col-sm-3">
-
-                                <div className="row" style={{ marginTop: '7px' }}>
-                                    <Button variant="warning" block style={{ width: '150px' }} data-toggle="collapse" data-target="#demo1">Shipping Address</Button>
-                                    <div id="demo1" style={{ fontSize: '12px' }} className="collapse">
-                                        {/* status is here  */}
-                                        <div> {order.shippingAddress.street}</div>
-                                        <div>{order.shippingAddress.city}</div>
-                                        <div>{order.shippingAddress.state}</div>
-                                        <div>{order.shippingAddress.zip_code}</div>
-                                    </div>
-                                </div>
-
-                                <div className="row" style={{ marginTop: '7px' }}>
-                                    <Button variant="warning" block style={{ width: '150px' }} data-toggle="collapse" data-target="#demo1">Billing Address</Button>
-                                    <div id="demo1" style={{ fontSize: '12px' }} className="collapse">
-                                        {/* status is here  */}
-                                        <div> {order.billingAddress.street}</div>
-                                        <div>{order.billingAddress.city}</div>
-                                        <div>{order.billingAddress.state}</div>
-                                        <div>{order.billingAddress.zip_code}</div>
-                                    </div>
-                                </div>
-
-                                <div className = "row" style = {{marginTop:'7px'}}>
-                                <Button variant = "warning" block  style={{ width: '150px'}}  data-toggle="collapse" data-target="#demo1">Billing Address</Button>
-                                <div id="demo1" style = {{fontSize:'12px'}} className="collapse">
-                                    {/* status is here  */}
-                                   <div> {order.billingAddress.street}</div>
-                                    <div>{order.billingAddress.city}</div>
-                                    <div>{order.billingAddress.state}</div>
-                                    <div>{order.billingAddress.zip_code}</div>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div >
-                </div>
-            )
-        })
+    
+    let cancelledOrders = this.state.cancelledOrders.map((sellerOrder) => {
+      console.log("seller", sellerOrder);
+      let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
+        var buttonId = sellerOrder.order._id;
         return (
-            <div>
-                <div className="container">
-                    <div className="row">
-                        <img
-                            src={require("../../utils/logo.jpg")}
-                            style={{ float: "center", height: "100px", width: "200px" }}
-                            alt="hs"
-                        />
+          <div>
+            <div class="card">
+              <table>
+                <tr>
+                  <th style={{ width: "20%" }}>
+                    <img
+                      class="card-img-left"
+                      src={logo}
+                      alt="Card image cap"
+                      style={{
+                        width: "300px",
+                        height: "300px",
+                        float: "left",
+                        marginLeft: "20px",
+                      }}
+                    ></img>
+                  </th>
+                  <th style={{ width: "30%", textAlign: "left" }}>
+                    <div
+                      class="card-body"
+                      style={{
+                        marginLeft: "20px",
+                      }}
+                    >
+                      <h5 class="card-title">
+                        {orderProduct.status}
+                      </h5>
+                      <p class="card-text">
+                        <a href="#" class="card-link">
+                          {orderProduct.product.productName}
+                        </a>
+                      </p>
+                      {/* <p class="card-text">
+                        {orderProduct.product.productName}
+                      </p> */}
+                      <h6>{orderProduct.product.productDesc}</h6>
+                      <h6>Price: {orderProduct.product.price}</h6>
+                      <h6>Quantity: {orderProduct.quantity}</h6>
                     </div>
 
-                    <ul class="nav nav-tabs" id="myTab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="orders-tab" data-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="true">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Cancelled Orders</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="orders" role="tabpanel" aria-labelledby="orders-tab">{orderDetails}</div>
-                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                    </div>
+                    {/* <div class="card-body">
+                      <a href="#" class="card-link">
+                        Card link
+                      </a>
+                      <a href="#" class="card-link">
+                        Another link
+                      </a>
+                    </div> */}
+                  </th>
+                  <th style={{ width: "25%" }}>
+                    <Button
+                      variant="light"
+                      style={{
+                        width: "280px",
+                        height: "50px",
+                        float: "right",
+                        marginRight: "20px",
+                      }}
+                      block
+                      onClick={(event) => this.addProduct(event)}
+                    >
+                      View Product
+                    </Button>
+                    <Button
+                      variant="light"
+                      style={{
+                        width: "280px",
+                        height: "50px",
+                        float: "right",
+                        marginRight: "20px",
+                      }}
+                      block
+                      onClick={(event) => this.addProduct(event)}
+                    >
+                      Loading...
+                    </Button>
+                  </th>
+                </tr>
+              </table>
+            </div>
 
-
-                    {/* <ul className="list-group list-group-horizontal-xl">
-                        <button className="button" onClick={(event) => this.fetchOrders(event)}>Orders</button>
-                        <button className="button" style={{ width: '200px', marginLeft: '10px' }}>Cancelled Orders</button>
-                    </ul>
-                </div>
-                <div>
-                    {orderDetails}
-                </div> */}
-
-                </div>
-                </div>
+            {/* <div class="card-body">
+              <h5 class="card-title">{orderProduct.productTracking.status}</h5>
+              <p class="card-text">{orderProduct.product.productName}</p>
+              <p class="card-text">{orderProduct.product.productDesc}</p>
+              <p class="card-text">Price: {orderProduct.product.price}</p>
+              <p class="card-text">
+                Quantity: {orderProduct.productTracking.quantity}
+              </p>
+            </div> */}
+          </div>
         );
-    }
+      });
+
+      return (
+        <div class="card text-center">
+          <div class="card-header">
+            <table style={{ width: "100%" }}>
+              <tr>
+                <th>ORDER PLACED</th>
+                <th>Total</th>
+                <th>ORDER # </th>
+                <th>ORDER DETAILS</th>
+              </tr>
+              <tr>
+                <td>{sellerOrder.order.createDate}</td>
+                <td>{sellerOrder.order.transactionAmount}</td>
+                <td>{sellerOrder.order._id}</td>
+                <td>
+                  <Link
+                    to={{
+                      pathname: `/orderDetailPage/${sellerOrder.order._id}`,
+                    }}
+                  >
+                    Order Details
+                  </Link>
+                </td>
+              </tr>
+            </table>
+            {/* <ul class="nav nav-pills card-header-pills">
+              Order Placed On:{sellerOrder.order.createDate}
+            </ul>
+            <p class="card-text">
+              {" "}
+              Order ID:{sellerOrder.order._id}
+              TransactionAmount: {sellerOrder.order.transactionAmount}
+            </p>
+            <p class="card-title">
+              Shipping Address: {sellerOrder.order.shippingAddress.street}
+              {sellerOrder.order.shippingAddress.city}
+              {sellerOrder.order.shippingAddress.state}
+              {sellerOrder.order.shippingAddress.zip_code}
+            </p>
+            {/* <button
+              class="btn btn-primary"
+              onClick={this.productsDisplay(sellerOrder.order._id)}
+            >
+              Products
+            </button> */}
+          </div>
+          {orderProducts}
+        </div>
+      );
+    });
+
+    
+    let ordersPlaced = this.state.orders.map((sellerOrder) => {
+      console.log("orders placed!!", sellerOrder);
+      let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
+        var buttonId = sellerOrder.order._id;
+        return (
+          <div>
+            <div class="card">
+              <table>
+                <tr>
+                  <th style={{ width: "20%" }}>
+                    <img
+                      class="card-img-left"
+                      src={logo}
+                      alt="Card image cap"
+                      style={{
+                        width: "300px",
+                        height: "300px",
+                        float: "left",
+                        marginLeft: "20px",
+                      }}
+                    ></img>
+                  </th>
+                  <th style={{ width: "30%", textAlign: "left" }}>
+                    <div
+                      class="card-body"
+                      style={{
+                        marginLeft: "20px",
+                      }}
+                    >
+                      <h5 class="card-title">
+                        {orderProduct.status}
+                      </h5>
+                      <p class="card-text">
+                        <a href="#" class="card-link">
+                          {orderProduct.product.productName}
+                        </a>
+                      </p>
+                      {/* <p class="card-text">
+                        {orderProduct.product.productName}
+                      </p> */}
+                      <h6>{orderProduct.product.productDesc}</h6>
+                      <h6>Price: {orderProduct.product.price}</h6>
+                      <h6>Quantity: {orderProduct.quantity}</h6>
+                    </div>
+
+                    {/* <div class="card-body">
+                      <a href="#" class="card-link">
+                        Card link
+                      </a>
+                      <a href="#" class="card-link">
+                        Another link
+                      </a>
+                    </div> */}
+                  </th>
+                  <th style={{ width: "25%" }}>
+                    <Button
+                      variant="light"
+                      style={{
+                        width: "280px",
+                        height: "50px",
+                        float: "right",
+                        marginRight: "20px",
+                      }}
+                      block
+                      onClick={(event) => this.addProduct(event)}
+                    >
+                      View Product
+                    </Button>
+                    <Button
+                      variant="light"
+                      style={{
+                        width: "280px",
+                        height: "50px",
+                        float: "right",
+                        marginRight: "20px",
+                      }}
+                      block
+                      hidden = {orderProduct.status === "Delivered" || orderProduct.status === "Cancelled"}
+                      onClick={(event) => this.cancelProduct(event,sellerOrder.order._id,orderProduct.product._id)}
+                    >
+                      Cancel Product
+                    </Button>
+                    <Button
+                      variant="light"
+                      style={{
+                        width: "280px",
+                        height: "50px",
+                        float: "right",
+                        marginRight: "20px",
+                      }}
+                      block
+                      onClick={(event) =>
+                        this.getProductTrackingDetails(
+                          event,
+                          orderProduct.product._id,
+                          sellerOrder.order._id
+                        )
+                      }
+                    >
+                      Tracking Details
+                    </Button>
+                  </th>
+                </tr>
+              </table>
+            </div>
+          </div>
+        );
+      });
+
+      return (
+        <div class="card text-center">
+          <div class="card-header">
+            <table style={{ width: "100%" }}>
+              <tr>
+                <th>ORDER PLACED</th>
+                <th>Total</th>
+                <th>ORDER # </th>
+                <th>ORDER DETAILS</th>
+              </tr>
+              <tr>
+                <td>{sellerOrder.order.createDate}</td>
+                <td>{sellerOrder.order.transactionAmount}</td>
+                <td>{sellerOrder.order._id}</td>
+                <td>
+                  <Link
+                    to={{
+                      pathname: `/orderDetailPage/${sellerOrder.order._id}`,
+                    }}
+                  >
+                    Order Details
+                  </Link>
+                </td>
+              </tr>
+            </table>
+            {/* <ul class="nav nav-pills card-header-pills">
+              Order Placed On:{sellerOrder.order.createDate}
+            </ul>
+            <p class="card-text">
+              {" "}
+              Order ID:{sellerOrder.order._id}
+              TransactionAmount: {sellerOrder.order.transactionAmount}
+            </p>
+            <p class="card-title">
+              Shipping Address: {sellerOrder.order.shippingAddress.street}
+              {sellerOrder.order.shippingAddress.city}
+              {sellerOrder.order.shippingAddress.state}
+              {sellerOrder.order.shippingAddress.zip_code}
+            </p>
+            {/* <button
+              class="btn btn-primary"
+              onClick={this.productsDisplay(sellerOrder.order._id)}
+            >
+              Products
+            </button> */}
+          </div>
+          {orderProducts}
+        </div>
+      );
+    });
+
+    return (
+      <div>
+        <div className="auth-wrapper">
+          <div className="auth-inner3">
+            <h3>Your Orders</h3>
+            <br />
+            <br />
+            <nav>
+              <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a
+                  class="nav-item nav-link active"
+                  id="nav-orders-tab"
+                  data-toggle="tab"
+                  href="#nav-orders"
+                  role="tab"
+                  aria-controls="nav-orders"
+                  aria-selected="true"
+                >
+                  Orders placed
+                </a>
+                <a
+                  class="nav-item nav-link"
+                  id="nav-cancelled-orders-tab"
+                  data-toggle="tab"
+                  href="#nav-cancelled-orders"
+                  role="tab"
+                  aria-controls="nav-cancelled-orders"
+                  aria-selected="false"
+                >
+                  Cancelled Orders
+                </a>
+              </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+              <div
+                class="tab-pane fade show active"
+                id="nav-orders"
+                role="tabpanel"
+                aria-labelledby="nav-orders-tab"
+              >
+                {ordersPlaced}
+              </div>
+              <div
+                class="tab-pane fade"
+                id="nav-cancelled-orders"
+                role="tabpanel"
+                aria-labelledby="nav-cancelled-orders-tab"
+              >
+                {cancelledOrders}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  getProductTrackingDetails = (event, pid, orderId) => {
+    this.setState({ redirect: `/productTrackingDetails/${pid}/${orderId}` });
+  };
 }

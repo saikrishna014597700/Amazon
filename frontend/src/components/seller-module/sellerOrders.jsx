@@ -25,7 +25,7 @@ export default class SellerOrders extends Component {
   }
 
   async componentDidMount() {
-    var sellerId = "123";
+    var sellerId = localStorage.getItem("id");
     axios
       .get(`http://localhost:3001/api/seller/getOrderDetails/${sellerId}`)
       .then((response) => {
@@ -76,6 +76,15 @@ export default class SellerOrders extends Component {
   // };
 
   render() {
+
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }else{
+      if(localStorage.getItem("role") != "Seller"){
+        redirectVar = <Redirect to= "/login"/>
+      }
+    }
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
@@ -721,6 +730,7 @@ export default class SellerOrders extends Component {
 
     return (
       <div>
+        {redirectVar}
         <div className="auth-wrapper">
           <div className="auth-inner">
             <h3>Your Orders</h3>
