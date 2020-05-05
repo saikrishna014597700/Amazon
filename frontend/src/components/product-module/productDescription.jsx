@@ -23,6 +23,7 @@ export default class productDescription extends Component {
     
   };
   addToCart = async () => {
+    let cartSize = 0;
     console.log("inside add to cart method");
     let payload = {
       userId: this.state.userId,
@@ -38,6 +39,7 @@ export default class productDescription extends Component {
           if (response.data.length != 0) {
             let quantity = response.data[0].quantity;
             finalQuantity = quantity + 1;
+            cartSize=response.data.length;
           }
         }
       });
@@ -66,6 +68,7 @@ export default class productDescription extends Component {
           }
         });
     }
+    localStorage.setItem("cartSize",cartSize+1);
     await this.setState({ redirect: `/cart` });
   };
   async componentDidMount() {

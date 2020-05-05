@@ -13,6 +13,8 @@ export default class checkout extends Component {
       productDetails: [],
       cartPrice: 0,
     };
+    this.refsArray=[];
+    this.textBoxRefsArray = [];
   }
 
   async componentDidMount() {
@@ -70,9 +72,72 @@ export default class checkout extends Component {
         }
       });
   }
+
+  async checkGift(e, i, product) {
+    if (this.refsArray[i].checked) {
+      this.textBoxRefsArray[i].style.display = "block";
+      let pros = this.state.productDetails;
+      let cartPrice = 0;
+      pros.forEach((prod) => {
+        if (prod._id == product._id) {
+          let isGift = {
+            isGift: true,
+          };
+          prod.gift = isGift;
+          cartPrice = parseInt(this.state.cartPrice, 10) + 1;
+        }
+      });
+      await this.setState({
+        productDetails: pros,
+        cartPrice: cartPrice,
+      });
+    } else {
+      this.textBoxRefsArray[i].style.display = "none";
+      let pros = this.state.productDetails;
+      let cartPrice = 0;
+      pros.forEach((prod) => {
+        if (prod._id == product._id) {
+          let isGift = {
+            isGift: false,
+            giftMessage:""
+          };
+          prod.gift = isGift;
+          cartPrice = parseInt(this.state.cartPrice, 10) - 1;
+        }
+      });
+      await this.setState({
+        productDetails: pros,
+        cartPrice: cartPrice,
+      });
+    }
+  }
+
+
+
+
+  async changeHandlerMessage(e, i, product) {
+      let pros = this.state.productDetails;
+      pros.forEach((prod) => {
+        if (prod._id == product._id) {
+          let isGift = {
+            isGift: true,
+            giftMessage:e.target.value
+          };
+          prod.gift = isGift;
+        }
+      });
+      await this.setState({
+        productDetails: pros,
+      });
+  }
+
+
   placeOrder = () => {
     console.log("this.state.userId=>" + this.state.userId);
-    this.state.selectedAddress.street = this.state.selectedAddress.street1 +","+ this.state.selectedAddress.street2 ;
+    this.state.selectedAddress.street =
+      this.state.selectedAddress.street1 +
+      "," +
+      this.state.selectedAddress.street2;
     let data = {
       userId: this.state.userId,
       shippingAddress: this.state.selectedAddress,
@@ -86,14 +151,31 @@ export default class checkout extends Component {
       .post("http://localhost:3001/api/cart/saveOrder", data)
       .then(async (response) => {
         if (response.status == 201) {
-          console.log("saved successfully"+JSON.stringify(response));
+          console.log("saved successfully" + JSON.stringify(response));
           let orderId = response.data;
           localStorage.removeItem("selectedAddress");
           localStorage.removeItem("selectedCard");
-          await axios.post("http://localhost:3001/api/cart/deleteCompleteCart",{userId:this.state.userId})
-          .then((response) =>{
-              console.log("response from delete complete cart=>"+JSON.stringify(response));
-          })
+          await axios
+            .post("http://localhost:3001/api/cart/deleteCompleteCart", {
+              userId: this.state.userId,
+            })
+            .then((response) => {
+              console.log(
+                "response from delete complete cart=>" +
+                  JSON.stringify(response)
+              );
+              localStorage.setItem("cartSize",0);
+              
+            });
+            await this.state.productDetails.forEach(async (product)=>{
+              let payload = {
+                productId:product._id,
+                orderId:orderId,
+                quantity:product.quantity,
+                sellerId:product.sellerId
+              }
+              await axios.post("http://localhost:3001/api/cart/saveToMapOrder",payload)
+            })
           await this.setState({ redirect: `/orderDetailPage/${orderId}` });
         }
       });
@@ -176,7 +258,7 @@ export default class checkout extends Component {
         <div className="col-md-4"></div>
       </div>
     );
-    let productsDiv = this.state.productDetails.map((product) => {
+    let productsDiv = this.state.productDetails.map((product, i) => {
       return (
         <div className="row">
           <hr style={{ width: "850px", marginLeft: "18px" }}></hr>
@@ -199,6 +281,25 @@ export default class checkout extends Component {
                 </div>
                 <div className="row">{product.productDesc}</div>
                 <div className="row">$ {product.price}</div>
+                <div className="row">
+                  <input
+                    type="checkbox"
+                    onChange={(e) => this.checkGift(e, i, product)}
+                    ref={(ref) => (this.refsArray[i] = ref)}
+                  ></input>
+                  &nbsp;This is a gift
+                </div>
+                <div
+                  className="row"
+                  ref={(ref) => (this.textBoxRefsArray[i] = ref)}
+                  style={{ display: "none" }}
+                >
+                  Gift Message : &nbsp;
+                  <input
+                    type="text"
+                    onChange={(e)=>this.changeHandlerMessage(e,i,product)}
+                  ></input>
+                </div>
               </td>
               <td style={{ width: "10%" }}></td>
             </tr>
