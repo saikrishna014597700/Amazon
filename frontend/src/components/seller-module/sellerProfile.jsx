@@ -4,12 +4,13 @@ import axios from "axios";
 
 import "./seller.css";
 import Env from "../../helpers/Env";
+import { Redirect } from "react-router";
 
 class SelerProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      sellerId: 40,
+      sellerId: localStorage.getItem("id"),
       role: "Seller",
       sellerName: "",
       street: "",
@@ -92,8 +93,18 @@ class SelerProfile extends React.Component {
   }
 
   render() {
+
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }else{
+      if(localStorage.getItem("role") != "Seller"){
+        redirectVar = <Redirect to= "/login"/>
+      }
+    }
     return (
       <div className="seller-profile">
+        {redirectVar}
         <h3>SelerProfile</h3>
         {!!this.state.editMode ? (
           <div>

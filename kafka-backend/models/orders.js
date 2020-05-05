@@ -68,18 +68,21 @@ var trackingDetails = new Schema({
   createDate: { type: Date },
 });
 
+
+
+var giftObj = new Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  isGift: { type: Boolean },
+  giftMessage: { type: String },
+});
+
 var product = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   productId: { type: String },
   quantity: { type: Number },
   trackingInfo: [trackingDetails],
   status: { type: String },
-});
-
-var giftObj = new Schema({
-  _id: mongoose.Schema.Types.ObjectId,
-  isGift: { type: Boolean },
-  giftMessage: { type: String },
+  gift : { type: giftObj }
 });
 
 var order = new Schema({
@@ -88,7 +91,7 @@ var order = new Schema({
   shippingAddress: { type: shippingaddress },
   transactionAmount: { type: Number },
   products: [product],
-  gift: { type: giftObj },
+  // gift: { type: giftObj },
   paymentDetails: { type: String }, // card id from customer details
   createDate: { type: Date },
   updateDate: { type: Date },

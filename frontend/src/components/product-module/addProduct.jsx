@@ -4,6 +4,7 @@ import "./product.css";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import $ from "jquery";
+import {Redirect} from "react-router"
 
 export default class AddProduct extends Component {
   constructor() {
@@ -29,7 +30,7 @@ export default class AddProduct extends Component {
 
   async viewAllSellerProducts(event) {
     const payload = {
-      sellerId: "123",
+      sellerId: localStorage.getItem("id"),
     };
     axios
       .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
@@ -55,6 +56,14 @@ export default class AddProduct extends Component {
   }
 
   render() {
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }else{
+      if(localStorage.getItem("role") != "Seller"){
+        redirectVar = <Redirect to= "/login"/>
+      }
+    }
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
       return (
         <div className="col-md-3" style={{ margin: 5 }}>
@@ -256,7 +265,9 @@ export default class AddProduct extends Component {
             </div>
           </div>
         </div>
-        <div className="row">{sellerProducts}</div>
+        <div className="row">
+          {redirectVar}
+          {sellerProducts}</div>
       </div>
     );
   }

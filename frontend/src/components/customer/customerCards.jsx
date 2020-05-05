@@ -4,6 +4,7 @@ import { Form, Button, FormGroup } from "react-bootstrap";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import "./style.css"
+import { Redirect } from "react-router";
 
 export default class customerCards extends Component {
   constructor() {
@@ -23,15 +24,17 @@ export default class customerCards extends Component {
         selectedCard = card;
       }
     }
+    if(document.forms[id].reportValidity()){
     console.log("selectedCard::", selectedCard)
-    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" + 29, selectedCard).then((res) => {
+    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" + localStorage.getItem("id"), selectedCard).then((res) => {
 
       console.log("cards::", res.data)
       this.setState({
         cards: res.data
       })
+  
     })
-
+  }
   }
 
   async deleteCard(id){
@@ -43,7 +46,7 @@ export default class customerCards extends Component {
         selectedCard = card;
       }
     }
-    await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerCard/?userId=" + 29, selectedCard).then((res) => {
+    await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerCard/?userId=" + localStorage.getItem("id"), selectedCard).then((res) => {
 
       console.log("cards::", res.data)
       this.setState({
@@ -84,7 +87,7 @@ export default class customerCards extends Component {
   }
   async componentDidMount() {
 
-    var data = 29;
+    var data = localStorage.getItem("id");
 
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" + data).then((res) => {
 
@@ -97,7 +100,7 @@ export default class customerCards extends Component {
   }
 
   async cancelCard(){
-    var data = 29;
+    var data = localStorage.getItem("id");
 
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" + data).then((res) => {
 
@@ -127,6 +130,13 @@ export default class customerCards extends Component {
 
   render() {
 
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }
+    else if (localStorage.getItem("id") && !(localStorage.getItem("role") === "Customer")){
+      redirectVar = <Redirect to= "/login"/>
+    }
 
     let customerCards = this.state.cards.map((card) => {
       return (
@@ -148,11 +158,12 @@ export default class customerCards extends Component {
                   </p>
                 </div>
                 <div className="card-body" style={{ marginLeft: "5px" }}>
+                  <form id = {card._id}>
                   <div className="row">
                     <div className="col-sm">
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>Card Number</p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={card.cardNo} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "cardNo")} />
+                        <input style={{ width: "90%" }} pattern ="[\d]{16}" required type="text" defaultValue={card.cardNo} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "cardNo")} />
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>Name on Card </p>
                       <div className="form-group">
@@ -162,11 +173,11 @@ export default class customerCards extends Component {
                     <div className="col-sm">
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>CVV </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={card.cvv} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "cvv")} />
+                        <input style={{ width: "90%" }} type="text" pattern ="[\d]{3}" required defaultValue={card.cvv} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "cvv")} />
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}> Expiry Date </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={card.expirationDate} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "expirationDate")} />
+                        <input style={{ width: "90%" }} type="text" pattern = "[\d]{4}[\/\.\-]*0[1-9]|1[0-2]" required defaultValue={card.expirationDate} disabled={!card.editFlag} onChange={e => this.handleChange(e, card._id, "expirationDate")} />
                       </div>
                     </div>
 
@@ -177,6 +188,7 @@ export default class customerCards extends Component {
                   <button hidden={!card.editFlag} className = "Amazon" onClick={e => this.saveCard(card._id)} style={{ float: "right", marginBottom: "5px",marginRight:"5px",width:"50px" }}> Save
                   </button>
 
+                </form>
                   
                 </div>
 
@@ -189,9 +201,10 @@ export default class customerCards extends Component {
 
     return (
       <div style={{ marginTop: "50px" }}>
+        {redirectVar}
         <h4>Your payment options</h4>
         <div className="auth-wrapper">
-            <div className="auth-inner">
+            <div className="auth-innerStyle">
         {customerCards}
 
         <button  className = "Amazon" style = {{width:"100px"}}onClick={e => this.addCard()}> Add Card

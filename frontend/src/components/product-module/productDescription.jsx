@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import StarRatings from "react-star-ratings";
 import axios from "axios";
+import { Redirect } from "react-router";
 
 const productImage = require("../../utils/product.jpg");
 const product2Image = require("../../utils/product2.jpg");
@@ -10,6 +11,7 @@ export default class productDescription extends Component {
   constructor() {
     super();
     this.state = {
+      userId:22,
       product: {},
       productId: "5e9d9d90278fd64044dc6945",
       rating: 4.5,
@@ -17,11 +19,14 @@ export default class productDescription extends Component {
     };
     this.addToCart = this.addToCart.bind(this);
   }
-
+  goToCart = (event, pid, orderId) => {
+    
+  };
   addToCart = async () => {
+    let cartSize = 0;
     console.log("inside add to cart method");
     let payload = {
-      userId: 3,
+      userId: this.state.userId,
       productId: this.state.productId,
     };
     let finalQuantity = 1;
@@ -34,18 +39,19 @@ export default class productDescription extends Component {
           if (response.data.length != 0) {
             let quantity = response.data[0].quantity;
             finalQuantity = quantity + 1;
+            cartSize=response.data.length;
           }
         }
       });
     console.log("quantity in add to cart=>" + finalQuantity);
     payload = {
-      userId: 3,
+      userId: this.state.userId,
       productId: this.state.productId,
       quantity: finalQuantity,
     };
 
     if (finalQuantity == 1) {
-        axios
+        await axios
         .post("http://localhost:3001/api/cart/addToCart/", payload)
         .then((res) => {
           if (res) {
@@ -54,7 +60,7 @@ export default class productDescription extends Component {
         });
 
     } else {
-      axios
+      await axios
         .post("http://localhost:3001/api/cart/updateCart/", payload)
         .then((res) => {
           if (res) {
@@ -62,9 +68,27 @@ export default class productDescription extends Component {
           }
         });
     }
+    localStorage.setItem("cartSize",cartSize+1);
+    await this.setState({ redirect: `/cart` });
   };
-  componentDidMount() {
-    console.log("inside componentdidmount");
+  async componentDidMount() {
+    var id = localStorage.getItem("id");
+    if(id)
+    {
+      console.log("in this id=>"+id);
+      this.setState({
+        userId : id
+      })
+    }
+    
+    var productID = this.props.match.params.id;
+    if(productID){
+      console.log("halwe=>"+productID)
+     await this.setState({
+        productId : productID
+      })
+    }
+    console.log("inside componentdidmount=>"+this.state.productId);
     axios
       .get(
         "http://localhost:3001/api/product/getProductDetails/?productId=" +
@@ -89,6 +113,9 @@ export default class productDescription extends Component {
     });
   }
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
     let product = this.state.product;
     console.log("the product inside render=>" + JSON.stringify(product));
     let productDescription = (

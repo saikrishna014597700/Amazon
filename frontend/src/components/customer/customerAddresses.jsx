@@ -4,6 +4,7 @@ import { Form, Button, FormGroup } from "react-bootstrap";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import "./style.css"
+import { Redirect } from "react-router";
 
 export default class customerAddresses extends Component {
   constructor() {
@@ -23,15 +24,16 @@ export default class customerAddresses extends Component {
         selectedAddress = address;
       }
     }
+    if(document.forms[id].reportValidity()){
     console.log("selectedAddress::", selectedAddress)
-    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerAddresses/?userId=" + 29, selectedAddress).then((res) => {
+    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerAddresses/?userId=" + localStorage.getItem("id"), selectedAddress).then((res) => {
 
       console.log("addresses::", res.data)
       this.setState({
         addresses: res.data
       })
     })
-
+  }
   }
 
   async deleteAddress(id){
@@ -43,7 +45,7 @@ export default class customerAddresses extends Component {
         selectedAddress = address;
       }
     }
-    await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerAddress/?userId=" + 29, selectedAddress).then((res) => {
+    await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerAddress/?userId=" + localStorage.getItem("id"), selectedAddress).then((res) => {
 
       console.log("addresses::", res.data)
       this.setState({
@@ -88,7 +90,7 @@ export default class customerAddresses extends Component {
   }
   async componentDidMount() {
 
-    var data = 29;
+    var data = localStorage.getItem("id");
 
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" + data).then((res) => {
 
@@ -101,7 +103,7 @@ export default class customerAddresses extends Component {
   }
 
   async cancelAddress(){
-    var data = 29;
+    var data = localStorage.getItem("id");
 
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" + data).then((res) => {
 
@@ -131,6 +133,13 @@ export default class customerAddresses extends Component {
 
   render() {
 
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }
+    else if (localStorage.getItem("id") && !(localStorage.getItem("role") === "Customer")){
+      redirectVar = <Redirect to= "/login"/>
+    }
 
     let customerAddresses = this.state.addresses.map((address) => {
       return (
@@ -152,6 +161,7 @@ export default class customerAddresses extends Component {
                   </p>
                 </div>
                 <div className="card-body" style={{ marginLeft: "5px" }}>
+                  <form id = {address._id}>
                   <div className="row">
                     <div className="col-sm">
                     <p style={{ marginBottom: "0px", marginTop: "3px" }}>Name</p>
@@ -164,7 +174,7 @@ export default class customerAddresses extends Component {
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>state </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={address.state} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "state")} />
+                        <input style={{ width: "90%" }} type="text" defaultValue={address.state} disabled={!address.editFlag} pattern = "^(?:(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]))$" required onChange={e => this.handleChange(e, address._id, "state")} />
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}>Country</p>
                       <div className="form-group">
@@ -182,11 +192,11 @@ export default class customerAddresses extends Component {
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}> Zip Code </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={address.zip_code} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "zip_code")} />
+                        <input style={{ width: "90%" }} type="text" pattern = "^[0-9]{5}(?:-[0-9]{4})?$" required defaultValue={address.zip_code} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "zip_code")} />
                       </div>
                       <p style={{ marginBottom: "0px", marginTop: "3px" }}> Phone Number </p>
                       <div className="form-group">
-                        <input style={{ width: "90%" }} type="text" defaultValue={address.phoneNo} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "phoneNo")} />
+                        <input style={{ width: "90%" }} type="text" pattern = "[\d]{10}" required defaultValue={address.phoneNo} disabled={!address.editFlag} onChange={e => this.handleChange(e, address._id, "phoneNo")} />
                       </div>
                     </div>
 
@@ -197,9 +207,9 @@ export default class customerAddresses extends Component {
                   <button hidden={!address.editFlag} className = "Amazon" onClick={e => this.saveAddress(address._id)} style={{ float: "right", marginBottom: "5px",marginRight:"5px",width:"50px" }}> Save
                   </button>
 
-                  
+                  </form>
                 </div>
-
+               
               </div>
             </div>
           
@@ -209,9 +219,10 @@ export default class customerAddresses extends Component {
 
     return (
       <div style={{ marginTop: "50px" }}>
-        <h4>Your payment options</h4>
+        {redirectVar}
+        <h4>Your Saved Addresses</h4>
         <div className="auth-wrapper">
-            <div className="auth-inner">
+            <div className="auth-innerStyle">
         {customerAddresses}
 
         <button  className = "Amazon" style = {{width:"130px"}}onClick={e => this.addAddress()}> Add Address

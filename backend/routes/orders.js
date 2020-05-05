@@ -42,10 +42,30 @@ router.get("/getAllOrders", async (req, res) => {
       } else {
         msg.status = results.status;
         logger.info(msg);
-        return res.status(results.status).send(results.data);
+        return res.status(results.status).send(results.resultArray);
       }
     });
   });
+
+  router.get("/getCancelledOrders", async (req, res) => {
+    let msg = req.body;
+    msg.userId = req.query.userId
+    console.log("Req param", req.query.userId);
+    msg.route = "getCancelledOrders";
+    await kafka.make_request("getCancelledOrders", msg, function (err, results) {
+      if (err) {
+        msg.error = err.data;
+        logger.error(msg);
+        return res.status(err.status).send(err.data);
+      } else {
+        msg.status = results.status;
+        logger.info(msg);
+        return res.status(results.status).send(results.resultArray);
+      }
+    });
+  });
+
+  
 
 
 module.exports = router;
