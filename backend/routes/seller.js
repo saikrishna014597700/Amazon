@@ -13,6 +13,30 @@ const logger = require("../utils/logger");
  * @param req: user_id
  */
 
+router.get("/getTotalSalesSumForSeller/:sellerId", async (req, res) => {
+  let msg = req.body;
+  msg.route = "total_sales_sum";
+  msg.sellerId = req.params.sellerId;
+
+  //   const { error } = validateAccount(req.body);
+  //   if (error) {
+  //     msg.error = error.details[0].message;
+  //     logger.error(msg);
+  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
+  //   }
+
+  kafka.make_request("getTotalSalesSumForSeller", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
+
 router.get("/getOrderDetails/:sellerId", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);

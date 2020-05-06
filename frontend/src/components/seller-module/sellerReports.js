@@ -16,6 +16,7 @@ export default class SellerReports extends Component {
       redirect: null,
       analyticsArrayState: [],
       chartData: [],
+      salesSum: "",
     };
   }
 
@@ -23,7 +24,7 @@ export default class SellerReports extends Component {
     var sellerId = localStorage.getItem("id");
     console.log("componentDidMount");
     // console.log("orderId::", orderId);
-    axios
+    await axios
       .get(`http://localhost:3001/api/seller/sellerReports/${sellerId}`)
       .then((response) => {
         console.log("sellerReports are::", response);
@@ -72,35 +73,17 @@ export default class SellerReports extends Component {
         });
         console.log("State iss", this.state.chartData);
       });
+    await axios
+      .get(
+        `http://localhost:3001/api/seller/getTotalSalesSumForSeller/${sellerId}`
+      )
+      .then((response) => {
+        console.log("Res isss", response.data[0].sales_sum);
+        this.setState({
+          salesSum: response.data[0].sales_sum,
+        });
+      });
   }
-
-  // async componentWillMount() {
-  //   console.log("componentWillMount");
-  //   var labels = [];
-  //   var data = [];
-  //   var backgroundColor = [];
-  //   // let report = this.state.sellerReports.map((order) => {});
-  //   this.state.sellerReports.map((order) => {
-  //     labels.push(order.product_name);
-  //     data.push(order.product_sales_um);
-  //     backgroundColor.push("rgba(255,99,132,0.6");
-  //   });
-
-  //   var state = {};
-  //   var datasets = [];
-  //   state.labels = labels;
-  //   var x = {};
-  //   x.label = "Productwise Sales Sum";
-  //   x.data = data;
-  //   x.backgroundColor = backgroundColor;
-  //   datasets.push(x);
-  //   state.datasets = datasets;
-  //   console.log("State is", state);
-  //   this.setState({
-  //     chartData: state,
-  //   });
-  //   console.log("State iss", this.state.chartData);
-  // }
 
   getChartData() {}
 
@@ -114,11 +97,11 @@ export default class SellerReports extends Component {
     }
 
     let redirectVar = null;
-    if(!localStorage.getItem("id")){
-        redirectVar = <Redirect to= "/login"/>
-    }else{
-      if(localStorage.getItem("role") != "Seller"){
-        redirectVar = <Redirect to= "/login"/>
+    if (!localStorage.getItem("id")) {
+      redirectVar = <Redirect to="/login" />;
+    } else {
+      if (localStorage.getItem("role") != "Seller") {
+        redirectVar = <Redirect to="/login" />;
       }
     }
     let graph = (
@@ -208,7 +191,7 @@ export default class SellerReports extends Component {
     return (
       <div className="auth-wrapper">
         {redirectVar}
-        <div className="auth-inner">
+        <div className="auth-inner3">
           <div class="card text-center">
             <div class="card-header">
               <table style={{ width: "100%" }}>
@@ -218,7 +201,7 @@ export default class SellerReports extends Component {
                 </tr>
                 <tr>
                   <td>"Fetch from Local storage"</td>
-                  <td>"1234.5"</td>
+                  <td>{this.state.salesSum}</td>
                   <td>
                     {/* <Link
                   to={{

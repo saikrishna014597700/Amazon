@@ -128,7 +128,7 @@ router.post("/viewAllSellerProducts", async (req, res) => {
   //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
   //   }
 
-  kafka.make_request("addProduct", msg, function (err, results) {
+  kafka.make_request("viewAllSellerProducts", msg, function (err, results) {
     if (err) {
       msg.error = err.data;
       logger.error(msg);

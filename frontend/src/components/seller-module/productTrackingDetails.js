@@ -18,7 +18,7 @@ export default class ProductTrackingDetails extends Component {
       productId: "",
       orderId: "",
       editTrackingFlag: false,
-      trackingStatus: "",
+      trackingStatus: "Packing",
     };
   }
 
@@ -41,13 +41,17 @@ export default class ProductTrackingDetails extends Component {
         )
         .then((response) => {
           console.log("Pro are::", response.data.products[0].trackingInfo);
-          this.setState({
-            sellerOrder: this.state.sellerOrder.concat(response.data),
+          response.data.products.map((product) => {
+            if (product.productId == productId) {
+              this.setState({
+                productDetail: this.state.productDetail.concat(
+                  product.trackingInfo
+                ),
+              });
+            }
           });
           this.setState({
-            productDetail: this.state.productDetail.concat(
-              response.data.products[0].trackingInfo
-            ),
+            sellerOrder: this.state.sellerOrder.concat(response.data),
           });
         });
     }
@@ -89,10 +93,14 @@ export default class ProductTrackingDetails extends Component {
         this.setState({
           sellerOrder: this.state.sellerOrder.concat(response.data),
         });
-        this.setState({
-          productDetail: this.state.productDetail.concat(
-            response.data.products[0].trackingInfo
-          ),
+        response.data.products.map((product) => {
+          if (product.productId == this.state.productId) {
+            this.setState({
+              productDetail: this.state.productDetail.concat(
+                product.trackingInfo
+              ),
+            });
+          }
         });
       });
   }
@@ -103,7 +111,7 @@ export default class ProductTrackingDetails extends Component {
     }
 
     let editTDetails = null;
-    if (this.state.editTrackingFlag ) {
+    if (this.state.editTrackingFlag) {
       editTDetails = (
         <div className="card">
           <div className="card-header">
@@ -257,35 +265,32 @@ export default class ProductTrackingDetails extends Component {
       );
     });
 
-    let editButton ; 
+    let editButton;
 
-    if(localStorage.getItem("role") === "Seller"){
-    editButton = (
-      <button
-                className="Amazon"
-                onClick={(e) =>
-                  this.editTrackingDetails(
-                    this.state.orderId,
-                    this.state.productId
-                  )
-                }
-                style={{
-                  float: "right",
-                  marginRight: "5px",
-                  width: "80px",
-                  fontSize: "20px",
-                }}
-              >
-                {" "}
-                Edit
-              </button>
-    )
-              }
+    if (localStorage.getItem("role") === "Seller") {
+      editButton = (
+        <button
+          className="Amazon"
+          onClick={(e) =>
+            this.editTrackingDetails(this.state.orderId, this.state.productId)
+          }
+          style={{
+            float: "right",
+            marginRight: "5px",
+            width: "80px",
+            fontSize: "20px",
+          }}
+        >
+          {" "}
+          Edit
+        </button>
+      );
+    }
 
     return (
       <div>
         <div className="auth-wrapper">
-          <div className="auth-inner">
+          <div className="auth-inner3">
             <h4>
               Tracking Details
               {editButton}

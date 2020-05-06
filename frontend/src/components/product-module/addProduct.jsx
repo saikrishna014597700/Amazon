@@ -4,7 +4,7 @@ import "./product.css";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import $ from "jquery";
-import {Redirect} from "react-router"
+import { Redirect } from "react-router";
 
 export default class AddProduct extends Component {
   constructor() {
@@ -15,6 +15,7 @@ export default class AddProduct extends Component {
       price: "",
       category: "",
       sellerProducts: [],
+      categories: [],
     };
     this.addProduct = this.addProduct.bind(this);
     this.viewAllSellerProducts = this.viewAllSellerProducts.bind(this);
@@ -26,12 +27,23 @@ export default class AddProduct extends Component {
     let pos = $("#" + id).scrollLeft() + far;
     $("#" + id).animate({ scrollLeft: pos }, 100);
   }
-  our;
+
+  async componentDidMount() {
+    await axios
+      .get("http://localhost:3001/api/admin/get-product-categories")
+      .then((res) => {
+        console.log("response is::", res);
+        this.setState({
+          categories: res.data,
+        });
+      });
+  }
 
   async viewAllSellerProducts(event) {
     const payload = {
       sellerId: localStorage.getItem("id"),
     };
+
     axios
       .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
       .then((response) => {
@@ -49,6 +61,7 @@ export default class AddProduct extends Component {
       productDesc: this.state.productDesc,
       price: this.state.price,
       category: this.state.category,
+      sellerId: localStorage.getItem("id"),
     };
     axios
       .post("http://localhost:3001/api/product/addProduct/", payload)
@@ -57,13 +70,24 @@ export default class AddProduct extends Component {
 
   render() {
     let redirectVar = null;
-    if(!localStorage.getItem("id")){
-        redirectVar = <Redirect to= "/login"/>
-    }else{
-      if(localStorage.getItem("role") != "Seller"){
-        redirectVar = <Redirect to= "/login"/>
+    if (!localStorage.getItem("id")) {
+      redirectVar = <Redirect to="/login" />;
+    } else {
+      if (localStorage.getItem("role") != "Seller") {
+        redirectVar = <Redirect to="/login" />;
       }
     }
+
+    // const { category } = this.state.categories;
+
+    // let categoriesList = Object.keys(category).map((k) => {
+    //   return (
+    //     <option key={k} value={k}>
+    //       {category[k]}
+    //     </option>
+    //   );
+    // }, this);
+
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
       return (
         <div className="col-md-3" style={{ margin: 5 }}>
@@ -212,7 +236,6 @@ export default class AddProduct extends Component {
                         <strong>Category</strong>
                         <select
                           placeholder="Select Category"
-                          defaultValue=""
                           class="form-control"
                           name="category"
                           onChange={(e) =>
@@ -221,11 +244,13 @@ export default class AddProduct extends Component {
                             })
                           }
                         >
-                          <option value="Electronics">Electronics</option>
-                          <option value="Kitchen">Kitchen</option>
-                          <option value="Clothing">Clothing</option>
-                          <option value="Furniture">Furniture</option>
-                          <option value="Rentals">Rentals</option>
+                          {this.state.categories.map((e, key) => {
+                            return (
+                              <option key={key} value={e.category}>
+                                {e.category}
+                              </option>
+                            );
+                          })}
                         </select>
                       </div>
                       <div
@@ -267,7 +292,8 @@ export default class AddProduct extends Component {
         </div>
         <div className="row">
           {redirectVar}
-          {sellerProducts}</div>
+          {sellerProducts}
+        </div>
       </div>
     );
   }
