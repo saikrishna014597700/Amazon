@@ -375,8 +375,8 @@ class Profile extends Component {
                           <div
                             className="a-section a-spacing-none circular-avatar-image"
                             style={{
-                              backgroundImage:
-                                'url("//d1k8kvpjaf8geh.cloudfront.net/gp/profile/assets/search_avatar-8059b2ed8a963eda51ee0b024a379bc98b88e8b72ba77c7c37204308ce09b47b.png")',
+                              // backgroundImage:
+                              //   'url("//d1k8kvpjaf8geh.cloudfront.net/gp/profile/assets/search_avatar-8059b2ed8a963eda51ee0b024a379bc98b88e8b72ba77c7c37204308ce09b47b.png")',
                               backgroundSize: "contain",
                             }}
                           >
