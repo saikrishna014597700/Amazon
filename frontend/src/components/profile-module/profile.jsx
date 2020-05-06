@@ -25,6 +25,27 @@ class Profile extends Component {
     this.handleImageChange=this.handleImageChange.bind(this)
   }
 
+  async uploadPic(){
+    let fileData = new FormData()
+    console.log('fileData in state',this.state.formData)
+    fileData.append("file", this.state.formData)
+
+    var data = {
+      type : this.state.formData.type,
+      path:  this.state.formData.name
+    }
+    await axios.post("http://localhost:3001/api/file/uploadImage/?userId="+localStorage.getItem("id"),fileData,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }}).then((res)=>{
+        localStorage.setItem("imagePath",res.data.Location)
+        console.log("response:",res)
+        this.setState({
+          logout:false
+        })
+     })
+  }
+
   async componentDidMount()
   {
     const data=
@@ -68,9 +89,9 @@ class Profile extends Component {
 
   async handleChange(e) {
     this.setState({
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.files[0],
     });
-    console.log(e.target.value);
+    console.log(e.target.name," ",e.target.value)
   }
 
   async savename()
@@ -91,7 +112,7 @@ class Profile extends Component {
 
   async handleImageChange(e)  {
     this.setState({
-      [e.target.name]: e.target.files[0],
+     formData: e.target.files[0],
     });
     console.log(e.target.name," ",e.target.value)
   };
@@ -119,6 +140,21 @@ class Profile extends Component {
 
       )
     });
+
+    let profilePath = null;
+    if(localStorage.getItem("imagePath")){
+      profilePath = (<img
+        alt=""
+        src={localStorage.getItem("imagePath")}
+        id="avatar-image"
+      />)
+    }else{
+      profilePath = (<img
+        alt=""
+        src={require("./../product-module/shoe.jpg")}
+        id="avatar-image"
+      />)
+    }
     return (
       <div>
         {redirectVar}
@@ -380,11 +416,7 @@ class Profile extends Component {
                               backgroundSize: "contain",
                             }}
                           >
-                            <img
-                              alt=""
-                              src={require("../product-module/shoe.jpg")}
-                              id="avatar-image"
-                            />
+                            {profilePath}
 
                           </div>
                         </div>
@@ -395,7 +427,7 @@ class Profile extends Component {
                 <hr></hr>
                 <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
                 <hr></hr>
-                <button variant="primary" type="submit">
+                <button variant="primary" type="submit" onClick = {(e)=>this.uploadPic()}>
                                     <b>Update</b>
                                 </button>
                 

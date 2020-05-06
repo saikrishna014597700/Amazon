@@ -29,6 +29,10 @@ let signin = async (msg, callback) => {
             response.name = result[0].name;
             response.id = result[0].id;
             response.role = result[0].role;
+            if(result[0].imagePath!=null) 
+            {
+              response.imagePath = result[0].imagePath;
+            }
             return callback(null, response);
           } else {
             response.status = STATUS_CODE.SUCCESS;

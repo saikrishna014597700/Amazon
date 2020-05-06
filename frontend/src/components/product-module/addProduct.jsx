@@ -16,16 +16,25 @@ export default class AddProduct extends Component {
       category: "",
       sellerProducts: [],
       categories: [],
+      formData:[]
     };
     this.addProduct = this.addProduct.bind(this);
     this.viewAllSellerProducts = this.viewAllSellerProducts.bind(this);
     this.scroll = this.scroll.bind(this);
+    this.handleImageChange=this.handleImageChange.bind(this);
   }
   scroll(direction, id) {
     console.log("id here=>" + id);
     let far = ($("#" + id).width() + 25) * direction;
     let pos = $("#" + id).scrollLeft() + far;
     $("#" + id).animate({ scrollLeft: pos }, 100);
+  }
+
+  handleImageChange(e,index){
+
+    this.setState({
+      formData: this.state.formData.concat(e.target.files[0])
+    })
   }
 
   async componentDidMount() {
@@ -56,16 +65,41 @@ export default class AddProduct extends Component {
   }
 
   async addProduct(event) {
-    const payload = {
-      productName: this.state.productName,
-      productDesc: this.state.productDesc,
-      price: this.state.price,
-      category: this.state.category,
-      sellerId: localStorage.getItem("id"),
-    };
-    axios
-      .post("http://localhost:3001/api/product/addProduct/", payload)
-      .then((response) => {});
+    //As the add product API is not working properly, I used by commenting and hardcoding this as of now. The axios call "addProduct" should be returning productId and after that this uploadImages .  
+    var productId = "5eb26a7d8aca962d72d8ca90";
+    console.log("this.state.formData:",this.state.formData)
+
+    var imagesData = []
+    
+    this.state.formData.map(async (form)=>{
+      let fileData = new FormData()
+      fileData.append("file", form)
+      imagesData.push(fileData)
+      await axios.post("http://localhost:3001/api/file/uploadImages/?productId="+productId,fileData,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }}).then((res)=>{
+
+        console.log("success",res)
+      })
+    })
+
+
+
+    // const payload = {
+    //   productName: this.state.productName,
+    //   productDesc: this.state.productDesc,
+    //   price: this.state.price,
+    //   category: this.state.category,
+    //   sellerId: localStorage.getItem("id"),
+    // };
+    // axios
+    //   .post("http://localhost:3001/api/product/addProduct/", payload)
+    //   .then((response) => {
+
+    //     console.log("response",response)
+        
+    //   });
   }
 
   render() {
@@ -89,8 +123,58 @@ export default class AddProduct extends Component {
     // }, this);
 
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
+      let imagesHTML;
+
+      if(sellerProduct.productImages.length === 0){
+
+        return(
+          <div>
+        <div className="image">
+        <img
+          src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+          style={{ maxWidth: "100%" }}
+        />
+      </div>
+      <div className="image">
+        <img
+          src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+          style={{ maxWidth: "100%" }}
+        />
+      </div>
+      <div className="image">
+        <img
+          src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+          style={{ maxWidth: "100%" }}
+        />
+      </div>
+      <div className="image">
+        <img
+          src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+          style={{ maxWidth: "100%" }}
+        />
+      </div>
+      <div className="image">
+        <img
+          src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+          style={{ maxWidth: "100%" }}
+        />
+      </div>
+      </div>
+      )
+      }else{
+      //use this imagesHTML instead of ****hardcoding images****
+     imagesHTML = sellerProduct.productImages.map((image)=>{
+        return(
+        <div className="image">
+        <img src= {image} style={{ maxWidth: "100%" }}
+        />
+        </div>
+        )
+      })
+    }
+      
       return (
-        <div className="col-md-3" style={{ margin: 5 }}>
+      <div className="col-md-3" style={{ margin: 5 }}>
           <div class="ui card">
             {/* <div class="image"> */}
             <div className="row" style={{ margin: 10 }}>
@@ -104,6 +188,8 @@ export default class AddProduct extends Component {
               </div>
               <div className="col-md-8">
                 <div className="image-container" id={sellerProduct._id}>
+                  
+                  {/* ****hardcoding images****   you can delete from here to */}
                   <div className="image">
                     <img
                       src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
@@ -253,10 +339,29 @@ export default class AddProduct extends Component {
                           })}
                         </select>
                       </div>
-                      <div
-                        className="form-group"
-                        style={{ paddingTop: "12px" }}
+                      <div style={{ paddingTop: "12px" }}
                       >
+                        <div className="form-group">
+                        <strong>Image 1</strong> 
+                        <input type="file"  name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1"  onChange={(e)=>this.handleImageChange(e,0)} />
+                        </div>
+                        <div className="form-group">
+                        <strong>Image 2</strong> 
+                        <input type="file"  name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1"  onChange={(e)=>this.handleImageChange(e,1)} />
+                        </div>
+                        <div className="form-group">
+                        <strong>Image 3</strong> 
+                        <input type="file"  name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1"  onChange={(e)=>this.handleImageChange(e,2)} />
+                        </div>
+                        <div className="form-group">
+                        <strong>Image 4</strong> 
+                        <input type="file"  name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1"  onChange={(e)=>this.handleImageChange(e,3)} />
+                        </div>
+                        <div className="form-group">
+                        <strong>Image 5</strong> 
+                        <input type="file"  name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1"  onChange={(e)=>this.handleImageChange(e,4)} />
+                
+                        </div>
                         <Button
                           variant="warning"
                           size="lg"

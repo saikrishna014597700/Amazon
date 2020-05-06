@@ -88,6 +88,55 @@ export default class viewAllSellerProducts extends Component {
       return <Redirect to={this.state.redirect} />;
     }
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
+      let imagesHTML;
+
+      if(sellerProduct.productImages.length === 0){
+        imagesHTML = (
+          <div>
+          <div className="image">
+            <img
+              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+              style={{ maxWidth: "100%" }}
+            />
+          </div>
+          <div className="image">
+            <img
+              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+              style={{ maxWidth: "100%" }}
+            />
+          </div>
+          <div className="image">
+            <img
+              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+              style={{ maxWidth: "100%" }}
+            />
+          </div>
+          <div className="image">
+            <img
+              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+              style={{ maxWidth: "100%" }}
+            />
+          </div>
+          <div className="image">
+            <img
+              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+              style={{ maxWidth: "100%" }}
+            />
+          </div>
+          </div>
+       )
+      }else{
+        imagesHTML = sellerProduct.productImages.map((image)=>{
+          return(
+          <div className="image">
+          <img src= {image} style={{ maxWidth: "100%" }}
+          />
+          </div>
+          )
+       })
+    }
+
+
       return (
         <div className="col-md-3" style={{ margin: 5 }}>
           <br />
@@ -103,40 +152,11 @@ export default class viewAllSellerProducts extends Component {
                   &#10094;
                 </a>
               </div>
-              <div className="col-md-8">
-                <div className="image-container" id={sellerProduct._id}>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                </div>
-              </div>
+            <div className="col-md-8">
+           <div className="image-container" id={sellerProduct._id}>
+          {imagesHTML}
+           </div>
+             </div> 
               <div className="col-md-1" style={{ paddingTop: "50px" }}>
                 <a
                   className="next"
@@ -172,8 +192,11 @@ export default class viewAllSellerProducts extends Component {
             <div class="extra content">
               <Link
                 style={{ fontSize: "18", float: "left", marginLeft: "10px" }}
-                to="login"
+                to={{
+                  pathname: `/product/${sellerProduct._id}`,
+                }}
               >
+
                 View Product
               </Link>
               <Link

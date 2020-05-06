@@ -25,7 +25,36 @@ class SelerProfile extends React.Component {
       sellerProfile: {},
       editMode: false,
     };
+    this.handleImageChange=this.handleImageChange.bind(this)
   }
+
+  async uploadPic(){
+    let fileData = new FormData()
+    console.log('fileData in state',this.state.formData)
+    fileData.append("file", this.state.formData)
+
+    var data = {
+      type : this.state.formData.type,
+      path:  this.state.formData.name
+    }
+    await axios.post("http://localhost:3001/api/file/uploadImage/?userId="+localStorage.getItem("id"),fileData,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }}).then((res)=>{
+        localStorage.setItem("imagePath",res.data.Location)
+        console.log("response:",res)
+        this.setState({
+          logout:false
+        })
+     })
+  }
+
+  async handleImageChange(e)  {
+    this.setState({
+     formData: e.target.files[0],
+    });
+    console.log(e.target.name," ",e.target.value)
+  };
 
   handleOnChange = (event) => {
     this.setState({
@@ -107,9 +136,33 @@ class SelerProfile extends React.Component {
         redirectVar = <Redirect to= "/login"/>
       }
     }
+
+    let profilePath = null;
+    console.log("profilePath before change::",profilePath , )
+    if(localStorage.getItem("imagePath")){
+      console.log("true")
+      profilePath = (<img
+        alt=""
+        src={localStorage.getItem("imagePath")}
+        id="avatar-image"
+        style={{width:"220px",height:"220px",borderRadius:"50%",marginTop:"85px",marginLeft:"20px"}}
+      />)
+    }else{
+      console.log("false")
+      profilePath = (<img
+        alt=""
+        src={require("../product-module/shoe.jpg")}
+        
+        id="avatar-image"
+        style={{width:"220px",height:"220px",borderRadius:"50%",marginTop:"85px",marginLeft:"20px"}}
+      />)
+    }
+
+    console.log("profilePath::",profilePath)
     return (
       // <div className="seller-profile">
       <div>
+        <div className="a-section updated-profile-image-holder desktop">
        <div
                         className="a-section a-spacing-none desktop cover-photo"
                         style={{
@@ -121,17 +174,19 @@ class SelerProfile extends React.Component {
                           ,marginLeft:"300px"
                         }}
                       >
-                      <img
-                              alt=""
-                              src={require("../product-module/shoe.jpg")}
-                              
-                              id="avatar-image"
-                              style={{width:"220px",height:"220px",borderRadius:"50%",marginTop:"85px",marginLeft:"20px"}}
-                            />
-
+                      
+                        {profilePath}
+                        </div>
 {/* <p>{this.state?.sellerProfile?.sellerName}</p> */}
                        
-                      </div>
+                      </div >
+                      <div style = {{marginLeft : "300px"}}>
+                      <input type="file" style = {{magrinLeft : "300px !important",width:"20%"}} name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
+                
+                <button variant="primary" style = {{magrinLeft : "300px !important"}} type="submit" onClick = {(e)=>this.uploadPic()}>
+                                    <b>Update</b>
+                                </button>
+                                </div>
 
 
                     

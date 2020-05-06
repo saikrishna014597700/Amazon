@@ -25,7 +25,7 @@ export default class orders extends Component {
   }
 
   async componentDidMount() {
-    var sellerId = "123";
+    //var sellerId = "123";
     axios
       .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
       .then((response) => {
@@ -45,6 +45,12 @@ export default class orders extends Component {
         });
         //console.log("Pro are::", this.state.orders);
       });
+  }
+
+  addProduct(e,id){
+      this.setState({
+        redirect: `/product/${id}`
+      })
   }
 
   async cancelProduct(e,orderId,prodId){
@@ -113,9 +119,11 @@ export default class orders extends Component {
                         {orderProduct.status}
                       </h5>
                       <p class="card-text">
-                        <a href="#" class="card-link">
-                          {orderProduct.product.productName}
-                        </a>
+                      <Link 
+                      to={{
+                        pathname: `/product/${orderProduct.product._id}`,
+                      }}
+                     > {orderProduct.product.productName}</Link>
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}
@@ -144,23 +152,11 @@ export default class orders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) => this.addProduct(event,orderProduct.product._id)}
                     >
                       View Product
                     </Button>
-                    <Button
-                      variant="light"
-                      style={{
-                        width: "280px",
-                        height: "50px",
-                        float: "right",
-                        marginRight: "20px",
-                      }}
-                      block
-                      onClick={(event) => this.addProduct(event)}
-                    >
-                      Loading...
-                    </Button>
+                    
                   </th>
                 </tr>
               </table>
@@ -264,9 +260,12 @@ export default class orders extends Component {
                         {orderProduct.status}
                       </h5>
                       <p class="card-text">
-                        <a href="#" class="card-link">
-                          {orderProduct.product.productName}
-                        </a>
+                      <Link 
+                      to={{
+                        pathname: `/product/${orderProduct.product._id}`,
+                      }}
+                     > {orderProduct.product.productName}</Link>
+                        
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}
@@ -295,7 +294,7 @@ export default class orders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) => this.addProduct(event,orderProduct.product._id)}
                     >
                       View Product
                     </Button>

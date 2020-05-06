@@ -37,7 +37,8 @@ export default class Login extends Component {
             console.log("IDDDD", response.data.id);
             localStorage.setItem("id", response.data.id);
             localStorage.setItem("role", response.data.role);
-            localStorage.setItem("name", response.data.name);
+			localStorage.setItem("name", response.data.name);
+			localStorage.setItem("imagePath", response.data.imagePath);
             this.setState({
               msg: localStorage.getItem("role"),
             });

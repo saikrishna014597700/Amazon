@@ -15,29 +15,52 @@ const deleteFile = (file) => {
     });
 }
 
-function uploadFileToS3(file, module, user_id) {
-    let promise = new Promise((resolve, reject) => {
-        const params = {
-            Bucket: awsBucket + '/' + module + '/' + user_id,
-            Key: file.originalname,
-            ContentType: file.mimetype,
-            Body: fs.createReadStream(file.path),
-            ACL: awsPermission
-        };
+function uploadFileToS3(buffer, name, type,param) {
 
-        s3.upload(params, function (s3Err, resp) {
+    //const fileContent  = Buffer.from(req.files.uploadedFileName.data, 'binary');
+    let promise = new Promise((resolve, reject) => {
+
+        let params;
+        if(param === "user"){
+         params = {
+            ACL: 'public-read',
+            Body: buffer,
+            Bucket: awsBucket +"/users",
+            ContentType: type.mime,
+            Key: `${name}.${type}`
+          };
+        }else if (param === "product"){
+             params = {
+                ACL: 'public-read',
+                Body: buffer,
+                Bucket: awsBucket +"/products",
+                ContentType: type.mime,
+                Key: `${name}.${type}`
+              }; 
+        }
+        
+        
+        s3.upload(params, (s3Err, resp) => {
             if (s3Err) {
-                console.log(s3Err);
-                deleteFile(file);
+                console.log("error in upload: ",s3Err);
+                //deleteFile(file);
                 reject(s3Err);
-            } else {
+            }
+            else {
                 imageUrl = resp.Location;
-                deleteFile(file);
+                //deleteFile(file);
                 resolve(resp);
             }
-        });
+          });
+        // s3.upload(params, function (s3Err, resp) {
+        //     if (s3Err) {
+                
+        //     } else {
+                
+        //     }
+        // });
     });
     return promise;
 };
 
-module.exports = uploadFileToS3;
+exports.uploadFileToS3 = uploadFileToS3;

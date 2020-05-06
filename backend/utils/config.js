@@ -7,10 +7,10 @@ const config = {
   mysqlPassword: "amazonuser",
   mysqlHost: "amazondb.cmod13ww0plr.us-east-1.rds.amazonaws.com",
   mysqlDatabase: "amazonDB",
-  awsBucket: "cmpe273twitter",
+  awsBucket: "amazon-cmpe273",
   // Keys can't be added here because AWS categorizes this as vulnerability.
-  awsAccessKey: "",
-  awsSecretAccessKey: "",
+  awsAccessKey: "AKIAIVVSEWVULCHONKKA",
+  awsSecretAccessKey: "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",
   awsPermission: "public-read",
   redisHost: "54.173.125.207",
   redisPort: 6379,

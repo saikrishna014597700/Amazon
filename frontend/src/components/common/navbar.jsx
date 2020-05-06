@@ -33,6 +33,7 @@ class Navbar extends Component {
     localStorage.removeItem("id");
     localStorage.removeItem("role");
     localStorage.removeItem("name");
+    localStorage.removeItem("imagePath");
     this.setState({
       redirectVar: <Redirect to="/login" />,
     });

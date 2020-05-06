@@ -12,7 +12,9 @@ export default class productDescription extends Component {
     super();
     this.state = {
       userId:22,
-      product: {},
+      product: {
+        productImages:[]
+      },
       productId: "5e9d9d90278fd64044dc6945",
       rating: 4.5,
       selectedImage: productImage,
@@ -100,6 +102,7 @@ export default class productDescription extends Component {
         );
         await this.setState({
           product: response.data[0],
+          selectedImage :response.data[0].productImages[0]
         });
         console.log("this state =>" + JSON.stringify(this.state.product));
       });
@@ -151,8 +154,11 @@ export default class productDescription extends Component {
       </div>
     );
 
-    let images = (
-      <div style={{ height: "650px " }}>
+    let imagesHTML
+
+    if(this.state.product.productImages.length === 0){
+      imagesHTML= (
+        <div>
         <div className="row">
           <img
             src={productImage}
@@ -192,6 +198,34 @@ export default class productDescription extends Component {
             }}
           ></img>
         </div>
+        </div>
+      )
+      
+    }else{
+      imagesHTML = this.state.product.productImages.map((image)=>{
+        return(
+          <div>
+          <div className="row">
+          <img
+            src={image}
+            style={{ width: "50px", height: "65px", cursor: "pointer" }}
+            onClick={() => {
+              this.setState({ selectedImage: image });
+            }}
+          ></img>
+        </div>
+        <br></br>
+        </div>
+
+        )
+      })
+
+
+    }
+
+    let images = (
+      <div style={{ height: "650px " }}>
+        {imagesHTML}
         <br></br>
         <div className="row">
           <img
