@@ -8,6 +8,7 @@ const { getAllSellers } = require("./getAllSellers");
 const { getAllOrders } = require("./getAllOrders");
 const { getOrdersBySellerName } = require("./getOrdersBySellerName");
 const { getReports } = require("./getReports");
+const { getMostViewedProducts } = require("./getMostViewedProducts");
 
 let handle_request = (msg, callback) => {
   switch (msg.route) {
@@ -37,6 +38,9 @@ let handle_request = (msg, callback) => {
       break;
     case "reports":
       getReports(msg, callback);
+      break;
+    case "most_viewed_products":
+      getMostViewedProducts(msg, callback);
       break;
   }
 };
