@@ -120,11 +120,13 @@ export default class SearchProduct extends Component {
 
   async componentDidUpdate(prevProps) {
     if (
-      this.props.match.params.searchTerm != prevProps.match.params.searchTerm
+      this.props.match.params.searchTerm != prevProps.match.params.searchTerm || 
+      this.props.match.params.searchCategory!= prevProps.match.params.searchCategory 
     ) {
       console.log("here in update=>");
       await this.setState({
         searchTerm: this.props.match.params.searchTerm,
+        searchCategory: this.props.match.params.searchCategory
       });
       this.viewSeachResults();
     }

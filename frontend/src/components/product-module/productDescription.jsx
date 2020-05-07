@@ -14,86 +14,23 @@ export default class productDescription extends Component {
   constructor() {
     super();
     this.state = {
-      userId:22,
+      userId: 22,
       product: {
-        productImages:[]
+        productImages: [],
       },
       productId: "",
       rating: 4.5,
       reviews: [],
       selectedImage: productImage,
       newRating: 0,
-      quantity:1,
+      quantity: 1,
     };
     this.userReview = {};
     this.reviewSuccess = {};
     this.addToCart = this.addToCart.bind(this);
   }
-  goToCart = (event, pid, orderId) => {};
-  addToCart = async () => {
-    let cartSize = 0;
-    let payload = {
-      userId: this.state.userId,
-      productId: this.state.productId,
-    };
-    let finalQuantity = this.state.quantity;
-    let productExists = false;
-    await axios
-      .post("http://localhost:3001/api/cart/getCart/", payload)
-      .then((response) => {
-        console.log("in get cart response",response)
-        if (response) {
-          if (response.data.length != 0) {
-            productExists = true;
-            let quantity = response.data[0].quantity;
-            finalQuantity = parseInt(quantity,10) + parseInt(this.state.quantity,10);
-            cartSize = response.data.length;
-          }
-        }
-      });
-      console.log("final quantity now =>"+finalQuantity);
-    payload = {
-      userId: this.state.userId,
-      productId: this.state.productId,
-      quantity: finalQuantity,
-    };
-
-    if (!productExists) {
-      await axios
-        .post("http://localhost:3001/api/cart/addToCart/", payload)
-        .then((res) => {
-          if (res) {
-          }
-        });
-    } else {
-      await axios
-        .post("http://localhost:3001/api/cart/updateCart/", payload)
-        .then((res) => {
-          if (res) {
-          }
-        });
-    }
-    localStorage.setItem("cartSize", cartSize + 1);
-    await this.setState({ redirect: `/cart` });
-  };
-  async updateViewCount(){
-    axios.post("http://localhost:3001/api/product/updateViewCount",{productId:this.state.productId})
-    .then((response)=>{
-      console.log("view added");
-    });
-  }
-
-
-  quantityChangeHandler = async (product, e) => {
-    let quantity = e.target.value;
-    await this.setState({
-      quantity : quantity
-    })
-    
-  };
 
   async componentDidMount() {
-    
     var id = localStorage.getItem("id");
     if (id) {
       // console.log("in this id=>" + id);
@@ -119,13 +56,14 @@ export default class productDescription extends Component {
         console.log(
           "response for product details=>" + JSON.stringify(response)
         );
-        var defaultPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png"
-        if(response.data[0].productImages[0]){
-          defaultPath = response.data[0].productImages[0]
+        var defaultPath =
+          "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        if (response.data[0].productImages[0]) {
+          defaultPath = response.data[0].productImages[0];
         }
         await this.setState({
           product: response.data[0],
-          selectedImage :defaultPath
+          selectedImage: defaultPath,
         });
         // console.log("response.data[0].sellerId=>", response.data[0].sellerId);
         await axios
@@ -161,8 +99,79 @@ export default class productDescription extends Component {
           // console.log("this state =>" + JSON.stringify(this.state));
         });
       });
+    sleep(1000).then(() => {
       this.updateViewCount();
+    });
   }
+
+  goToCart = (event, pid, orderId) => {};
+  addToCart = async () => {
+    let cartSize = 0;
+    let payload = {
+      userId: this.state.userId,
+      productId: this.state.productId,
+    };
+    let finalQuantity = this.state.quantity;
+    let productExists = false;
+    await axios
+      .post("http://localhost:3001/api/cart/getCart/", payload)
+      .then((response) => {
+        console.log("in get cart response", response);
+        if (response) {
+          if (response.data.length != 0) {
+            productExists = true;
+            let quantity = response.data[0].quantity;
+            finalQuantity =
+              parseInt(quantity, 10) + parseInt(this.state.quantity, 10);
+            cartSize = response.data.length;
+          }
+        }
+      });
+    console.log("final quantity now =>" + finalQuantity);
+    payload = {
+      userId: this.state.userId,
+      productId: this.state.productId,
+      quantity: finalQuantity,
+    };
+
+    if (!productExists) {
+      await axios
+        .post("http://localhost:3001/api/cart/addToCart/", payload)
+        .then((res) => {
+          if (res) {
+          }
+        });
+    } else {
+      await axios
+        .post("http://localhost:3001/api/cart/updateCart/", payload)
+        .then((res) => {
+          if (res) {
+          }
+        });
+    }
+    localStorage.setItem("cartSize", cartSize + 1);
+    await this.setState({ redirect: `/cart` });
+  };
+  async updateViewCount() {
+    var payload = {
+      productId: this.state.productId,
+      productName: this.state.product.productName,
+    };
+    console.log("view count payload=>", this.state.product);
+    axios
+      .post("http://localhost:3001/api/product/updateViewCount", payload)
+      .then((response) => {
+        console.log("view added");
+      });
+  }
+
+  quantityChangeHandler = async (product, e) => {
+    let quantity = e.target.value;
+    await this.setState({
+      quantity: quantity,
+    });
+  };
+
   changeRating(newRating, name) {
     this.setState({
       newRating: newRating,
@@ -179,7 +188,7 @@ export default class productDescription extends Component {
 
     axios
       .post("http://localhost:3001/api/product/addRatingAndReview", payLoad)
-      .then((response) => {
+      .then(async (response) => {
         console.log("the response after adding the review is =>", response);
         if (response.status == 201) {
           this.userReview.innerHTML = "";
@@ -188,6 +197,16 @@ export default class productDescription extends Component {
           sleep(3000).then(() => {
             this.reviewSuccess.style.display = "none";
           });
+          await axios
+            .get(
+              "http://localhost:3001/api/product/getProductDetails/?productId=" +
+                this.state.productId
+            )
+            .then(async (res) => {
+              await this.setState({
+                reviews: res.data[0].reviewAndRatings,
+              });
+            });
         }
       });
   };
@@ -319,137 +338,136 @@ export default class productDescription extends Component {
       </div>
     );
 
-    let imagesHTML
+    let imagesHTML;
 
-    if(this.state.product.productImages.length === 0){
-      imagesHTML= (
+    if (this.state.product.productImages.length === 0) {
+      imagesHTML = (
         <div>
-        <div className="row">
-          <img
-            src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-            style={{ width: "50px", height: "65px", cursor: "pointer" }}
-            onClick={() => {
-              this.setState({ selectedImage: productImage });
-            }}
-          ></img>
-        </div>
-        <br></br>
-        </div>
-      )
-      
-    }else{
-      imagesHTML = this.state.product.productImages.map((image)=>{
-        return(
-          <div>
           <div className="row">
-          <img
-            src={image}
-            style={{ width: "50px", height: "65px", cursor: "pointer" }}
-            onClick={() => {
-              this.setState({ selectedImage: image });
-            }}
-          ></img>
+            <img
+              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+              style={{ width: "50px", height: "65px", cursor: "pointer" }}
+              onClick={() => {
+                this.setState({ selectedImage: productImage });
+              }}
+            ></img>
+          </div>
+          <br></br>
         </div>
-        <br></br>
-        </div>
-
-        )
-      })
-
-
+      );
+    } else {
+      imagesHTML = this.state.product.productImages.map((image) => {
+        return (
+          <div>
+            <div className="row">
+              <img
+                src={image}
+                style={{ width: "50px", height: "65px", cursor: "pointer" }}
+                onClick={() => {
+                  this.setState({ selectedImage: image });
+                }}
+              ></img>
+            </div>
+            <br></br>
+          </div>
+        );
+      });
     }
 
     let images = (
       <div style={{ height: "650px " }}>
         {imagesHTML}
         <br></br>
-        </div>
+      </div>
     );
 
     let deliveryOptions;
 
-    if(localStorage.getItem("role") === "Customer"){
-     deliveryOptions = (
-      <div style={{ height: "650px" }}>
-        <div
-          className="card"
-          style={{
-            alignItems: "center",
-            marginLeft: "40px",
-            marginRight: "30px",
-            padding: "0px",
-          }}
-        >
+    if (localStorage.getItem("role") === "Customer" && product.isDeleted == 0) {
+      deliveryOptions = (
+        <div style={{ height: "650px" }}>
           <div
-            className="card-body"
+            className="card"
             style={{
+              alignItems: "center",
+              marginLeft: "40px",
+              marginRight: "30px",
               padding: "0px",
-              paddingTop: "10px",
-              width: "150px",
-              margin: "0px",
             }}
           >
-            <div className="row">
-              <div className="col-sm" style={{ width: "100%" }}>
-                <div className="row" style={{ fontSize: "12px" }}>
-                  qty: &nbsp;&nbsp;
-                  <select
-                    onChange={(e) => this.quantityChangeHandler(product, e)}
-                    style={{ backgroundColor: "#e7eae8", borderRadius: "2px" }}
-                    defaultValue={product.quantity}
-                  >
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                  </select>
+            <div
+              className="card-body"
+              style={{
+                padding: "0px",
+                paddingTop: "10px",
+                width: "150px",
+                margin: "0px",
+              }}
+            >
+              <div className="row">
+                <div className="col-sm" style={{ width: "100%" }}>
+                  <div className="row" style={{ fontSize: "12px" }}>
+                    qty: &nbsp;&nbsp;
+                    <select
+                      onChange={(e) => this.quantityChangeHandler(product, e)}
+                      style={{
+                        backgroundColor: "#e7eae8",
+                        borderRadius: "2px",
+                      }}
+                      defaultValue={product.quantity}
+                    >
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                    </select>
+                  </div>
+                  <div className="row" style={{ marginTop: "10px" }}>
+                    <button
+                      className="AddCart"
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        height: "30px",
+                      }}
+                      onClick={this.addToCart}
+                    >
+                      Add to cart
+                    </button>
+                  </div>
+                  <hr></hr>
+                  <div className="row">
+                    <button style={{ width: "100%", height: "30px" }}>
+                      {" "}
+                      Save for later{" "}
+                    </button>
+                  </div>
+                  <br></br>
                 </div>
-                <div className="row" style={{ marginTop: "10px" }}>
-                  <button
-                    className="AddCart"
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      height: "30px",
-                    }}
-                    onClick={this.addToCart}
-                  >
-                    Add to cart
-                  </button>
-                </div>
-                <hr></hr>
-                <div className="row">
-                  <button style={{ width: "100%", height: "30px" }}>
-                    {" "}
-                    Save for later{" "}
-                  </button>
-                </div>
-                <br></br>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
     }
 
-    let reviewAddDiv ;
-    if(localStorage.getItem("role") === "Customer"){
+    let reviewAddDiv;
+    if (localStorage.getItem("role") === "Customer") {
       reviewAddDiv = (
         <div>
-      <div style={{ fontSize: "20px", fontWeight: "bold" }}>
-      Give rating and review
-    </div>
-    {addReviewDiv}
-    </div>
-    )
+          <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+            Give rating and review
+          </div>
+          {addReviewDiv}
+        </div>
+      );
     }
 
     return (
@@ -487,9 +505,7 @@ export default class productDescription extends Component {
           </tr>
           <tr>
             <td></td>
-            <td colSpan="3">
-              {reviewAddDiv}
-            </td>
+            <td colSpan="3">{reviewAddDiv}</td>
           </tr>
         </table>
       </div>
