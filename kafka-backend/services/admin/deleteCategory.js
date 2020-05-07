@@ -16,10 +16,11 @@ let deleteCategory = async (msg, callback) => {
       .then(async (sqlResult) => {
         if (sqlResult.length == 0) {
           await query(pool, deleteQuery).then((result) => {
-            response.result = result;
+            response.result = "Deleted successfully";
             response.status = STATUS_CODE.SUCCESS;
             response.data = MESSAGES.DELETE_SUCCESSFUL;
           });
+        } else {
           response.result = "Category with existing products cannot be deleted";
           response.status = STATUS_CODE.SUCCESS;
           response.data = MESSAGES.ACTION_NOT_COMPLETE;

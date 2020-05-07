@@ -140,7 +140,7 @@ html,
 
 .image {
   /* height: 100%;
-  width: 100%; */
+    width: 100%; */
   font-size: 25px;
   margin: 10px;
   display: inline;
@@ -156,26 +156,26 @@ html,
 }
 
 /* h2 {
-    margin-top: 2px;
-    margin-bottom: 2px;
-  }
-  
-  .container { max-width: 360px; }
-  
-  .divider {
-    text-align: center;
-    margin-top: 20px;
-    margin-bottom: 5px;
-  }
-  
-  .divider hr {
-    margin: 7px 0px;
-    width: 35%;
-  }
-  
-  .left { float: left; }
-  
-  .right { float: right; } */
+      margin-top: 2px;
+      margin-bottom: 2px;
+    }
+    
+    .container { max-width: 360px; }
+    
+    .divider {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 5px;
+    }
+    
+    .divider hr {
+      margin: 7px 0px;
+      width: 35%;
+    }
+    
+    .left { float: left; }
+    
+    .right { float: right; } */
 
 .seller-profile {
   width: 850px;

@@ -11,7 +11,29 @@ const logger = require("../utils/logger");
 /**
  * to deactivate an account
  * @param req: user_id
- */
+ */ router.post("/getMonthWiseSalesSum/:sellerId", async (req, res) => {
+  let msg = req.body;
+  msg.route = "monthwise_total_sales_sum";
+  msg.sellerId = req.params.sellerId;
+
+  //   const { error } = validateAccount(req.body);
+  //   if (error) {
+  //     msg.error = error.details[0].message;
+  //     logger.error(msg);
+  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
+  //   }
+
+  kafka.make_request("getMonthWiseSalesSum", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
 
 router.get("/getTotalSalesSumForSeller/:sellerId", async (req, res) => {
   let msg = req.body;

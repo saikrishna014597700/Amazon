@@ -382,7 +382,7 @@ export default class AdminReports extends Component {
     return (
       <div className="auth-wrapper">
         {redirectVar}
-        <div className="auth-inner3">
+        <div className="auth-inner4">
           <div class="card text-center">
             <div className="card">
               <Form

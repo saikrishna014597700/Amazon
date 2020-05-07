@@ -7,6 +7,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 
+import { Link } from "react-router-dom";
+
 import Env from "../../helpers/Env";
 import StarRatings from "react-star-ratings";
 
@@ -21,6 +23,7 @@ class InventoryListings extends React.Component {
       productsAvailable: false,
       dialogueOpen: false,
       categoryName: "",
+      defaultCatName: "",
     };
   }
 
@@ -56,6 +59,18 @@ class InventoryListings extends React.Component {
   async componentDidMount() {
     await this.getCategories();
     console.log("categories::::", this.state.categories);
+    var defaultCatId;
+    var defaultCatName;
+    this.state?.categories?.map((category) => {
+      defaultCatId = category.id;
+      defaultCatName = category.category;
+    });
+    await this.setState({
+      defaultCatName: defaultCatName,
+    });
+    if (defaultCatId) {
+      await this.getProductsByCategory(defaultCatId);
+    }
   }
 
   getProductsByCategory = (categoryId) => {
@@ -105,6 +120,7 @@ class InventoryListings extends React.Component {
       )
       .then(async (res) => {
         console.log("delete response::::", res);
+        alert(res.data.result);
         this.getCategories();
       });
   };
@@ -116,6 +132,9 @@ class InventoryListings extends React.Component {
     });
     console.log(JSON.stringify(this.state.selectedCategory, null, 2));
     this.getProductsByCategory(this.state.selectedCategory.id);
+    this.setState({
+      defaultCatName: this.state.selectedCategory.category,
+    });
   };
 
   onSearchNameKeyUp = (event) => {
@@ -129,6 +148,7 @@ class InventoryListings extends React.Component {
 
   render() {
     let products = "";
+    console.log("Abcc", this.state.defaultCatName);
     if (this.state.productsAvailable) {
       console.log("enetered iff in ");
       products = this.state?.products?.map((sellerProduct) => {
@@ -150,31 +170,7 @@ class InventoryListings extends React.Component {
                     <div className="image">
                       <img
                         src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                        style={{ maxWidth: "100%" }}
-                      />
-                    </div>
-                    <div className="image">
-                      <img
-                        src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                        style={{ maxWidth: "100%" }}
-                      />
-                    </div>
-                    <div className="image">
-                      <img
-                        src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                        style={{ maxWidth: "100%" }}
-                      />
-                    </div>
-                    <div className="image">
-                      <img
-                        src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                        style={{ maxWidth: "100%" }}
-                      />
-                    </div>
-                    <div className="image">
-                      <img
-                        src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                        style={{ maxWidth: "100%" }}
+                        style={{ width: "100%", height: "100%" }}
                       />
                     </div>
                   </div>
@@ -232,10 +228,17 @@ class InventoryListings extends React.Component {
               </div>
               <hr style={{ height: "2px", backgroundColor: "gray" }}></hr>
               <div className="extra content">
-                <a href="#" style={{ fontSize: "15" }}>
+                <Link
+                  style={{ fontSize: "15", marginLeft: "70px" }}
+                  to={{
+                    pathname: `/product/${sellerProduct._id}`,
+                  }}
+                >
+                  {" "}
                   View Product
-                </a>
+                </Link>
               </div>
+              <br />
             </div>
           </div>
         );
@@ -244,7 +247,7 @@ class InventoryListings extends React.Component {
 
     return (
       <React.Fragment>
-        <article className="auth-inner">
+        <article className="auth-inner4">
           {/* <div className="row">InventoryListings</div> */}
           <div className="row">
             <div className="col-6">
@@ -252,6 +255,7 @@ class InventoryListings extends React.Component {
                 className="productSearch"
                 id="combo-box-demo"
                 name="categoryName"
+                searchText={this.state.defaultCatName}
                 onChange={this.handleSearchNameChange}
                 onKeyUp={this.onSearchNameKeyUp}
                 options={!!this.state?.categories ? this.state?.categories : []}
@@ -271,6 +275,7 @@ class InventoryListings extends React.Component {
                 <button
                   className="btn btn btn-warning category-button"
                   type="button"
+                  style={{ marginTop: "15px", marginLeft: "25px" }}
                   onClick={this.addCategoryAction}
                 >
                   Add Category
@@ -281,6 +286,7 @@ class InventoryListings extends React.Component {
               <div className="apply-btn-container float-left">
                 <button
                   className="btn btn btn-warning category-button"
+                  style={{ marginTop: "15px", marginLeft: "20px" }}
                   type="button"
                   onClick={this.deleteCategory}
                 >
@@ -291,11 +297,22 @@ class InventoryListings extends React.Component {
           </div>
           <div className="row">
             {!!this.state?.productsAvailable && products ? (
-              <div className="row">{products}</div>
+              <div>
+                <br />
+                <h5 style={{ marginLeft: "20px" }}>
+                  Selected Category : {this.state.defaultCatName}
+                </h5>
+                <br />
+                <div className="row">{products}</div>
+                <br />
+              </div>
             ) : (
-              <h1 className="product-unavailable">
+              <h6
+                className="product-unavailable"
+                style={{ marginLeft: "20px" }}
+              >
                 This category has no products
-              </h1>
+              </h6>
             )}
           </div>
         </article>
@@ -303,13 +320,13 @@ class InventoryListings extends React.Component {
         <Dialog
           className="add-product-dialogue"
           onClose={this.handleClose}
+          style={{ margin: "auto", width: "400px", height: "400px" }}
           aria-labelledby="customized-dialog-title"
           open={this.state.dialogueOpen}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
             Add Category
           </DialogTitle>
-          <DialogContent dividers></DialogContent>
           <Form>
             <Form.Group controlId="exampleForm.ControlInput1">
               <Form.Label>Category Name</Form.Label>
@@ -327,6 +344,16 @@ class InventoryListings extends React.Component {
               onClick={this.addCategory}
             >
               Add Category
+            </button>
+          </div>
+          <br />
+          <div className="apply-btn-container float-left">
+            <button
+              className="btn btn btn-warning category-button"
+              type="button"
+              onClick={this.handleClose}
+            >
+              Close
             </button>
           </div>
         </Dialog>

@@ -7,6 +7,7 @@ import SellerReports from "./components/seller-module/sellerReports";
 import OrderDetailPage from "./components/seller-module/orderDetailPage";
 import ProductTrackingDetails from "./components/seller-module/productTrackingDetails";
 import SellerProfile from "./components/seller-module/sellerProfile";
+import AdminProductTrackingDetails from "./components/admin-module/adminProductTrackingDetails";
 
 import EditProductDetails from "./components/product-module/editProductDetails";
 // import SignIn from "./components/signin-module/login";
@@ -58,6 +59,10 @@ class Main extends Component {
           <Route
             path="/productTrackingDetails/:id/:id"
             component={ProductTrackingDetails}
+          />
+          <Route
+            path="/adminProductTrackingDetails/:id/:id"
+            component={AdminProductTrackingDetails}
           />
           <Route
             path="/viewAllSellerProducts"

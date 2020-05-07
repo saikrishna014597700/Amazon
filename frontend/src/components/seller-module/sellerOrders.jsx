@@ -681,7 +681,7 @@ export default class SellerOrders extends Component {
                       block
                       onClick={(event) => this.addProduct(event)}
                     >
-                      View Productt
+                      View Product
                     </Button>
                     <Button
                       variant="light"
