@@ -5,6 +5,9 @@ const { deleteCategory } = require("./deleteCategory");
 const { getProductsByCategory } = require("./getProductsByCategory");
 const { getProductsBySeller } = require("./getProductsBySeller");
 const { getAllSellers } = require("./getAllSellers");
+const { getAllOrders } = require("./getAllOrders");
+const { getOrdersBySellerName } = require("./getOrdersBySellerName");
+const { getReports } = require("./getReports");
 
 let handle_request = (msg, callback) => {
   switch (msg.route) {
@@ -25,6 +28,15 @@ let handle_request = (msg, callback) => {
       break;
     case "get_all_sellers":
       getAllSellers(msg, callback);
+      break;
+    case "get_all_orders":
+      getAllOrders(msg, callback);
+      break;
+    case "orders_by_seller_name":
+      getOrdersBySellerName(msg, callback);
+      break;
+    case "reports":
+      getReports(msg, callback);
       break;
   }
 };
