@@ -88,7 +88,8 @@ export default class customerCards extends Component {
   async componentDidMount() {
 
     var data = localStorage.getItem("id");
-
+    
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" + data).then((res) => {
 
       console.log("cards::", res.data)

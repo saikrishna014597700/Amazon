@@ -31,7 +31,7 @@ let getOrders = async (msg, callback) => {
         
         var productsArr =  await modifyOrdersData(prods,productDetails)
         result.productsArr = productsArr
-        console.log('productsArr returning::',productsArr )
+        //console.log('productsArr returning::',productsArr )
         resultArray.push(result);
        }
        
@@ -39,7 +39,7 @@ let getOrders = async (msg, callback) => {
         
     })
 
-    console.log('resultArray::', resultArray)
+    //console.log('resultArray::', resultArray)
     response.resultArray = resultArray
     response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
     //response.data = MESSAGES.CREATE_SUCCESSFUL;
@@ -58,7 +58,7 @@ exports.getOrders = getOrders;
 
 async function modifyOrdersData(prods,productDetails){
     var productsArr = []
-    console.log('products', prods)
+    //console.log('products', prods)
     for(var prod of prods){
       var prodQuantObj = {}
       prodQuantObj.quantity = prod.quantity;
@@ -66,7 +66,7 @@ async function modifyOrdersData(prods,productDetails){
       prodQuantObj = await modifyProductsData(prod,prodQuantObj)
       productsArr.push(prodQuantObj);
     }
-    console.log('productsArr::::',productsArr)
+    //console.log('productsArr::::',productsArr)
     return productsArr
 }
 

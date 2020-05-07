@@ -31,15 +31,17 @@ let getOpenOrders = async (msg, callback) => {
         
         var productsArr =  await modifyOrdersData(prods,productDetails)
         result.productsArr = productsArr
-        console.log('productsArr returning::',productsArr )
-        resultArray.push(result);
+        //console.log('productsArr returning::',productsArr )
+        if(result.productsArr.length>0){
+            resultArray.push(result);
+            }
        }
        
        
         
     })
 
-    console.log('resultArray::', resultArray)
+   // console.log('resultArray::', resultArray)
     response.resultArray = resultArray
     response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
     //response.data = MESSAGES.CREATE_SUCCESSFUL;
@@ -58,15 +60,17 @@ exports.getOpenOrders = getOpenOrders;
 
 async function modifyOrdersData(prods,productDetails){
     var productsArr = []
-    console.log('products', prods)
+    //console.log('products', prods)
     for(var prod of prods){
       var prodQuantObj = {}
       prodQuantObj.quantity = prod.quantity;
       prodQuantObj.status = prod.status
+      if(prod.status === "Shipped" || prod.status === "Ordered" || prod.status === "ordered"){
       prodQuantObj = await modifyProductsData(prod,prodQuantObj)
       productsArr.push(prodQuantObj);
+      }
     }
-    console.log('productsArr::::',productsArr)
+   // console.log('productsArr::::',productsArr)
     return productsArr
 }
 

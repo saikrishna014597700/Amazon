@@ -8,12 +8,14 @@ const pool = require('./mysqlConnection');
 // Setup work and export for the JWT passport strategy
 function auth() {
   var opts = {};
+  console.log("in auth function !!!")
   opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
   opts.secretOrKey = secret;
   passport.use(
     new JwtStrategy(opts, function (jwt_payload, done) {
       const user_id = jwt_payload.user_id;
       let sql = `CALL users_get('${user_id}')`;
+      console.log("user_id in payload:::", user_id)
       pool.query(sql, (err, sqlResult) => {
         if (err) {
           return done(err, null);

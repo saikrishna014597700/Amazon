@@ -38,20 +38,20 @@ export default class orders extends Component {
 
       axios
       .get("http://localhost:3001/api/orders/getOpenOrders/?userId=" + localStorage.getItem("id"))
-      .then((response) => {
-        console.log("Pro are::", response);
+      .then((openresponse) => {
+        console.log("Pro are::", openresponse);
         this.setState({
-            openOrders: response.data,
+            openOrders: openresponse.data,
         });
         //console.log("Pro are::", this.state.orders);
       });
       axios
       .get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
-      .then((response) => {
-        console.log("Cncelled orders are::", response);
+      .then((Cancelledresponse) => {
+        console.log("Cncelled orders are::", Cancelledresponse);
         
         this.setState({
-            cancelledOrders: response.data,
+            cancelledOrders: Cancelledresponse.data,
         });
         //console.log("Pro are::", this.state.orders);
       });
@@ -97,7 +97,7 @@ export default class orders extends Component {
 
     
     let cancelledOrders = this.state.cancelledOrders.map((sellerOrder) => {
-      console.log("seller", sellerOrder);
+      console.log("cancelled order", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
         let logoPath;
@@ -563,11 +563,11 @@ export default class orders extends Component {
                 </a>
                 <a
                   class="nav-item nav-link"
-                  id="nav-cancelled-orders-tab"
+                  id="nav-open-orders-tab"
                   data-toggle="tab"
-                  href="#nav-cancelled-orders"
+                  href="#nav-open-orders"
                   role="tab"
-                  aria-controls="nav-cancelled-orders"
+                  aria-controls="nav-open-orders"
                   aria-selected="false"
                 >
                   Open Orders
@@ -596,9 +596,9 @@ export default class orders extends Component {
               </div>
               <div
                 class="tab-pane fade show active"
-                id="nav-orders"
+                id="nav-open-orders"
                 role="tabpanel"
-                aria-labelledby="nav-orders-tab"
+                aria-labelledby="nav-open-orders-tab"
               >
                 {openOrders}
               </div>
