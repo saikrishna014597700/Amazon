@@ -121,6 +121,14 @@ export default class SellerOrders extends Component {
       console.log("seller", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
+
+
         return (
           <div>
             <div class="card">
@@ -129,7 +137,7 @@ export default class SellerOrders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",
@@ -288,6 +296,12 @@ export default class SellerOrders extends Component {
       console.log("seller", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
         return (
           <div>
             <div class="card">
@@ -296,7 +310,7 @@ export default class SellerOrders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",
@@ -437,6 +451,12 @@ export default class SellerOrders extends Component {
       console.log("seller", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
         return (
           <div>
             <div class="card">
@@ -445,7 +465,7 @@ export default class SellerOrders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",
@@ -586,6 +606,12 @@ export default class SellerOrders extends Component {
       console.log("seller", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
         return (
           <div>
             <div class="card">
@@ -594,7 +620,7 @@ export default class SellerOrders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",

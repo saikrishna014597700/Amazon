@@ -17,7 +17,43 @@ export default class EditProductDetails extends Component {
       sellerProducts: [],
       sellerProductsTest: [],
       redirect: null,
+      formData:[]
     };
+    this.handleImageChange=this.handleImageChange.bind(this);
+  }
+
+  handleImageChange(e){
+
+    console.log("sellerProductsTest", this.state.sellerProductsTest)
+    this.setState({
+      formData: this.state.formData.concat(e.target.files[0])
+    })
+  }
+
+  async removeImage(image){
+    var productId = this.props.match.params.id;
+    console.log("remove productId::", productId, "imagePath:::", image);
+
+    var data = {
+      productId:productId,
+      imagePath: image
+    }
+
+    await axios.post("http://localhost:3001/api/file/removeProductImage",data).then(async (res)=>{
+            console.log("success",res)
+            await axios.get(`http://localhost:3001/api/product/getProductDetails/${productId}`)
+            .then((response) => {
+              console.log("Pro are::", response);
+              alert("deleted image")
+              this.setState({
+                sellerProducts: this.state.sellerProducts.concat(response.data),
+              });
+              //console.log("Pro are::", this.state.sellerProducts);
+            });
+
+            })
+          
+
   }
 
   async componentDidMount() {
@@ -55,12 +91,28 @@ export default class EditProductDetails extends Component {
     };
     axios
       .post("http://localhost:3001/api/product/editProduct/", payload)
-      .then((response) => {
+      .then(async (response) => {
         console.log("Final res is", response);
-        this.setState({
-          sellerProducts: response.data,
-        });
-        alert("Updated successfully");
+        
+        this.state.formData.map(async (form)=>{
+          let fileData = new FormData()
+          fileData.append("file", form)
+          //imagesData.push(fileData)
+          await axios.post("http://localhost:3001/api/file/uploadImages/?productId="+this.props.match.params.id,fileData,{
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }}).then(async (res)=>{
+            console.log("success",res)
+            })
+          })
+          await axios.get(`http://localhost:3001/api/product/getProductDetails/${this.props.match.params.id}`)
+            .then((response) => {
+              alert("Updated successfully");
+              console.log("Pro are::", response);
+              this.setState({
+                sellerProducts: [].concat(response.data),
+              });
+        })   
       });
   }
 
@@ -87,6 +139,56 @@ export default class EditProductDetails extends Component {
     }
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
       console.log("P name", sellerProduct.productName);
+
+      let imagesHTML;
+      let imagesHTMLforAdd;
+
+      let multpileAdds;
+
+      imagesHTML = sellerProduct.productImages.map((image) => {
+        return (
+          <div className="form-group">
+            <div className="row" style={{ marginLeft: "15px" }}>
+              <img
+                src={image}
+                style={{ width: "50px", height: "65px", cursor: "pointer", marginRight: "15px" }}
+              ></img>
+              <Button variant="warning"
+                style={{ width: "85px" }}
+                block
+                onClick={(event) => this.removeImage(image)}>Remove</Button>
+            </div>
+          </div>
+
+        )
+      })
+
+      // console.log("remaining length::",5-sellerProduct.productImages.length)
+
+      //(i)=>{
+      let len = sellerProduct.productImages.length;
+      let arr = []
+      for(let index=0;index<5-len;index++){
+        arr.push(index);
+      }
+
+
+      imagesHTMLforAdd = arr.map((pp) => {
+
+        return (<div className="form-group">
+          <strong>Image </strong>
+          <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={(e) => this.handleImageChange(e)} />
+        </div>)
+      })
+
+      // multpileAdds = 
+
+      //}
+      console.log("imagesHTMLforAdd", imagesHTMLforAdd)
+      //console.log("imagesHTMLforAdd", imagesHTMLforAdd)
+      //}
+
+
       return (
         <div className="auth-wrapper">
           <div className="auth-inner1">
@@ -171,6 +273,9 @@ export default class EditProductDetails extends Component {
                           <option value="Rentals">Rentals</option>
                         </select>
                       </div>
+
+                      {imagesHTML}
+                      {imagesHTMLforAdd}
                       <div
                         className="form-group"
                         style={{ paddingTop: "12px" }}

@@ -227,13 +227,7 @@ export default class productDescription extends Component {
       <div style={{ height: "650px " }}>
         {imagesHTML}
         <br></br>
-        <div className="row">
-          <img
-            src={productImage}
-            style={{ width: "50px", height: "65px", cursor: "pointer" }}
-          ></img>
         </div>
-      </div>
     );
 
     let deliveryOptions = (

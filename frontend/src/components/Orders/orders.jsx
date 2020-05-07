@@ -35,6 +35,16 @@ export default class orders extends Component {
         });
         //console.log("Pro are::", this.state.orders);
       });
+
+      axios
+      .get("http://localhost:3001/api/orders/getOpenOrders/?userId=" + localStorage.getItem("id"))
+      .then((response) => {
+        console.log("Pro are::", response);
+        this.setState({
+            openOrders: response.data,
+        });
+        //console.log("Pro are::", this.state.orders);
+      });
       axios
       .get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
       .then((response) => {
@@ -90,6 +100,13 @@ export default class orders extends Component {
       console.log("seller", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
+
         return (
           <div>
             <div class="card">
@@ -98,7 +115,7 @@ export default class orders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",
@@ -226,10 +243,15 @@ export default class orders extends Component {
       );
     });
 
-    
-    let ordersPlaced = this.state.orders.map((sellerOrder) => {
+    let openOrders = this.state.openOrders.map((sellerOrder) => {
       console.log("orders placed!!", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
         var buttonId = sellerOrder.order._id;
         return (
           <div>
@@ -239,7 +261,7 @@ export default class orders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",
@@ -364,26 +386,155 @@ export default class orders extends Component {
                 </td>
               </tr>
             </table>
-            {/* <ul class="nav nav-pills card-header-pills">
-              Order Placed On:{sellerOrder.order.createDate}
-            </ul>
-            <p class="card-text">
-              {" "}
-              Order ID:{sellerOrder.order._id}
-              TransactionAmount: {sellerOrder.order.transactionAmount}
-            </p>
-            <p class="card-title">
-              Shipping Address: {sellerOrder.order.shippingAddress.street}
-              {sellerOrder.order.shippingAddress.city}
-              {sellerOrder.order.shippingAddress.state}
-              {sellerOrder.order.shippingAddress.zip_code}
-            </p>
-            {/* <button
-              class="btn btn-primary"
-              onClick={this.productsDisplay(sellerOrder.order._id)}
-            >
-              Products
-            </button> */}
+          </div>
+          {orderProducts}
+        </div>
+      );
+    });
+
+    let ordersPlaced = this.state.orders.map((sellerOrder) => {
+      console.log("orders placed!!", sellerOrder);
+      let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
+        var buttonId = sellerOrder.order._id;
+        return (
+          <div>
+            <div class="card">
+              <table>
+                <tr>
+                  <th style={{ width: "20%" }}>
+                    <img
+                      class="card-img-left"
+                      src={logoPath}
+                      alt="Card image cap"
+                      style={{
+                        width: "300px",
+                        height: "300px",
+                        float: "left",
+                        marginLeft: "20px",
+                      }}
+                    ></img>
+                  </th>
+                  <th style={{ width: "30%", textAlign: "left" }}>
+                    <div
+                      class="card-body"
+                      style={{
+                        marginLeft: "20px",
+                      }}
+                    >
+                      <h5 class="card-title">
+                        {orderProduct.status}
+                      </h5>
+                      <p class="card-text">
+                      <Link 
+                      to={{
+                        pathname: `/product/${orderProduct.product._id}`,
+                      }}
+                     > {orderProduct.product.productName}</Link>
+                        
+                      </p>
+                      {/* <p class="card-text">
+                        {orderProduct.product.productName}
+                      </p> */}
+                      <h6>{orderProduct.product.productDesc}</h6>
+                      <h6>Price: {orderProduct.product.price}</h6>
+                      <h6>Quantity: {orderProduct.quantity}</h6>
+                    </div>
+
+                    {/* <div class="card-body">
+                      <a href="#" class="card-link">
+                        Card link
+                      </a>
+                      <a href="#" class="card-link">
+                        Another link
+                      </a>
+                    </div> */}
+                  </th>
+                  <th style={{ width: "25%" }}>
+                    <Button
+                      variant="light"
+                      style={{
+                        width: "280px",
+                        height: "50px",
+                        float: "right",
+                        marginRight: "20px",
+                      }}
+                      block
+                      onClick={(event) => this.addProduct(event,orderProduct.product._id)}
+                    >
+                      View Product
+                    </Button>
+                    <Button
+                      variant="light"
+                      style={{
+                        width: "280px",
+                        height: "50px",
+                        float: "right",
+                        marginRight: "20px",
+                      }}
+                      block
+                      hidden = {orderProduct.status === "Delivered" || orderProduct.status === "Cancelled"}
+                      onClick={(event) => this.cancelProduct(event,sellerOrder.order._id,orderProduct.product._id)}
+                    >
+                      Cancel Product
+                    </Button>
+                    <Button
+                      variant="light"
+                      style={{
+                        width: "280px",
+                        height: "50px",
+                        float: "right",
+                        marginRight: "20px",
+                      }}
+                      block
+                      onClick={(event) =>
+                        this.getProductTrackingDetails(
+                          event,
+                          orderProduct.product._id,
+                          sellerOrder.order._id
+                        )
+                      }
+                    >
+                      Tracking Details
+                    </Button>
+                  </th>
+                </tr>
+              </table>
+            </div>
+          </div>
+        );
+      });
+
+      return (
+        <div class="card text-center">
+          <div class="card-header">
+            <table style={{ width: "100%" }}>
+              <tr>
+                <th>ORDER PLACED</th>
+                <th>Total</th>
+                <th>ORDER # </th>
+                <th>ORDER DETAILS</th>
+              </tr>
+              <tr>
+                <td>{sellerOrder.order.createDate}</td>
+                <td>{sellerOrder.order.transactionAmount}</td>
+                <td>{sellerOrder.order._id}</td>
+                <td>
+                  <Link
+                    to={{
+                      pathname: `/orderDetailPage/${sellerOrder.order._id}`,
+                    }}
+                  >
+                    Order Details
+                  </Link>
+                </td>
+              </tr>
+            </table>
           </div>
           {orderProducts}
         </div>
@@ -419,6 +570,17 @@ export default class orders extends Component {
                   aria-controls="nav-cancelled-orders"
                   aria-selected="false"
                 >
+                  Open Orders
+                </a>
+                <a
+                  class="nav-item nav-link"
+                  id="nav-cancelled-orders-tab"
+                  data-toggle="tab"
+                  href="#nav-cancelled-orders"
+                  role="tab"
+                  aria-controls="nav-cancelled-orders"
+                  aria-selected="false"
+                >
                   Cancelled Orders
                 </a>
               </div>
@@ -431,6 +593,14 @@ export default class orders extends Component {
                 aria-labelledby="nav-orders-tab"
               >
                 {ordersPlaced}
+              </div>
+              <div
+                class="tab-pane fade show active"
+                id="nav-orders"
+                role="tabpanel"
+                aria-labelledby="nav-orders-tab"
+              >
+                {openOrders}
               </div>
               <div
                 class="tab-pane fade"

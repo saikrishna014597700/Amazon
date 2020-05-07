@@ -101,6 +101,20 @@ router.post("/uploadImages", async (req, res) => {
   });
 
 
+  router.post("/removeProductImage", async (req, res) => {
+    console.log("Req body for add Pr", req.body);
+    var productId = req.body.productId
+    
+    var imagePath = req.body.imagePath
+
+    Product.updateOne({_id:productId},{"$pull": { "productImages": imagePath }},{ multi:true })
+    .then((response)=>{
+        console.log("updated")
+        return res.status(200).send("deleted");
+        // return res.send({ signedUrl: data })
+     });
+
+    })
   
 
 

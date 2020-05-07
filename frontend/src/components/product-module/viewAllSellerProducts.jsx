@@ -99,30 +99,6 @@ export default class viewAllSellerProducts extends Component {
               style={{ maxWidth: "100%" }}
             />
           </div>
-          <div className="image">
-            <img
-              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-              style={{ maxWidth: "100%" }}
-            />
-          </div>
-          <div className="image">
-            <img
-              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-              style={{ maxWidth: "100%" }}
-            />
-          </div>
-          <div className="image">
-            <img
-              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-              style={{ maxWidth: "100%" }}
-            />
-          </div>
-          <div className="image">
-            <img
-              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-              style={{ maxWidth: "100%" }}
-            />
-          </div>
           </div>
        )
       }else{

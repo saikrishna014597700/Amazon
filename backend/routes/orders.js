@@ -65,6 +65,24 @@ router.get("/getAllOrders", async (req, res) => {
     });
   });
 
+
+  router.get("/getOpenOrders", async (req, res) => {
+    let msg = req.body;
+    msg.userId = req.query.userId
+    console.log("Req param", req.query.userId);
+    msg.route = "getOpenOrders";
+    await kafka.make_request("getOpenOrders", msg, function (err, results) {
+      if (err) {
+        msg.error = err.data;
+        logger.error(msg);
+        return res.status(err.status).send(err.data);
+      } else {
+        msg.status = results.status;
+        logger.info(msg);
+        return res.status(results.status).send(results.resultArray);
+      }
+    });
+  });
   
 
 
