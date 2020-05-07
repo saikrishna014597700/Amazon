@@ -409,7 +409,7 @@ class Navbar extends Component {
       );
     }
     return (
-      <div>
+      <div style={{width:"100%"}}>
         {redirectVar}
         {this.state.redirectVar}
         {navBar}

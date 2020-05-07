@@ -172,10 +172,15 @@ export default class checkout extends Component {
                 productId:product._id,
                 orderId:orderId,
                 quantity:product.quantity,
-                sellerId:product.sellerId
+                sellerId:product.sellerId,
+                price:product.price,
+                userId:this.state.userId,
+                productName:product.productName
               }
-              await axios.post("http://localhost:3001/api/cart/saveToMapOrder",payload)
+              await axios.post("http://localhost:3001/api/cart/saveToMapOrder",payload);
+              await axios.post("http://localhost:3001/api/cart/saveProductAnalytics",payload)
             })
+           
           await this.setState({ redirect: `/orderDetailPage/${orderId}` });
         }
       });

@@ -201,5 +201,22 @@ router.post("/saveToMapOrder", async (req, res) => {
     }
   });
 });
+router.post("/saveProductAnalytics", async (req, res) => {
+  let msg = req.body;
+  console.log("saveProductAnalytics ==> ", req.body);
+  msg.route = "save_product_analytics";
+  kafka.make_request("saveProductAnalytics", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
 
 module.exports = router;

@@ -13,7 +13,7 @@ var reviewAndRating = new Schema({
 var products = new Schema({
   productName: { type: String, required: true },
   productDesc: { type: String },
-  price: { type: String },
+  price: { type: Number },
   sellerId: { type: String },
   isDeleted: { type: Number },
   category: { type: String },
@@ -21,6 +21,8 @@ var products = new Schema({
   reviewAndRatings: [reviewAndRating],
   createDate: { type: Date },
   updateDate: { type: Date },
+  avgRating:{type:Number},
+  noOfRatings:{type:Number}
 });
 
 // Export the model

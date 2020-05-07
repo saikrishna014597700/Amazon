@@ -12,7 +12,6 @@ export default class selectCard extends Component {
       productDetails: [],
       selectedCard: {},
       cartPrice: 0,
-
     };
     this.radioRefsArray = [];
     this.textBoxRefsArray = [];
@@ -84,6 +83,40 @@ export default class selectCard extends Component {
         }
       });
   }
+
+  changeHandler(event, name) {
+    console.log("=====?" + event.target.value);
+    let add = this.state.selectedCard;
+    add[name] = event.target.value;
+    this.setState({
+      selectedCard: add,
+    });
+  }
+  selectCard = async (card) => {
+    await this.setState({
+      selectedCard: card,
+    });
+    localStorage.setItem("selectedCard", JSON.stringify(card));
+    console.log("localsss=>" + localStorage.getItem("selectedCard"));
+    console.log("this.state.card=>" + JSON.stringify(this.state.selectedCard));
+    await this.setState({ redirect: `/checkout` });
+  };
+
+  addCard = async (e) =>{
+    var payload = {
+      nameOnCard : this.state.selectedCard.name,
+      cardNo : this.state.selectedCard.cardNo,
+      expirationDate : this.state.selectedCard.expDate,
+      cvv : this.state.selectedCard.cvv
+    }
+
+    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" + localStorage.getItem("id"),payload)
+    .then(async (response)=>{
+      if(response.status == 201)
+      await this.setState({ redirect: `/checkout` });
+    })
+  }
+
   async checkRadio(e, i, card) {
     console.log("yo here");
     var j;
@@ -102,9 +135,9 @@ export default class selectCard extends Component {
     localStorage.setItem("selectedCard", JSON.stringify(card));
   }
 
-  goToCheckout= async ()=>{
+  goToCheckout = async () => {
     await this.setState({ redirect: `/checkout` });
-  }
+  };
 
   render() {
     if (this.state.redirect) {
@@ -183,15 +216,16 @@ export default class selectCard extends Component {
               </button>
             </div>
             <div className="row">
-            You can review this order before it's final.
+              You can review this order before it's final.
             </div>
           </div>
         </div>
       </div>
     );
+
     return (
       <div className="row" style={{ margin: "100px", marginTop: "60px" }}>
-        <div className="row shippingSelect">Select a payment method</div>
+        <div className="row shippingSelect">Select a addCardment method</div>
         <br></br>
 
         <br></br>
@@ -216,6 +250,84 @@ export default class selectCard extends Component {
           {cardsDiv}
         </div>
         <div className="col-md-3">{continueDiv}</div>
+        <div className="col-md-10">
+          <div className="row">
+            <div className="col-md-8">
+              <div className="row addAddressHeading">Add a new Card</div>
+              <br></br>
+              <div className="row">Name on card:</div>
+              <div className="row">
+                <input
+                  type="text"
+                  style={{
+                    width: "50%",
+                    margin: " 8px 0",
+                    display: "inline-block",
+                    border: "1px solid #ccc !important",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                  onChange={(e) => this.changeHandler(e, "name")}
+                ></input>
+              </div>
+              <div className="row">Card Number:</div>
+              <div className="row">
+                <input
+                  type="text"
+                  style={{
+                    width: "50%",
+                    margin: " 8px 0",
+                    display: "inline-block",
+                    border: "1px solid #ccc !important",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                  onChange={(e) => this.changeHandler(e, "cardNo")}
+                ></input>
+              </div>
+              <div className="row">CVV:</div>
+              <div className="row">
+                <input
+                  type="text"
+                  style={{
+                    width: "50%",
+                    margin: " 8px 0",
+                    display: "inline-block",
+                    border: "1px solid #ccc !important",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                  onChange={(e) => this.changeHandler(e, "cvv")}
+                ></input>
+              </div>
+              <div className="row">Expiry Date:</div>
+              <div className="row">
+                <input
+                  type="text"
+                  style={{
+                    width: "50%",
+                    margin: " 8px 0",
+                    display: "inline-block",
+                    border: "1px solid #ccc !important",
+                    borderRadius: "4px",
+                    boxSizing: "border-box",
+                  }}
+                  onChange={(e) => this.changeHandler(e, "expDate")}
+                ></input>
+              </div>
+              <br></br>
+              <div className="row">
+                <button
+                  className="Amazon"
+                  onClick={(e) => this.addCard(e)}
+                  style={{ height: "30px", padding: "0px", width: "200px" }}
+                >
+                  Pay with this card
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

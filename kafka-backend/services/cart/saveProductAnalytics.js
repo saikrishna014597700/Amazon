@@ -3,7 +3,7 @@ const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const pool = require("../../utils/mysqlConnection");
 const moment = require("moment");
 
-let saveToMapOrder = async (msg, callback) => {
+let saveProductAnalytics = async (msg, callback) => {
   console.log("in saveToMapOrder=>", msg);
   let response = {};
   let err = {};
@@ -11,11 +11,12 @@ let saveToMapOrder = async (msg, callback) => {
       var date = new Date();
       var today = date.getFullYear()+"-"+(date.getMonth()+1) + "-" + date.getDate()
       console.log("today is =>"+today)
-      var query = "insert into map_order_product (product_id,order_id,quantity,sellerId,status,create_date) "+
-      "values ('"+msg.productId+"','"+msg.orderId+"','"+msg.quantity+"','"+msg.sellerId+"','Ordered','"+today+"')";
+      var salesSum = parseInt(msg.quantity,10) * parseInt(msg.price,10)
+      var query = "insert into product_analytics (product_id,order_id,seller_id,price,quantity,product_sales_um,product_name,user_id,create_date) "+
+      "values ('"+msg.productId+"','"+msg.orderId+"',"+msg.sellerId+","+msg.price+","+msg.quantity+","+salesSum+",'"+msg.productName+"','"+msg.userId+"','"+today+"')";
       console.log(" the query is => "+query);
-    await pool.query(query, async function (err, result) {
-      console.log("Result in mapOrder=>", result+" may be errr=>"+err);
+      await pool.query(query, async function (err, result) {
+      console.log("Result in product ANalytics=>", result+" may be errr=>"+err);
     });
     response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
     response.data = MESSAGES.CREATE_SUCCESSFUL;
@@ -28,4 +29,4 @@ let saveToMapOrder = async (msg, callback) => {
   }
 };
 
-exports.saveToMapOrder = saveToMapOrder;
+exports.saveProductAnalytics = saveProductAnalytics;

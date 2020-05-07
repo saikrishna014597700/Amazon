@@ -105,7 +105,7 @@ router.post("/saveCustomerAddresses", async (req, res) => {
   });
 });
 
-router.post("/deleteCustomerAddress", async (req, res) => {
+router.get("/deleteCustomerAddress", async (req, res) => {
   let msg = req.body;
   msg.userId = req.query.userId
   console.log("msg ", msg);
@@ -122,6 +122,26 @@ router.post("/deleteCustomerAddress", async (req, res) => {
     }
   });
 });
+
+router.post("/getCustomerDetails", async (req, res) => {
+  let msg = req.body;
+  msg.userId = req.query.userId
+  console.log("msg in get customer details ", msg);
+  msg.route = "get_customer_details";
+  kafka.make_request("getCustomerDetails", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.data);
+    }
+  });
+});
+
+
 
 
 

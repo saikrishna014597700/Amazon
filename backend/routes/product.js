@@ -160,4 +160,41 @@ router.get("/getProductDetails", async (req, res) => {
     }
   });
 });
+
+
+router.post("/addRatingAndReview", async (req, res) => {
+  let msg = req.body;
+  console.log("Add Rating and review", req.body);
+  msg.route = "add_rating_and_review";
+  kafka.make_request("addRatingAndReview", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
+
+router.post("/updateViewCount", async (req, res) => {
+  let msg = req.body;
+  console.log("Update view Count");
+  msg.route = "update_view_count";
+  kafka.make_request("updateViewCount", msg, function (err, results) {
+    if (err) {
+      msg.error = err.data;
+      logger.error(msg);
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Result:::", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.result);
+    }
+  });
+});
 module.exports = router;

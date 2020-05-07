@@ -10,6 +10,7 @@ const { deleteSaveForLater } = require("./deleteSaveForLater");
 const { saveOrder } = require("./saveOrder");
 const { deleteCompleteCart } = require("./deleteCompleteCart");
 const { saveToMapOrder } = require("./saveToMapOrder");
+const { saveProductAnalytics } = require("./saveProductAnalytics");
 
 let handle_request = (msg, callback) => {
   switch (msg.route) {
@@ -46,6 +47,10 @@ let handle_request = (msg, callback) => {
     case "save_to_map_order":
       saveToMapOrder(msg, callback);
       break;
+    case "save_product_analytics":
+      saveProductAnalytics(msg, callback);
+      break;
+
   }
 };
 

@@ -7,6 +7,9 @@ const productImage = require("../../utils/product.jpg");
 const product2Image = require("../../utils/product2.jpg");
 const product3Image = require("../../utils/product3.jpg");
 const product4Image = require("../../utils/product4.jpg");
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
 export default class productDescription extends Component {
   constructor() {
     super();
@@ -17,35 +20,36 @@ export default class productDescription extends Component {
       },
       productId: "5e9d9d90278fd64044dc6945",
       rating: 4.5,
+      reviews: [],
       selectedImage: productImage,
+      newRating: 0,
+      quantity:1,
     };
+    this.userReview = {};
+    this.reviewSuccess = {};
     this.addToCart = this.addToCart.bind(this);
   }
-  goToCart = (event, pid, orderId) => {
-    
-  };
+  goToCart = (event, pid, orderId) => {};
   addToCart = async () => {
     let cartSize = 0;
-    console.log("inside add to cart method");
     let payload = {
       userId: this.state.userId,
       productId: this.state.productId,
     };
-    let finalQuantity = 1;
+    let finalQuantity = this.state.quantity;
     await axios
       .post("http://localhost:3001/api/cart/getCart/", payload)
       .then((response) => {
+        console.log("in get cart response",response)
         if (response) {
-          console.log("cart is => ", JSON.stringify(response));
-          console.log("data size is =>" + response.data.length);
           if (response.data.length != 0) {
             let quantity = response.data[0].quantity;
-            finalQuantity = quantity + 1;
-            cartSize=response.data.length;
+            finalQuantity = parseInt(quantity,10) + parseInt(this.state.quantity,10);
+            cartSize = response.data.length;
           }
         }
       });
-    console.log("quantity in add to cart=>" + finalQuantity);
+      console.log("final quantity now =>"+finalQuantity);
     payload = {
       userId: this.state.userId,
       productId: this.state.productId,
@@ -53,44 +57,57 @@ export default class productDescription extends Component {
     };
 
     if (finalQuantity == 1) {
-        await axios
+      await axios
         .post("http://localhost:3001/api/cart/addToCart/", payload)
         .then((res) => {
           if (res) {
-            console.log("response in add to cart =>", JSON.stringify(res));
           }
         });
-
     } else {
       await axios
         .post("http://localhost:3001/api/cart/updateCart/", payload)
         .then((res) => {
           if (res) {
-            console.log("response in add to cart =>", JSON.stringify(res));
           }
         });
     }
-    localStorage.setItem("cartSize",cartSize+1);
+    localStorage.setItem("cartSize", cartSize + 1);
     await this.setState({ redirect: `/cart` });
   };
-  async componentDidMount() {
-    var id = localStorage.getItem("id");
-    if(id)
-    {
-      console.log("in this id=>"+id);
-      this.setState({
-        userId : id
-      })
-    }
+  async updateViewCount(){
+    axios.post("http://localhost:3001/api/product/updateViewCount",{productId:this.state.productId})
+    .then((response)=>{
+      console.log("view added");
+    });
+  }
+
+
+  quantityChangeHandler = async (product, e) => {
+    let quantity = e.target.value;
+    await this.setState({
+      quantity : quantity
+    })
     
-    var productID = this.props.match.params.id;
-    if(productID){
-      console.log("halwe=>"+productID)
-     await this.setState({
-        productId : productID
-      })
+  };
+
+  async componentDidMount() {
+    this.updateViewCount();
+    var id = localStorage.getItem("id");
+    if (id) {
+      // console.log("in this id=>" + id);
+      this.setState({
+        userId: id,
+      });
     }
-    console.log("inside componentdidmount=>"+this.state.productId);
+
+    var productID = this.props.match.params.id;
+    if (productID) {
+      // console.log("halwe=>" + productID);
+      await this.setState({
+        productId: productID,
+      });
+    }
+    // console.log("inside componentdidmount=>" + this.state.productId);
     axios
       .get(
         "http://localhost:3001/api/product/getProductDetails/?productId=" +
@@ -104,35 +121,176 @@ export default class productDescription extends Component {
           product: response.data[0],
           selectedImage :response.data[0].productImages[0]
         });
-        console.log("this state =>" + JSON.stringify(this.state.product));
+        // console.log("response.data[0].sellerId=>", response.data[0].sellerId);
+        await axios
+          .get(
+            `http://localhost:3001/api/seller/profile/${response.data[0].sellerId}`
+          )
+          .then((seller) => {
+            // console.log("seller Idddd=>", seller);
+            response.data[0].sellerName = seller.data.sellerName;
+          });
+        // console.log(
+        // "response for product details=>" + JSON.stringify(response)
+        // );
+        let reviews = response.data[0].reviewAndRatings;
+        await reviews.forEach(async (review) => {
+          await axios
+            .post(
+              "http://localhost:3001/api/customerDetails/getCustomerDetails/?userId=" +
+                review.userId
+            )
+            .then((res) => {
+              // console.log("addresses::", res.data);
+              review.username = res.data.firstName;
+            });
+        });
+        // console.log("reviews:::", reviews);
+        sleep(500).then(() => {
+          // this.getAllDetails();
+          this.setState({
+            product: response.data[0],
+            reviews: reviews,
+          });
+          // console.log("this state =>" + JSON.stringify(this.state));
+        });
       });
-  }
-  onStarClick(nextValue, prevValue, name) {
-    this.setState({ rating: nextValue });
   }
   changeRating(newRating, name) {
     this.setState({
-      rating: newRating,
+      newRating: newRating,
     });
   }
+  addReview = () => {
+    // console.log("this user review=>"+this.userReview.value);
+    let payLoad = {
+      userId: this.state.userId,
+      productId: this.state.productId,
+      rating: this.state.newRating,
+      review: this.userReview.value,
+    };
+
+    axios
+      .post("http://localhost:3001/api/product/addRatingAndReview", payLoad)
+      .then((response) => {
+        console.log("the response after adding the review is =>", response);
+        if (response.status == 201) {
+          this.userReview.innerHTML = "";
+          this.userReview.value = "";
+          this.reviewSuccess.style.display = "block";
+          sleep(3000).then(() => {
+            this.reviewSuccess.style.display = "none";
+          });
+        }
+      });
+  };
   render() {
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
-    let product = this.state.product;
-    console.log("the product inside render=>" + JSON.stringify(product));
-    let productDescription = (
-      <div style={{ width: "400px", height: "650px" }}>
-        <div
-          className="row"
-          id="productName"
-          style={{ fontSize: "21px", color: "black" }}
-        >
-          {product.productName}
+
+    let reviewAndRatingsDiv = this.state.reviews.map((review) => {
+      let rating;
+      if (review.rating) {
+        rating = (
           <StarRatings
-            rating={this.state.rating}
+            rating={review.rating}
+            starRatedColor="#febe62"
+            starDimension="15px"
+            starSpacing="1px"
+            numberOfStars={5}
+            name="rating"
+          />
+        );
+      }
+      return (
+        <div
+          style={{
+            margin: "15px",
+            border: "1px",
+            borderStyle: "solid",
+            borderColor: "#efefef",
+          }}
+        >
+          <div
+            className="row"
+            style={{
+              marginLeft: "0px",
+              // marginTop: "5px",
+              marginBottom: "15px",
+              backgroundColor: "#e7eae8",
+              width: "100%",
+              border: "1px",
+              borderStyle: "solid",
+              borderColor: "#efefef",
+            }}
+          >
+            {/* <div className="col-md-1"></div> */}
+            {review.username}
+          </div>
+          {/* <hr></hr> */}
+          <div
+            className="row"
+            style={{ marginLeft: "15px", marginTop: "-10px" }}
+          >
+            {rating}
+          </div>
+          <div className="row" style={{ marginLeft: "15px" }}>
+            {review.review}
+          </div>
+        </div>
+      );
+    });
+
+    let addReviewDiv = (
+      <div style={{ marginLeft: "35px" }}>
+        <div
+          style={{ display: "none", fontSize: "10px", color: "green" }}
+          ref={(ref) => (this.reviewSuccess = ref)}
+        >
+          Review added successfully.
+        </div>
+        <div className="row">
+          Rating: &nbsp;&nbsp;
+          <StarRatings
+            rating={this.state.newRating}
             starRatedColor="#febe62"
             changeRating={this.changeRating.bind(this)}
+            starDimension="15px"
+            starSpacing="1px"
+            numberOfStars={5}
+            name="rating"
+          />
+        </div>
+        <div className="row">
+          Review :
+          <textarea
+            rows="5"
+            cols="40"
+            ref={(ref) => (this.userReview = ref)}
+          ></textarea>
+        </div>
+        <br></br>
+        <div className="row">
+          <button onClick={this.addReview}>Add Review</button>
+        </div>
+        <br></br>
+      </div>
+    );
+
+    let product = this.state.product;
+    let productDescription = (
+      <div style={{ width: "400px", height: "650px" }}>
+        <div className="row">
+          <a href={"/sellerProfile/" + product.sellerId}>
+            {product.sellerName}
+          </a>
+        </div>
+        <div className="row" style={{ fontSize: "21px", color: "black" }}>
+          {product.productName}
+          <StarRatings
+            rating={product.avgRating}
+            starRatedColor="#febe62"
             starDimension="15px"
             starSpacing="1px"
             numberOfStars={5}
@@ -253,7 +411,23 @@ export default class productDescription extends Component {
             <div className="row">
               <div className="col-sm" style={{ width: "100%" }}>
                 <div className="row" style={{ fontSize: "12px" }}>
-                  <a href="#"> Deliver to San Jose 95126</a>
+                  qty: &nbsp;&nbsp;
+                  <select
+                    onChange={(e) => this.quantityChangeHandler(product, e)}
+                    style={{ backgroundColor: "#e7eae8", borderRadius: "2px" }}
+                    defaultValue={product.quantity}
+                  >
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                  </select>
                 </div>
                 <div className="row" style={{ marginTop: "10px" }}>
                   <button
@@ -284,28 +458,50 @@ export default class productDescription extends Component {
       </div>
     );
     return (
-      <div className="row">
-        <div className="card" style={{ width: "100%" }}>
-          <table style={{ width: "100%" }}>
-            <tr>
-              <td style={{ width: "5%" }}></td>
-              <td style={{ width: "20%" }}>{images}</td>
-              <td style={{ width: "25%" }}>
-                <img
-                  src={this.state.selectedImage}
-                  style={{
-                    width: "500px",
-                    height: "650px",
-                    marginRight: "20px",
-                  }}
-                ></img>
-              </td>
-              <td style={{ width: "25%" }}>{productDescription}</td>
-              <td style={{ width: "25%" }}>{deliveryOptions}</td>
-            </tr>
-          </table>
-        </div>
+      // <div className="row" style={{marginTop:"25px"}}>
+      <div className="card" style={{ width: "100%" }}>
+        <table style={{ width: "100%", marginTop: "25px" }}>
+          <tr>
+            <td style={{ width: "5%" }}></td>
+            <td style={{ width: "3%" }}>{images}</td>
+            <td style={{ width: "30%" }}>
+              <img
+                src={this.state.selectedImage}
+                style={{
+                  width: "300px",
+                  height: "500px",
+                  margin: "20px",
+                  // marginLeft:"20px"
+                }}
+              ></img>
+            </td>
+            <td style={{ width: "25%" }}>{productDescription}</td>
+            <td style={{ width: "25%" }}>{deliveryOptions}</td>
+          </tr>
+          <tr>
+            <td style={{ width: "5%" }}></td>
+            <td colSpan="3">
+              <div
+                // className="row"
+                style={{ fontSize: "20px", fontWeight: "bold" }}
+              >
+                Ratings and Reviews
+              </div>
+              {reviewAndRatingsDiv}
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td colSpan="3">
+              <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+                Give rating and review
+              </div>
+              {addReviewDiv}
+            </td>
+          </tr>
+        </table>
       </div>
+      // </div>
     );
   }
 }

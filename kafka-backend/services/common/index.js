@@ -1,7 +1,7 @@
 "use strict";
 const { search } = require("./search");
 const { productSearchBDSK } = require("./productSearchBDSK");
-const {createPro } = require("./createPro");
+const {dummy } = require("./dummy");
 
 let handle_request = (msg, callback) => {
   switch (msg.route) {
@@ -11,8 +11,9 @@ let handle_request = (msg, callback) => {
     case "productSearchBDSK":
       productSearchBDSK(msg, callback);
     case "createPro":
-      createPro(msg, callback);
+      dummy(msg, callback);
       break;
+    
   }
 };
 
