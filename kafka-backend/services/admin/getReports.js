@@ -65,10 +65,10 @@ let getReports = async (msg, callback) => {
     Order by sum(pa.product_sales_um) desc limit 5";
 
     const top5ProductsQuery =
-      "select product_Id as id, product_name as name, sum(product_sales_um) as sales\
+      "select product_Id as id, product_name as name, sum(quantity) as sales\
     from amazonDB.product_analytics as pa \
     group by product_Id \
-    Order by sum(product_sales_um) desc limit 5";
+    Order by sum(quantity) desc limit 5";
 
     const top10MostViewedProducts = `SELECT DISTINCT product_Id, view_Count \
             FROM amazonDB.product_analytics \
