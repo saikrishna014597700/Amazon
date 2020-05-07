@@ -14,7 +14,11 @@ let getMonthWiseSalesSum = async (msg, callback) => {
   var fromDate = msg.year + "-" + msg.month + "-" + "01";
   var toDate = msg.year + "-" + msg.month + "-" + "30";
   try {
-    var query = `SELECT SUM(product_sales_um) AS sales_sum FROM amazonDB.product_analytics WHERE seller_Id = ${msg.sellerId} and create_date BETWEEN "${fromDate}" AND "${toDate}"`;
+    // var query = `SELECT SUM(product_sales_um) AS sales_sum FROM amazonDB.product_analytics WHERE seller_Id = ${msg.sellerId} and create_date BETWEEN "${fromDate}" AND "${toDate}"`;
+    var query = `select SUM(p.product_sales_um) AS sales_sum from product_analytics p
+    join map_order_product m
+   ON p.order_id=m.order_Id and
+   p.product_Id=m.product_Id and m.status!="Cancelled" and p.seller_Id=${msg.sellerId} and p.create_date BETWEEN "${fromDate}" AND "${toDate}";`;
     console.log("Query", query);
     pool.query(query, async (err, sqlResult) => {
       console.log("From sales sum", sqlResult.length, sqlResult[0].sales_sum);

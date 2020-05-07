@@ -35,6 +35,7 @@ class SellerListings extends React.Component {
           alert("Give a precise seller name");
         }
       });
+    console.log("Sellers are", this.state.sellers);
   };
 
   componentDidMount() {
@@ -50,6 +51,7 @@ class SellerListings extends React.Component {
     }
   }
     let sellerListings = this.state?.sellers?.map((seller) => {
+      console.log("Seller is", seller);
       let imagePath;
 
       if (seller.imagePath === undefined) {
@@ -150,7 +152,7 @@ class SellerListings extends React.Component {
         </div>
         {redirectVar}
         {sellerListings}
-        {this.state?.sellers?.map((seller) => (
+        {/* {this.state?.sellers?.map((seller) => (
           <section className="card">
             <div className="row">
               <div className="col-3">
@@ -186,7 +188,7 @@ class SellerListings extends React.Component {
               </div>
             </div>
           </section>
-        ))}
+        ))} */}
       </div>
     );
   }

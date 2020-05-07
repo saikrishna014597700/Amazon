@@ -18,6 +18,8 @@ let addProduct = async (msg, callback) => {
       category: msg.category,
       isDeleted: 0,
       sellerId: msg.sellerId,
+      avgRating: 0,
+      noOfRatings: 0,
       createDate: today.format(),
       updateDate: today.format(),
     });
@@ -42,11 +44,11 @@ let addProduct = async (msg, callback) => {
               catId = row.id;
               console.log("Before If", catId);
               if (catId) {
-                var isertQUERY = `INSERT INTO product_analytics (product_Id,seller_Id,view_Count,price,product_sales_um,quantity,product_name,category_id,create_date) values ("${productId}",${
+                var isertQUERY = `INSERT INTO product_analytics (product_Id,seller_Id,price,view_Count,product_sales_um,quantity,product_name,category_id,create_date) values ("${productId}",${
                   msg.sellerId
                 },${msg.price},0,0,0,"${
                   msg.productName
-                }",${catId},${today.format("L")})`;
+                }",${catId},"${today.format("YYYY-MM-DD")}")`;
                 console.log("Got Cat ID", isertQUERY);
                 await pool.query(isertQUERY, async (err, sqlResult) => {
                   console.log("Got Result", sqlResult);

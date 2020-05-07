@@ -7,6 +7,7 @@ import $ from "jquery";
 import StarRatings from "react-star-ratings";
 import StarRatingComponent from "react-star-rating-component";
 import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 
 export default class HomePage extends Component {
   constructor() {
@@ -21,8 +22,8 @@ export default class HomePage extends Component {
       maxPrice: -1,
       minPrice: -1,
       sellerId: null,
-      limit:10,
-      page:1
+      limit: 10,
+      page: 1,
     };
     this.viewSeachResults = this.viewSeachResults.bind(this);
     // this.scroll = this.scroll.bind(this);
@@ -43,7 +44,6 @@ export default class HomePage extends Component {
   }
 
   async componentDidMount() {
-    
     if (localStorage.getItem("role") == "Seller") {
       await this.setState({
         sellerId: localStorage.getItem("id"),
@@ -102,7 +102,7 @@ export default class HomePage extends Component {
   }
   ratingFilter = async (rating) => {
     await this.setState({
-      rating:rating
+      rating: rating,
     });
     this.viewSeachResults();
   };
@@ -131,36 +131,36 @@ export default class HomePage extends Component {
     });
   };
 
-  prevClick = async (e)=>{
-    let page = this.state.page-1;
-    if(page>0){
+  prevClick = async (e) => {
+    let page = this.state.page - 1;
+    if (page > 0) {
       await this.setState({
-        page:page
+        page: page,
       });
       this.viewSeachResults();
     }
-  }
-  nextClick = async (e)=>{
-    let page = this.state.page+1;
-    if(page>0){
+  };
+  nextClick = async (e) => {
+    let page = this.state.page + 1;
+    if (page > 0) {
       await this.setState({
-        page:page
+        page: page,
       });
       this.viewSeachResults();
     }
-  }
+  };
 
-  changeLimit = async (e) =>{
+  changeLimit = async (e) => {
     await this.setState({
-      limit:e.target.value
-    })
+      limit: e.target.value,
+    });
     this.viewSeachResults();
-  }
+  };
 
   render() {
     let redirectVar = null;
-    if(!localStorage.getItem("id")){
-        redirectVar = <Redirect to= "/login"/>
+    if (!localStorage.getItem("id")) {
+      redirectVar = <Redirect to="/login" />;
     }
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
@@ -172,7 +172,10 @@ export default class HomePage extends Component {
           &nbsp;&nbsp;
           <button onClick={(e) => this.nextClick(e)}>next</button>
           &nbsp;&nbsp;
-          <select defaultValue={this.state.limit} onChange={(e) => this.changeLimit(e)}>
+          <select
+            defaultValue={this.state.limit}
+            onChange={(e) => this.changeLimit(e)}
+          >
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
@@ -270,15 +273,37 @@ export default class HomePage extends Component {
       </div>
     );
     let sellerProducts = this.state.products.map((sellerProduct) => {
-
       let logoPath;
-        if(sellerProduct.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = sellerProduct.productImages[0]
-        }
+      if (sellerProduct.productImages.length === 0) {
+        logoPath =
+          "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+      } else {
+        logoPath = sellerProduct.productImages[0];
+      }
+      let editProduct;
+      if (localStorage.getItem("role") == "Seller") {
+        editProduct = (
+          <div>
+            <hr></hr>
+            <div className="row">
+              <div className="col-md-4"></div>
+              <div className="col-md-6">
+                <Link
+                  style={{ fontSize: "18", textAlign: "center" }}
+                  to={{
+                    pathname: `/editProductDetails/${sellerProduct._id}`,
+                  }}
+                >
+                  Edit Product
+                </Link>
+              </div>
+            </div>
+            <br />
+          </div>
+        );
+      }
+
       return (
-        
         <div
           className="col-md-3"
           style={{
@@ -290,10 +315,7 @@ export default class HomePage extends Component {
         >
           {redirectVar}
           <div className="row" style={{ margin: 10 }}>
-            <img
-              src={logoPath}
-              style={{ height: "250px" }}
-            />
+            <img src={logoPath} style={{ height: "250px" }} />
           </div>
           <div
             className="row"
@@ -329,6 +351,7 @@ export default class HomePage extends Component {
               name="rating"
             />
           </div>
+          {editProduct}
         </div>
       );
     });
@@ -357,7 +380,7 @@ export default class HomePage extends Component {
                 <option value="ratingHigh">rating High to low</option>
               </select>
             </div>
-            
+
             <br></br>
             <div className="row">{sellerProducts}</div>
             <br></br>

@@ -80,20 +80,22 @@ class InventoryListings extends React.Component {
         console.log("response is::", res);
         if (res.data.result === "No products in this category") {
           await this.setState({
+            products: [],
             productsAvailable: false,
           });
         } else {
           for (var i in res.data.result) {
-            await axios
-              .get(
-                `http://localhost:3001/api/seller/profile/${res.data.result[i].sellerId}`
-              )
-              .then((seller) => {
-                res.data.result[i].sellerName = seller.data.sellerName;
-              });
+            if (res.data.result[i].sellerId) {
+              await axios
+                .get(
+                  `http://localhost:3001/api/seller/profile/${res.data.result[i].sellerId}`
+                )
+                .then((seller) => {
+                  res.data.result[i].sellerName = seller.data.sellerName;
+                });
+            }
+            console.log("after getting seller names::", res.data.result);
           }
-          console.log("after getting seller names::", res.data.result);
-
           await this.setState({
             products: res.data.result,
             productsAvailable: true,
@@ -308,12 +310,20 @@ class InventoryListings extends React.Component {
                 <br />
               </div>
             ) : (
-              <h6
-                className="product-unavailable"
-                style={{ marginLeft: "20px" }}
-              >
-                This category has no products
-              </h6>
+              <div>
+                <br />
+                <h5 style={{ marginLeft: "20px" }}>
+                  Selected Category : {this.state.defaultCatName}
+                </h5>
+                <br />
+                <h6
+                  className="product-unavailable"
+                  style={{ marginLeft: "20px" }}
+                >
+                  This category has no products
+                </h6>
+                <br />
+              </div>
             )}
           </div>
         </article>
