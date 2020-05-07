@@ -125,8 +125,12 @@ class Profile extends Component {
     let redirectVar = null;
     if(!localStorage.getItem("id")){
         redirectVar = <Redirect to= "/login"/>
-        
+    }else {
+      if (localStorage.getItem("role") != "Customer") {
+        redirectVar = <Redirect to="/login" />;
+      }
     }
+
     let candr= this.state.arr.map((msg)=> 
     {
       // <p>List of Comments added:</p>

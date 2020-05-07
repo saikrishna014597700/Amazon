@@ -270,6 +270,13 @@ export default class HomePage extends Component {
       </div>
     );
     let sellerProducts = this.state.products.map((sellerProduct) => {
+
+      let logoPath;
+        if(sellerProduct.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = sellerProduct.productImages[0]
+        }
       return (
         
         <div
@@ -284,7 +291,7 @@ export default class HomePage extends Component {
           {redirectVar}
           <div className="row" style={{ margin: 10 }}>
             <img
-              src={require("../../utils/product.jpg")}
+              src={logoPath}
               style={{ height: "250px" }}
             />
           </div>
