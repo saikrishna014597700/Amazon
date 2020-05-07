@@ -110,8 +110,8 @@ router.post("/addProduct", async (req, res) => {
       return res.status(err.status).send(err.data);
     } else {
       msg.status = results.status;
-      console.log("results::",results);
-      return res.status(results.status).send(results.data);
+      console.log("results::", results);
+      return res.status(results.status).send(results.result);
     }
   });
 });

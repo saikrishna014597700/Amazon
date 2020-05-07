@@ -51,7 +51,7 @@ let addProduct = async (msg, callback) => {
                 await pool.query(isertQUERY, async (err, sqlResult) => {
                   console.log("Got Result", sqlResult);
                   if (sqlResult && sqlResult.affectedRows > 0) {
-                    response.result = "Added Successfully";
+                    response.result = productId;
                     response.status = STATUS_CODE.SUCCESS;
                     response.data = MESSAGES.CREATE_SUCCESSFUL;
                     return callback(null, response);
@@ -64,14 +64,13 @@ let addProduct = async (msg, callback) => {
               }
             });
           } else {
-            //response.status = STATUS_CODE.SUCCESS;
-            //response.data = MESSAGES.DATA_NOT_FOUND;
-            //return callback(null, response);
-            console.log("issue with product_analytics fail");
+            response.status = STATUS_CODE.SUCCESS;
+            response.data = MESSAGES.DATA_NOT_FOUND;
+            return callback(null, response);
           }
         });
       } catch (error) {
-        console.log("Error occ while fetching seller orders" + error);
+        console.log("Error occ while savng product" + error);
         err.status = STATUS_CODE.INTERNAL_SERVER_ERROR;
         err.data = MESSAGES.INTERNAL_SERVER_ERROR;
         return callback(err, null);

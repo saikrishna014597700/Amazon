@@ -71,31 +71,6 @@ export default class AddProduct extends Component {
   }
 
   async addProduct(event) {
-    //As the add product API is not working properly, I used by commenting and hardcoding this as of now. The axios call "addProduct" should be returning productId and after that this uploadImages .
-    var productId = "5eb26a7d8aca962d72d8ca90";
-    console.log("this.state.formData:", this.state.formData);
-
-    var imagesData = [];
-
-    this.state.formData.map(async (form) => {
-      let fileData = new FormData();
-      fileData.append("file", form);
-      imagesData.push(fileData);
-      await axios
-        .post(
-          "http://localhost:3001/api/file/uploadImages/?productId=" + productId,
-          fileData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        )
-        .then((res) => {
-          console.log("success", res);
-        });
-    });
-
     const payload = {
       productName: this.state.productName,
       productDesc: this.state.productDesc,
@@ -106,8 +81,30 @@ export default class AddProduct extends Component {
     axios
       .post("http://localhost:3001/api/product/addProduct/", payload)
       .then((response) => {
-        if (response.status == 200) alert(response.data);
-        else alert("Error occurred creating a product");
+        console.log("Response is", response.data);
+        if (response.status == 200 && response.data) {
+          var imagesData = [];
+          this.state.formData.map(async (form) => {
+            let fileData = new FormData();
+            fileData.append("file", form);
+            imagesData.push(fileData);
+            await axios
+              .post(
+                "http://localhost:3001/api/file/uploadImages/?productId=" +
+                  response.data,
+                fileData,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                }
+              )
+              .then((res) => {
+                console.log("Adding Product");
+              });
+          });
+          alert(`Added a product successfully`);
+        } else alert("Error occurred creating a product");
       });
   }
 
@@ -120,16 +117,6 @@ export default class AddProduct extends Component {
         redirectVar = <Redirect to="/login" />;
       }
     }
-
-    // const { category } = this.state.categories;
-
-    // let categoriesList = Object.keys(category).map((k) => {
-    //   return (
-    //     <option key={k} value={k}>
-    //       {category[k]}
-    //     </option>
-    //   );
-    // }, this);
 
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
       let imagesHTML;
