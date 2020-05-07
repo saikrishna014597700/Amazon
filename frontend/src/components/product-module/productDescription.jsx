@@ -117,9 +117,13 @@ export default class productDescription extends Component {
         console.log(
           "response for product details=>" + JSON.stringify(response)
         );
+        var defaultPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png"
+        if(response.data[0].productImages[0]){
+          defaultPath = response.data[0].productImages[0]
+        }
         await this.setState({
           product: response.data[0],
-          selectedImage :response.data[0].productImages[0]
+          selectedImage :defaultPath
         });
         // console.log("response.data[0].sellerId=>", response.data[0].sellerId);
         await axios
@@ -319,7 +323,7 @@ export default class productDescription extends Component {
         <div>
         <div className="row">
           <img
-            src={productImage}
+            src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
             style={{ width: "50px", height: "65px", cursor: "pointer" }}
             onClick={() => {
               this.setState({ selectedImage: productImage });
@@ -327,35 +331,6 @@ export default class productDescription extends Component {
           ></img>
         </div>
         <br></br>
-        <div className="row">
-          <img
-            src={product2Image}
-            style={{ width: "50px", height: "65px", cursor: "pointer" }}
-            onClick={() => {
-              this.setState({ selectedImage: product2Image });
-            }}
-          ></img>
-        </div>
-        <br></br>
-        <div className="row">
-          <img
-            src={product3Image}
-            style={{ width: "50px", height: "65px", cursor: "pointer" }}
-            onClick={() => {
-              this.setState({ selectedImage: product3Image });
-            }}
-          ></img>
-        </div>
-        <br></br>
-        <div className="row">
-          <img
-            src={product4Image}
-            style={{ width: "50px", height: "65px", cursor: "pointer" }}
-            onClick={() => {
-              this.setState({ selectedImage: product4Image });
-            }}
-          ></img>
-        </div>
         </div>
       )
       
@@ -388,7 +363,10 @@ export default class productDescription extends Component {
         </div>
     );
 
-    let deliveryOptions = (
+    let deliveryOptions;
+
+    if(localStorage.getItem("role") === "Customer"){
+     deliveryOptions = (
       <div style={{ height: "650px" }}>
         <div
           className="card"
@@ -457,6 +435,20 @@ export default class productDescription extends Component {
         </div>
       </div>
     );
+    }
+
+    let reviewAddDiv ;
+    if(localStorage.getItem("role") === "Customer"){
+      reviewAddDiv = (
+        <div>
+      <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+      Give rating and review
+    </div>
+    {addReviewDiv}
+    </div>
+    )
+    }
+
     return (
       // <div className="row" style={{marginTop:"25px"}}>
       <div className="card" style={{ width: "100%" }}>
@@ -493,10 +485,7 @@ export default class productDescription extends Component {
           <tr>
             <td></td>
             <td colSpan="3">
-              <div style={{ fontSize: "20px", fontWeight: "bold" }}>
-                Give rating and review
-              </div>
-              {addReviewDiv}
+              {reviewAddDiv}
             </td>
           </tr>
         </table>

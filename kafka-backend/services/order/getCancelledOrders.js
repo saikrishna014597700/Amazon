@@ -14,7 +14,7 @@ let getCancelledOrders = async (msg, callback) => {
   var resultArray = []
   try {
     
-   await orders.find({userId:parseInt(msg.userId),products:{status:"Cancelled"}}).then(async function (res){
+   await orders.find({userId:parseInt(msg.userId)}).then(async function (res){
        console.log('response in cancelled orders',res)
       
       
@@ -31,15 +31,17 @@ let getCancelledOrders = async (msg, callback) => {
         
         var productsArr =  await modifyOrdersData(prods,productDetails)
         result.productsArr = productsArr
-        console.log('productsArr returning in cancelled::',productsArr )
+        //console.log('productsArr returning in cancelled::',productsArr )
+        if(result.productsArr.length>0){
         resultArray.push(result);
+        }
        }
        
        
         
     })
 
-    console.log('resultArray::', resultArray)
+    console.log('resultArray in cancelled::', resultArray)
     response.resultArray = resultArray
     response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
     //response.data = MESSAGES.CREATE_SUCCESSFUL;
@@ -63,8 +65,12 @@ async function modifyOrdersData(prods,productDetails){
       var prodQuantObj = {}
       prodQuantObj.quantity = prod.quantity;
       prodQuantObj.status = prod.status
-      prodQuantObj = await modifyProductsData(prod,prodQuantObj)
-      productsArr.push(prodQuantObj);
+      
+      if(prod.status === "Cancelled"){
+        console.log("pushing only cancelled order",prod.status)
+        prodQuantObj = await modifyProductsData(prod,prodQuantObj)
+        productsArr.push(prodQuantObj);
+      }
     }
     console.log('productsArr::::',productsArr)
     return productsArr

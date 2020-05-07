@@ -35,6 +35,59 @@ class SellerListings extends React.Component {
     this.getAllSellers();
   }
   render() {
+
+    let sellerListings = this.state?.sellers?.map((seller) => {
+      let imagePath 
+
+      if(seller.imagePath === undefined){
+        imagePath = ( <div className="image">
+        <img
+          src="https://react.semantic-ui.com/images/avatar/small/matthew.png"
+          style={{ height:"150px",width:"150px" }}
+        />
+      </div>
+        )
+      }else{
+        console.log("image exists for seller")
+        imagePath = (<div className="image">
+        <img
+          src={seller.imagePath}
+          style={{ height:"150px",width:"150px" }}
+        />
+      </div>
+        )
+      }
+      return(
+      <div>
+      <section className="card">
+      <div className="row">
+        <div className="col-3">
+         {imagePath}
+        </div>
+        <div className="col">
+          <section>
+            <Link
+              className="amazon-link"
+              to={{
+                pathname: "/product-view",
+                sellerId: seller.userId,
+                sellerName: seller.sellerName,
+                // prevPathName: this?.props?.location?.pathname,
+              }}
+            >
+              {" "}
+              <h4>{seller.sellerName}</h4>
+            </Link>
+
+            <div>from {seller.sellerAddress?.city}</div>
+          </section>
+        </div>
+      </div>
+    </section>
+    </div>
+  )
+    })
+
     return (
       <div className="seller-listings">
         <div className="row">
@@ -69,38 +122,7 @@ class SellerListings extends React.Component {
             </div>
           </Form>
         </div>
-        {this.state?.sellers?.map((seller) => (
-          <section className="card">
-            <div className="row">
-              <div className="col-3">
-                <div className="image">
-                  <img
-                    src="https://react.semantic-ui.com/images/avatar/small/matthew.png"
-                    style={{ maxWidth: "100%" }}
-                  />
-                </div>
-              </div>
-              <div className="col">
-                <section>
-                  <Link
-                    className="amazon-link"
-                    to={{
-                      pathname: "/product-view",
-                      sellerId: seller.userId,
-                      sellerName: seller.sellerName,
-                      // prevPathName: this?.props?.location?.pathname,
-                    }}
-                  >
-                    {" "}
-                    <h4>{seller.sellerName}</h4>
-                  </Link>
-
-                  <div>from {seller.sellerAddress?.city}</div>
-                </section>
-              </div>
-            </div>
-          </section>
-        ))}
+        {sellerListings}
       </div>
     );
   }

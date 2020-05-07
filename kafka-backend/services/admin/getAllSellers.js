@@ -2,7 +2,9 @@
 const Seller = require("../../models/seller");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const pool = require("../../utils/mysqlConnection");
-
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
 let getAllSellers = async (msg, callback) => {
   let response = {};
   let err = {};
@@ -12,16 +14,24 @@ let getAllSellers = async (msg, callback) => {
   }
   try {
     console.log("msg.searchTerm:::", msg.searchTerm);
-    Seller.find({
-      sellerName: { $regex: msg.searchTerm, $options: "i" },
-    })
-      .then((res) => {
-        console.log("Sellers found:::::", res);
-        response.result = res;
+    await Seller.find({ sellerName: { $regex: msg.searchTerm, $options: "i" } }).then(async (res) => {
+
+      var sellersFinal = [];
+      for (var seller of res) {
+        var sellerObj = await seller.toObject();
+        sellerObj = await modifyData(sellerObj).then(
+          sellersFinal.push(sellerObj)
+        );
+      }
+      sleep(1000).then(() => {
+        console.log("Sellers found:::::", sellersFinal);
+        response.result = sellersFinal;
         response.status = STATUS_CODE.SUCCESS;
         response.data = MESSAGES.SUCCESS;
         return callback(null, response);
-      })
+      });
+
+    })
       .catch((err) => {
         console.log("Error1 ", err);
         return callback(err, null);
@@ -35,3 +45,21 @@ let getAllSellers = async (msg, callback) => {
 };
 
 exports.getAllSellers = getAllSellers;
+
+
+async function modifyData(sellerObj) {
+
+  await pool.query(`select imagePath from users where id = ${sellerObj.userId}`, async (err, sqlResult) => {
+    if (!err) {
+      console.log("sqlResult for imagePaths", await sqlResult[0].imagePath)
+      if (await sqlResult[0].imagePath) {
+        sellerObj.imagePath = await sqlResult[0].imagePath
+        console.log("sellerObj:::", sellerObj)
+        return sellerObj;
+      }
+    }
+  })
+
+
+
+}

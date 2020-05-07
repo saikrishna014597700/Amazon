@@ -32,8 +32,17 @@ class ProductView extends React.Component {
       .get(
         `${Env.host}/api/admin/products-by-seller/${this.props?.location?.sellerId}`
       )
-      .then((res) => {
-        console.log("response is::", res);
+      .then(async (res) => {
+        for (var i in res.data) {
+          await axios
+            .get(
+              `http://localhost:3001/api/seller/profile/${res.data[i].sellerId}`
+            )
+            .then((seller) => {
+              res.data[i].sellerName = seller.data.sellerName;
+            });
+        }
+        console.log("response after seller name is::", res);
         this.setState({
           products: res.data,
         });
@@ -116,6 +125,9 @@ class ProductView extends React.Component {
                 }}
               >
                 {sellerProduct.productName}
+              </div>
+              <div className="row" style={{ margin: 10, textAlign: "center" }}>
+                Seller: {sellerProduct.sellerName}
               </div>
               <div className="row" style={{ margin: 10, textAlign: "center" }}>
                 {sellerProduct.productDesc}

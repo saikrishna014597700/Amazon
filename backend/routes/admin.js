@@ -156,6 +156,25 @@ router.get("/reports", async (req, res) => {
   });
 });
 
+router.get("/most-viewed-jobs", async (req, res) => {
+  let msg = req.body;
+  msg.route = "most_viewed_products";
+  msg.searchTerm = req.query.searchTerm;
+  msg.date = req.query.date;
+  kafka.make_request("getMostViewedProducts", msg, function (err, results) {
+    if (err) {
+      console.log("Errorrr", err);
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Success", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.resultArray);
+    }
+  });
+});
+
 router.get("/products-by-seller/:sellerId", async (req, res) => {
   let msg = req.body;
   msg.route = "products_by_seller";

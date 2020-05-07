@@ -23,8 +23,12 @@ let signin = async (msg, callback) => {
             response.status = STATUS_CODE.SUCCESS;
             if (result[0].role == "Customer") {
               response.data = MESSAGES.SUCCESS;
-            } else if (result[0].role == "Seller")
+            } else if (result[0].role == "Seller"){
               response.data = MESSAGES.SUCCESS;
+            }
+            else if(result[0].role == "Admin"){
+              response.data = MESSAGES.SUCCESS;
+            }
 
             response.name = result[0].name;
             response.id = result[0].id;
