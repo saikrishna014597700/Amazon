@@ -40,19 +40,37 @@ let search = async (msg, callback) => {
       sort["avgRating"] = 1;
     }
 
-    let skip = (msg.page-1)*(msg.limit);
-    console.log("before search=>", msg, sort, category);
+    let minPrice = 0;
+    let maxPrice = 100000;
+
+    if (msg.minPrice && msg.minPrice != -1) {
+      minPrice = msg.minPrice;
+    }
+    if (msg.maxPrice && msg.maxPrice != -1) {
+      maxPrice = msg.maxPrice;
+    }
+    let sellerId = "";
+    if (msg.sellerId) {
+      sellerId = msg.sellerId;
+    }
+    let limit = parseInt(msg.limit);
+    let page = parseInt(msg.page);
+
+    let skip = (page - 1) * limit;
+    console.log("before search  sort:" + sellerId);
     var products = await Product.find({
       productName: { $regex: msg.searchTerm, $options: "i" },
       category: { $regex: category, $options: "i" },
       avgRating: { $gte: rating },
+      isDeleted: 0,
+      price: { $gte: minPrice, $lte: maxPrice },
+      sellerId: { $regex: sellerId, $options: "i" },
     })
       .sort(sort)
-      .limit(msg.limit)
-      .skip(skip);
+      .skip(skip)
+      .limit(limit);
 
-
-      console.log("search results before:::", products.length);
+    console.log("search results befe:::", products.length);
     var sellers = await Seller.find({
       sellerName: { $regex: msg.searchTerm, $options: "i" },
     });
@@ -61,19 +79,19 @@ let search = async (msg, callback) => {
         sellerId: seller._id,
         category: { $regex: category, $options: "i" },
         avgRating: { $gte: rating },
+        isDeleted: 0,
+        price: { $gte: minPrice, $lte: maxPrice },
+        sellerId: { $regex: sellerId, $options: "i" },
       })
         .sort(sort)
-        .limit(msg.limit)
-        .skip(skip);
+        .skip(skip)
+        .limit(limit);
       console.log("pros is =>" + pros.length);
       Array.prototype.push.apply(products, pros);
     });
-    let limit = msg.limit;
-    let page = msg.page;
-    let startIndex = (page - 1) * 10;
     console.log("search results:::", products.length);
 
-    response.result = products.slice(startIndex, startIndex + limit);
+    response.result = products;
     response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
     response.data = MESSAGES.CREATE_SUCCESSFUL;
     return callback(null, response);

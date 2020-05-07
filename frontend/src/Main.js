@@ -32,6 +32,7 @@ import AdminOrders from "./components/admin-module/adminOrders";
 import AddressDetails from "./components/cart-module/selectAddress";
 import SelectCard from "./components/cart-module/selectCard";
 import Checkout from "./components/cart-module/checkout";
+import HomePage from "./components/common/homePage";
 
 //Create a Main Component
 class Main extends Component {
@@ -41,6 +42,7 @@ class Main extends Component {
         <div>
           <Route path="/" component={Navbar} />
           <Route path="/home" component={Home} />
+          <Route path="/homePage" component={HomePage} />
           <Route path="/signup" component={SignUp} />
           <Route path="/login" component={Login} />
           <Route path="/addProduct" component={AddProduct} />

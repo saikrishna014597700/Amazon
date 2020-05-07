@@ -13,7 +13,7 @@ export default class checkout extends Component {
       productDetails: [],
       cartPrice: 0,
     };
-    this.refsArray=[];
+    this.refsArray = [];
     this.textBoxRefsArray = [];
   }
 
@@ -99,7 +99,7 @@ export default class checkout extends Component {
         if (prod._id == product._id) {
           let isGift = {
             isGift: false,
-            giftMessage:""
+            giftMessage: "",
           };
           prod.gift = isGift;
           cartPrice = parseInt(this.state.cartPrice, 10) - 1;
@@ -112,25 +112,21 @@ export default class checkout extends Component {
     }
   }
 
-
-
-
   async changeHandlerMessage(e, i, product) {
-      let pros = this.state.productDetails;
-      pros.forEach((prod) => {
-        if (prod._id == product._id) {
-          let isGift = {
-            isGift: true,
-            giftMessage:e.target.value
-          };
-          prod.gift = isGift;
-        }
-      });
-      await this.setState({
-        productDetails: pros,
-      });
+    let pros = this.state.productDetails;
+    pros.forEach((prod) => {
+      if (prod._id == product._id) {
+        let isGift = {
+          isGift: true,
+          giftMessage: e.target.value,
+        };
+        prod.gift = isGift;
+      }
+    });
+    await this.setState({
+      productDetails: pros,
+    });
   }
-
 
   placeOrder = () => {
     console.log("this.state.userId=>" + this.state.userId);
@@ -164,23 +160,40 @@ export default class checkout extends Component {
                 "response from delete complete cart=>" +
                   JSON.stringify(response)
               );
-              localStorage.setItem("cartSize",0);
-              
+              localStorage.setItem("cartSize", 0);
             });
-            await this.state.productDetails.forEach(async (product)=>{
-              let payload = {
-                productId:product._id,
-                orderId:orderId,
-                quantity:product.quantity,
-                sellerId:product.sellerId,
-                price:product.price,
-                userId:this.state.userId,
-                productName:product.productName
-              }
-              await axios.post("http://localhost:3001/api/cart/saveToMapOrder",payload);
-              await axios.post("http://localhost:3001/api/cart/saveProductAnalytics",payload)
-            })
-           
+          
+          await this.state.productDetails.forEach(async (product) => {
+            let proCat = "";
+            await axios
+            .get(`http://localhost:3001/api/admin/get-product-categories`)
+            .then((res) => {
+              console.log("response is::", res);
+              res.data.map((category)=>{
+                if(category.category==product.category)
+                  proCat = category.id
+              })
+            });
+            let payload = {
+              productId: product._id,
+              orderId: orderId,
+              quantity: product.quantity,
+              sellerId: product.sellerId,
+              price: product.price,
+              userId: this.state.userId,
+              productName: product.productName,
+              categoryId: proCat
+            };
+            await axios.post(
+              "http://localhost:3001/api/cart/saveToMapOrder",
+              payload
+            );
+            await axios.post(
+              "http://localhost:3001/api/cart/saveProductAnalytics",
+              payload
+            );
+          });
+
           await this.setState({ redirect: `/orderDetailPage/${orderId}` });
         }
       });
@@ -302,7 +315,7 @@ export default class checkout extends Component {
                   Gift Message : &nbsp;
                   <input
                     type="text"
-                    onChange={(e)=>this.changeHandlerMessage(e,i,product)}
+                    onChange={(e) => this.changeHandlerMessage(e, i, product)}
                   ></input>
                 </div>
               </td>

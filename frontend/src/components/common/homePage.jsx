@@ -8,7 +8,7 @@ import StarRatings from "react-star-ratings";
 import StarRatingComponent from "react-star-rating-component";
 import { Redirect } from "react-router";
 
-export default class SearchProduct extends Component {
+export default class HomePage extends Component {
   constructor() {
     super();
     this.state = {
@@ -44,9 +44,9 @@ export default class SearchProduct extends Component {
 
   async componentDidMount() {
     // console.log("state=>" + this.state.searchCategory);
-    await this.setState({
-      searchTerm: this.props.match.params.searchTerm,
-    });
+    // await this.setState({
+    //   searchTerm: this.props.match.params.searchTerm,
+    // });
     if (localStorage.getItem("role") == "Seller") {
       await this.setState({
         sellerId: localStorage.getItem("id"),
@@ -348,12 +348,7 @@ export default class SearchProduct extends Component {
                 <option value="ratingHigh">rating High to low</option>
               </select>
             </div>
-
-            <div className="row" style={{fontSize:"20px",fontWeight:"bold"}}>
-            <div className="row" style={{fontSize:"20px",fontWeight:"bold",marginLeft:"15px"}}>
-                Search Results : {this.state.searchTerm}
-            </div>
-            </div>
+            
             <br></br>
             <div className="row">{sellerProducts}</div>
             <br></br>

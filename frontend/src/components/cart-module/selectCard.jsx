@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
 
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
+
 export default class selectCard extends Component {
   constructor() {
     super();
@@ -12,6 +16,7 @@ export default class selectCard extends Component {
       productDetails: [],
       selectedCard: {},
       cartPrice: 0,
+      isCardExist: false,
     };
     this.radioRefsArray = [];
     this.textBoxRefsArray = [];
@@ -102,20 +107,41 @@ export default class selectCard extends Component {
     await this.setState({ redirect: `/checkout` });
   };
 
-  addCard = async (e) =>{
-    var payload = {
-      nameOnCard : this.state.selectedCard.name,
-      cardNo : this.state.selectedCard.cardNo,
-      expirationDate : this.state.selectedCard.expDate,
-      cvv : this.state.selectedCard.cvv
-    }
+  addCard = async (e) => {
+    if (!document.forms["newCard"].reportValidity()) {
+    } else {
+      let isCardExist = false;
+      await this.state.cards.map(async (card) => {
+        if (card.cardNo == this.state.selectedCard.cardNo) {
+          console.log("here in yes");
+          this.errorDiv.style.display = "block";
+          sleep(4000).then(() => {
+            this.errorDiv.style.display = "none";
+          });
+          isCardExist = true;
+        }
+      });
+      if (!isCardExist) {
+        var payload = {
+          nameOnCard: this.state.selectedCard.name,
+          cardNo: this.state.selectedCard.cardNo,
+          expirationDate: this.state.selectedCard.expDate,
+          cvv: this.state.selectedCard.cvv,
+        };
 
-    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" + localStorage.getItem("id"),payload)
-    .then(async (response)=>{
-      if(response.status == 201)
-      await this.setState({ redirect: `/checkout` });
-    })
-  }
+        await axios
+          .post(
+            "http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" +
+              localStorage.getItem("id"),
+            payload
+          )
+          .then(async (response) => {
+            if (response.status == 201)
+              await this.setState({ redirect: `/checkout` });
+          });
+      }
+    }
+  };
 
   async checkRadio(e, i, card) {
     console.log("yo here");
@@ -168,8 +194,7 @@ export default class selectCard extends Component {
                 CVV:{" "}
                 <input
                   type="text"
-                  minLength="3"
-                  maxLength="3"
+                  pattern="[\d]{3}"
                   style={{ width: "50%" }}
                 ></input>
               </div>
@@ -180,6 +205,89 @@ export default class selectCard extends Component {
         </div>
       );
     });
+
+    let newCardDiv = (
+      <form id="newCard">
+        <div
+          style={{ color: "red", display: "none" }}
+          ref={(ref) => (this.errorDiv = ref)}
+        >
+          Card number already exists. Please enter different Number.
+        </div>{" "}
+        <div className="row">
+          <div className="col-sm">
+            <p style={{ marginBottom: "0px", marginTop: "3px" }}>Card Number</p>
+            <div className="form-group">
+              <input
+                style={{ width: "90%" }}
+                pattern="[\d]{16}"
+                required
+                type="text"
+                // defaultValue={card.cardNo}
+                // disabled={!card.editFlag}
+                onChange={(e) => this.changeHandler(e, "cardNo")}
+              />
+            </div>
+            <p style={{ marginBottom: "0px", marginTop: "3px" }}>
+              Name on Card{" "}
+            </p>
+            <div className="form-group">
+              <input
+                style={{ width: "90%" }}
+                type="text"
+                // defaultValue={card.nameOnCard}
+                // disabled={!card.editFlag}
+                onChange={(e) => this.changeHandler(e, "name")}
+              />
+            </div>
+          </div>
+          <div className="col-sm">
+            <p style={{ marginBottom: "0px", marginTop: "3px" }}>CVV </p>
+            <div className="form-group">
+              <input
+                style={{ width: "90%" }}
+                type="text"
+                pattern="[\d]{3}"
+                required
+                // defaultValue={card.cvv}
+                // disabled={!card.editFlag}
+                onChange={(e) => this.changeHandler(e, "cvv")}
+              />
+            </div>
+            <p style={{ marginBottom: "0px", marginTop: "3px" }}>
+              {" "}
+              Expiry Date{" "}
+            </p>
+            <div className="form-group">
+              <input
+                style={{ width: "90%" }}
+                type="text"
+                pattern="[\d]{4}[\/\.\-]*0[1-9]|1[0-2]"
+                required
+                // defaultValue={card.expirationDate}
+                // disabled={!card.editFlag}
+                onChange={(e) => this.changeHandler(e, "expDate")}
+              />
+            </div>
+          </div>
+        </div>
+        <button
+          // hidden={!card.editFlag}
+          className="Amazon"
+          onClick={(e) => this.addCard(e)}
+          style={{
+            float: "right",
+            marginBottom: "5px",
+            marginRight: "5px",
+            width: "100px",
+          }}
+        >
+          {" "}
+          Use this card
+        </button>
+      </form>
+    );
+
     let continueDiv = (
       <div>
         <div
@@ -255,7 +363,8 @@ export default class selectCard extends Component {
             <div className="col-md-8">
               <div className="row addAddressHeading">Add a new Card</div>
               <br></br>
-              <div className="row">Name on card:</div>
+              {newCardDiv}
+              {/* <div className="row">Name on card:</div>
               <div className="row">
                 <input
                   type="text"
@@ -274,6 +383,7 @@ export default class selectCard extends Component {
               <div className="row">
                 <input
                   type="text"
+                  pattern="[\d]{16}"
                   style={{
                     width: "50%",
                     margin: " 8px 0",
@@ -289,6 +399,7 @@ export default class selectCard extends Component {
               <div className="row">
                 <input
                   type="text"
+                  pattern="[\d]{3}"
                   style={{
                     width: "50%",
                     margin: " 8px 0",
@@ -324,7 +435,7 @@ export default class selectCard extends Component {
                 >
                   Pay with this card
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

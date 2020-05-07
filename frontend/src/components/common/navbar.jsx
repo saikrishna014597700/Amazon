@@ -19,7 +19,7 @@ class Navbar extends Component {
       redirectVar: null,
       redirect: null,
       productCategories: [],
-      cartSize:0
+      cartSize: 0,
     };
     this.onMenuClick = this.onMenuClick.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -41,7 +41,7 @@ class Navbar extends Component {
 
   goToHome = () => {
     this.setState({
-      redirectVar: <Redirect to="/home" />,
+      redirectVar: <Redirect to="/homePage" />,
     });
   };
 
@@ -51,7 +51,9 @@ class Navbar extends Component {
     });
   };
   goToSearch = () => {
-    this.setState({ redirect: `/search/${this.state.searchTerm}` });
+    this.setState({
+      redirectVar: <Redirect to={`/search/${this.state.searchTerm}`} />,
+    });
   };
 
   goToOrders = () => {
@@ -83,8 +85,8 @@ class Navbar extends Component {
             });
             localStorage.setItem("cartSize", cartSize);
             this.setState({
-              cartSize:cartSize
-            })
+              cartSize: cartSize,
+            });
           }
         }
       });
@@ -162,7 +164,7 @@ class Navbar extends Component {
               {" "}
               Your Profile
             </a>
-            <a className="dropdown-item" href="/viewAllSellerProducts">
+            <a className="dropdown-item" href="/homePage">
               {" "}
               Your Inventory
             </a>
@@ -409,7 +411,7 @@ class Navbar extends Component {
       );
     }
     return (
-      <div style={{width:"100%"}}>
+      <div style={{ width: "100%" }}>
         {redirectVar}
         {this.state.redirectVar}
         {navBar}
