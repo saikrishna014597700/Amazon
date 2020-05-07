@@ -58,11 +58,11 @@ export default class Login extends Component {
     let redirectvar = null;
     let errormsg=null;
 
-    if (localStorage.getItem("id")) {
-      redirectvar = <Redirect to="/home" />;
-    }
-    if (this.state.msg == "Customer") 
-    redirectvar = <Redirect to="/home" />;
+    // if (localStorage.getItem("id")) {
+    //   redirectvar = <Redirect to="/home" />;
+    // }
+    // if (this.state.msg == "Customer") 
+    // redirectvar = <Redirect to="/home" />;
    
     	if(this.state.err==1)
     {
@@ -77,6 +77,14 @@ export default class Login extends Component {
     		</div></div></div>
     	</div>
     </div>)}
+    
+	if(localStorage.getItem("role") === "Admin"){
+		redirectvar = <Redirect to="/inventory-listings" />;
+	}else if (localStorage.getItem("role") === "Seller"){
+		redirectvar = <Redirect to="/homePage" />
+	}else if (localStorage.getItem("role") === "Customer"){
+		redirectvar = <Redirect to="/homePage"/>
+	}
 
     return (
       <div>

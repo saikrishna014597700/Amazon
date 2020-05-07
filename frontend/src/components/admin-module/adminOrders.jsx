@@ -82,7 +82,7 @@ export default class AdminOrders extends Component {
     if (!localStorage.getItem("id")) {
       redirectVar = <Redirect to="/login" />;
     } else {
-      if (localStorage.getItem("role") != "Seller") {
+      if (localStorage.getItem("role") != "Admin") {
         redirectVar = <Redirect to="/login" />;
       }
     }
@@ -119,6 +119,9 @@ export default class AdminOrders extends Component {
                         marginLeft: "20px",
                       }}
                     >
+                      <h5 class="card-title">
+                        Status : {orderProduct.productTracking.status}
+                      </h5>
                       <p class="card-text">
                         <a href="#" class="card-link">
                           {orderProduct.product.productName}
@@ -149,6 +152,7 @@ export default class AdminOrders extends Component {
                         height: "50px",
                         float: "right",
                         marginRight: "20px",
+                        marginTop: "10%",
                       }}
                       block
                       onClick={(event) => this.addProduct(event)}
@@ -164,37 +168,20 @@ export default class AdminOrders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.getProductTrackingDetails(
+                          event,
+                          orderProduct.product._id,
+                          sellerOrder.order._id
+                        )
+                      }
                     >
-                      Cancel Product
-                    </Button>
-                    <Button
-                      variant="light"
-                      style={{
-                        width: "280px",
-                        height: "50px",
-                        float: "right",
-                        marginRight: "20px",
-                      }}
-                      block
-                      onClick={(event) => this.addProduct(event)}
-                    >
-                      Loading...
+                      Tracking Details
                     </Button>
                   </th>
                 </tr>
               </table>
             </div>
-
-            {/* <div class="card-body">
-              <h5 class="card-title">{orderProduct.productTracking.status}</h5>
-              <p class="card-text">{orderProduct.product.productName}</p>
-              <p class="card-text">{orderProduct.product.productDesc}</p>
-              <p class="card-text">Price: {orderProduct.product.price}</p>
-              <p class="card-text">
-                Quantity: {orderProduct.productTracking.quantity}
-              </p>
-            </div> */}
           </div>
         );
       });
@@ -255,83 +242,89 @@ export default class AdminOrders extends Component {
       <div>
         {redirectVar}
         <div className="auth-wrapper">
-          <div className="auth-inner3">
-            <h3>All Orders</h3>
+          <div className="auth-inner4">
             <Form
               onSubmit={(e) => {
                 e.preventDefault();
               }}
             >
-              <Form.Group
-                controlId="exampleForm.ControlInput5"
-                className="float-left"
-              >
-                <Form.Control
-                  type="text"
-                  className="search-input"
-                  name="searchTerm"
-                  placeholder="search by seller name..."
-                  autoComplete="off"
-                  onKeyUp={this.onKeyUp}
-                  onChange={this.handleOnChange}
-                />
-              </Form.Group>
-              {/* <div className="apply-btn-container float-left"> */}
-              <button
-                className="Amazon"
-                style={{
-                  width: "130px",
-                  height: "32px",
-                  "margin-left": "5px",
-                }}
-                onClick={this.searchOnChangeHandle}
-              >
-                Search
-              </button>
-
-              {/* <Form.Group controlId="exampleForm.ControlSelect1"> */}
-              {/* <Form.Label>Order status</Form.Label> */}
-              <Form.Control
-                style={{ width: "200px" }}
-                as="select"
-                name="status"
-                value="No Selection"
-                onChange={this.handleOnChange}
-              >
-                <option value="">No Seletion</option>
-                <option value="ordered">Ordered</option>
-                <option value="Cancelled">Cancelled</option>
-                <option value="Shipped">Shipped</option>
-              </Form.Control>
-              {/* </Form.Group> */}
-              <button
-                type="button"
-                className="Amazon"
-                style={{
-                  width: "130px",
-                  height: "32px",
-                  "margin-left": "5px",
-                }}
-                onClick={this.getOrdersbyStatus}
-              >
-                Filter
-              </button>
-            </Form>
-
-            {/* <div class="btn-group"> */}
-
-            {/* <div class="dropdown-menu">
-              <button class="dropdown-item" type="button">
-                Ordered
-              </button>
-              <button class="dropdown-item" type="button">
-                Another action
-              </button>
-              <button class="dropdown-item" type="button">
-                Something else here
-              </button>
-            </div> */}
-
+              <table style={{ width: "100%" }}>
+                <tr>
+                  <th>
+                    <h4>ADMIN ORDERS</h4>
+                  </th>
+                  <th>Search by</th>
+                  <th>Filter by</th>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>
+                    <Form.Group
+                      controlId="exampleForm.ControlInput5"
+                      className="float-left"
+                    >
+                      <Form.Control
+                        type="text"
+                        className="search-input"
+                        name="searchTerm"
+                        placeholder="Seller name..."
+                        autoComplete="off"
+                        onKeyUp={this.onKeyUp}
+                        onChange={this.handleOnChange}
+                      />
+                    </Form.Group>
+                  </td>
+                  <td>
+                    {" "}
+                    <Form.Control
+                      style={{ width: "200px" }}
+                      as="select"
+                      name="status"
+                      value="No Selection"
+                      onChange={this.handleOnChange}
+                    >
+                      <option value="">Select status</option>
+                      <option value="Ordered">Ordered</option>
+                      <option value="Shipped">Shipped</option>
+                      <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </Form.Control>
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td>
+                    {" "}
+                    <button
+                      className="Amazon"
+                      style={{
+                        width: "130px",
+                        height: "42px",
+                        "margin-left": "5px",
+                      }}
+                      onClick={this.searchOnChangeHandle}
+                    >
+                      Search
+                    </button>
+                  </td>
+                  <td>
+                    {" "}
+                    <button
+                      type="button"
+                      className="Amazon"
+                      style={{
+                        width: "130px",
+                        height: "42px",
+                        "margin-left": "5px",
+                      }}
+                      onClick={this.getOrdersbyStatus}
+                    >
+                      Filter
+                    </button>
+                  </td>
+                </tr>
+              </table>
+            </Form>{" "}
             <br />
             <br />
             <div class="tab-content" id="nav-tabContent">
@@ -350,6 +343,8 @@ export default class AdminOrders extends Component {
     );
   }
   getProductTrackingDetails = (event, pid, orderId) => {
-    this.setState({ redirect: `/productTrackingDetails/${pid}/${orderId}` });
+    this.setState({
+      redirect: `/adminProductTrackingDetails/${pid}/${orderId}`,
+    });
   };
 }

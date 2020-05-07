@@ -6,6 +6,7 @@ let updateViewCount = async (msg, callback) => {
   let error = {};
   try {
     let productId = msg.productId;
+    console.log("in view count=>"+productId)
     pool.query(
       "update product_analytics set view_Count = view_Count+1 where product_Id=? and order_id=''",
       [productId],

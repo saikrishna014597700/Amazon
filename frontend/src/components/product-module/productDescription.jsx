@@ -18,7 +18,7 @@ export default class productDescription extends Component {
       product: {
         productImages:[]
       },
-      productId: "5e9d9d90278fd64044dc6945",
+      productId: "",
       rating: 4.5,
       reviews: [],
       selectedImage: productImage,
@@ -37,12 +37,14 @@ export default class productDescription extends Component {
       productId: this.state.productId,
     };
     let finalQuantity = this.state.quantity;
+    let productExists = false;
     await axios
       .post("http://localhost:3001/api/cart/getCart/", payload)
       .then((response) => {
         console.log("in get cart response",response)
         if (response) {
           if (response.data.length != 0) {
+            productExists = true;
             let quantity = response.data[0].quantity;
             finalQuantity = parseInt(quantity,10) + parseInt(this.state.quantity,10);
             cartSize = response.data.length;
@@ -56,7 +58,7 @@ export default class productDescription extends Component {
       quantity: finalQuantity,
     };
 
-    if (finalQuantity == 1) {
+    if (!productExists) {
       await axios
         .post("http://localhost:3001/api/cart/addToCart/", payload)
         .then((res) => {
@@ -91,7 +93,7 @@ export default class productDescription extends Component {
   };
 
   async componentDidMount() {
-    this.updateViewCount();
+    
     var id = localStorage.getItem("id");
     if (id) {
       // console.log("in this id=>" + id);
@@ -145,7 +147,7 @@ export default class productDescription extends Component {
                 review.userId
             )
             .then((res) => {
-              // console.log("addresses::", res.data);
+              console.log("reviews::", res.data);
               review.username = res.data.firstName;
             });
         });
@@ -159,6 +161,7 @@ export default class productDescription extends Component {
           // console.log("this state =>" + JSON.stringify(this.state));
         });
       });
+      this.updateViewCount();
   }
   changeRating(newRating, name) {
     this.setState({

@@ -12,8 +12,8 @@ let saveProductAnalytics = async (msg, callback) => {
       var today = date.getFullYear()+"-"+(date.getMonth()+1) + "-" + date.getDate()
       console.log("today is =>"+today)
       var salesSum = parseInt(msg.quantity,10) * parseInt(msg.price,10)
-      var query = "insert into product_analytics (product_id,order_id,seller_id,price,quantity,product_sales_um,product_name,user_id,create_date) "+
-      "values ('"+msg.productId+"','"+msg.orderId+"',"+msg.sellerId+","+msg.price+","+msg.quantity+","+salesSum+",'"+msg.productName+"','"+msg.userId+"','"+today+"')";
+      var query = "insert into product_analytics (product_id,order_id,seller_id,price,quantity,product_sales_um,product_name,user_id,create_date,category_id) "+
+      "values ('"+msg.productId+"','"+msg.orderId+"',"+msg.sellerId+","+msg.price+","+msg.quantity+","+salesSum+",'"+msg.productName+"','"+msg.userId+"','"+today+"','"+msg.categoryId+"')";
       console.log(" the query is => "+query);
       await pool.query(query, async function (err, result) {
       console.log("Result in product ANalytics=>", result+" may be errr=>"+err);

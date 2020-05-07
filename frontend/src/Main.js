@@ -7,6 +7,7 @@ import SellerReports from "./components/seller-module/sellerReports";
 import OrderDetailPage from "./components/seller-module/orderDetailPage";
 import ProductTrackingDetails from "./components/seller-module/productTrackingDetails";
 import SellerProfile from "./components/seller-module/sellerProfile";
+import AdminProductTrackingDetails from "./components/admin-module/adminProductTrackingDetails";
 
 import EditProductDetails from "./components/product-module/editProductDetails";
 // import SignIn from "./components/signin-module/login";
@@ -32,6 +33,7 @@ import AdminOrders from "./components/admin-module/adminOrders";
 import AddressDetails from "./components/cart-module/selectAddress";
 import SelectCard from "./components/cart-module/selectCard";
 import Checkout from "./components/cart-module/checkout";
+import HomePage from "./components/common/homePage";
 
 //Create a Main Component
 class Main extends Component {
@@ -41,12 +43,13 @@ class Main extends Component {
         <div>
           <Route path="/" component={Navbar} />
           <Route path="/home" component={Home} />
+          <Route path="/homePage" component={HomePage} />
           <Route path="/signup" component={SignUp} />
           <Route path="/login" component={Login} />
           <Route path="/addProduct" component={AddProduct} />
           <Route path="/orders" component={Orders} />
           <Route path="/Profile" component={Profile} />
-          <Route path="/search/:searchTerm" component={SearchProduct} />
+          <Route path="/search/:searchTerm/:searchCategory" component={SearchProduct} />
           <Route path="/customerCards" component={customerCards} />
           <Route path="/customerAddresses" component={customerAddresses} />
           <Route path="/product/:id" component={ProductDescription} />
@@ -58,6 +61,10 @@ class Main extends Component {
           <Route
             path="/productTrackingDetails/:id/:id"
             component={ProductTrackingDetails}
+          />
+          <Route
+            path="/adminProductTrackingDetails/:id/:id"
+            component={AdminProductTrackingDetails}
           />
           <Route
             path="/viewAllSellerProducts"

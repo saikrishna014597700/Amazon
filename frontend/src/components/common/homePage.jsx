@@ -8,7 +8,7 @@ import StarRatings from "react-star-ratings";
 import StarRatingComponent from "react-star-rating-component";
 import { Redirect } from "react-router";
 
-export default class SearchProduct extends Component {
+export default class HomePage extends Component {
   constructor() {
     super();
     this.state = {
@@ -43,17 +43,12 @@ export default class SearchProduct extends Component {
   }
 
   async componentDidMount() {
-    // console.log("state=>" + this.state.searchCategory);
-    await this.setState({
-      searchTerm: this.props.match.params.searchTerm,
-      searchCategory: this.props.match.params.searchCategory
-    });
+    
     if (localStorage.getItem("role") == "Seller") {
       await this.setState({
         sellerId: localStorage.getItem("id"),
       });
     }
-    // console.log("here in search==>" + this.state.searchTerm);
     await this.viewSeachResults();
   }
 
@@ -163,6 +158,10 @@ export default class SearchProduct extends Component {
   }
 
   render() {
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
@@ -272,6 +271,7 @@ export default class SearchProduct extends Component {
     );
     let sellerProducts = this.state.products.map((sellerProduct) => {
       return (
+        
         <div
           className="col-md-3"
           style={{
@@ -281,6 +281,7 @@ export default class SearchProduct extends Component {
             borderColor: "#efefef",
           }}
         >
+          {redirectVar}
           <div className="row" style={{ margin: 10 }}>
             <img
               src={require("../../utils/product.jpg")}
@@ -349,12 +350,7 @@ export default class SearchProduct extends Component {
                 <option value="ratingHigh">rating High to low</option>
               </select>
             </div>
-
-            <div className="row" style={{fontSize:"20px",fontWeight:"bold"}}>
-            <div className="row" style={{fontSize:"20px",fontWeight:"bold",marginLeft:"15px"}}>
-                Search Results : {this.state.searchTerm}
-            </div>
-            </div>
+            
             <br></br>
             <div className="row">{sellerProducts}</div>
             <br></br>

@@ -55,9 +55,9 @@ export default class SellerReports extends Component {
           labels.push(order.product_name);
           // labels.push("Hi");
           data.push(order.product_sales_um);
-          backgroundColor.push("rgba(255,99,132,0.6)");
+          backgroundColor.push("rgba(245, 212, 122)");
         });
-
+        console.log("backgroundColor", backgroundColor);
         var state = {};
         var datasets = [];
         state.labels = labels;
@@ -92,6 +92,7 @@ export default class SellerReports extends Component {
   }
 
   render() {
+    console.log("state in render::", this.state.chartData);
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
@@ -106,27 +107,23 @@ export default class SellerReports extends Component {
     }
     let graph = (
       <div>
-        <Bar
+        {/* <Bar
           data={this.state.chartData}
           options={{
             title: {
-              display: "Product wise Seller Sales SUm Graph",
-              text: "Seller Sales SUm Graph",
+              display: "Product wise Seller Sales Sum Graph",
+              text: "Seller Sales Sum Graph",
               fontSize: 25,
             },
-            // legend: {
-            //   display: "xx",
-            //   position: "yy",
-            // },
           }}
-        />
+        /> */}
 
-        <Line
+        <Pie
           data={this.state.chartData}
           options={{
             title: {
-              display: this.props.displayTitle,
-              text: "Largest Cities In " + this.props.location,
+              display: "Product wise Seller Sales Sum Graph",
+              text: "Seller Sales Sum Graph",
               fontSize: 25,
             },
             legend: {
@@ -136,12 +133,14 @@ export default class SellerReports extends Component {
           }}
         />
 
-        <Pie
+        <br />
+
+        <Line
           data={this.state.chartData}
           options={{
             title: {
               display: this.props.displayTitle,
-              text: "Largest Cities In " + this.props.location,
+              text: "Seller Sales Sum " + this.props.location,
               fontSize: 25,
             },
             legend: {
@@ -193,6 +192,9 @@ export default class SellerReports extends Component {
         {redirectVar}
         <div className="auth-inner3">
           <div class="card text-center">
+            <br />
+            <h4>Seller Reports</h4>
+            <br />
             <div class="card-header">
               <table style={{ width: "100%" }}>
                 <tr>
@@ -200,7 +202,7 @@ export default class SellerReports extends Component {
                   <th>Total Sales Sum</th>
                 </tr>
                 <tr>
-                  <td>"Fetch from Local storage"</td>
+                  <td>{localStorage.getItem("name")}</td>
                   <td>{this.state.salesSum}</td>
                   <td>
                     {/* <Link

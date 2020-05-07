@@ -25,36 +25,39 @@ export default class orders extends Component {
   }
 
   async componentDidMount() {
-    //var sellerId = "123";
-    axios
-      .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
-      .then((response) => {
-        console.log("Pro are::", response);
-        this.setState({
-            orders: response.data,
-        });
-        //console.log("Pro are::", this.state.orders);
-      });
 
-      axios
-      .get("http://localhost:3001/api/orders/getOpenOrders/?userId=" + localStorage.getItem("id"))
-      .then((openresponse) => {
+    var response
+    var openresponse
+    var Cancelledresponse
+    //var sellerId = "123";
+    await axios
+      .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
+      .then(async (response) => {
+        console.log("response of all orders are::", response);
+        response = response
+        await axios.get("http://localhost:3001/api/orders/getOpenOrders/?userId=" + localStorage.getItem("id"))
+      .then(async (openresponse) => {
         console.log("Pro are::", openresponse);
-        this.setState({
-            openOrders: openresponse.data,
-        });
-        //console.log("Pro are::", this.state.orders);
-      });
-      axios
-      .get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
+        openresponse = openresponse
+        await axios.get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
       .then((Cancelledresponse) => {
         console.log("Cncelled orders are::", Cancelledresponse);
-        
+        Cancelledresponse = Cancelledresponse
         this.setState({
-            cancelledOrders: Cancelledresponse.data,
-        });
-        //console.log("Pro are::", this.state.orders);
+          orders: response.data,
+          cancelledOrders: Cancelledresponse.data,
+          openOrders: openresponse.data,
       });
+      });
+        
+      });
+        
+      });
+
+    
+     
+
+      
   }
 
   addProduct(e,id){
@@ -72,24 +75,31 @@ export default class orders extends Component {
     await axios.post("http://localhost:3001/api/orders/cancelOrder", payload).then(async (res) => {
         console.log('response is::', res)
         alert(res.data)
-       await axios.get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
-      .then((response) => {
-        console.log("Pro are::", response);
-        this.setState({
+        await axios
+        .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
+        .then(async (response) => {
+          console.log("response of all orders are::", response);
+          response = response
+          await axios.get("http://localhost:3001/api/orders/getOpenOrders/?userId=" + localStorage.getItem("id"))
+        .then(async (openresponse) => {
+          console.log("Pro are::", openresponse);
+          openresponse = openresponse
+          await axios.get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
+        .then((Cancelledresponse) => {
+          console.log("Cncelled orders are::", Cancelledresponse);
+          Cancelledresponse = Cancelledresponse
+          this.setState({
             orders: response.data,
+            cancelledOrders: Cancelledresponse.data,
+            openOrders: openresponse.data,
         });
-        //console.log("Pro are::", this.state.orders);
-      });
+        });
+         });
+        });
     })
   }
 
-  async redirectToProductsPage(event) {
-    this.setState({ redirect: `/viewAllsellerOrders` });
-  }
-  // productsDisplay = (productsDiv) => {
-  //   this.productsDiv.style.display = "block";
-  // };
-
+  
   render() {
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
@@ -244,7 +254,7 @@ export default class orders extends Component {
     });
 
     let openOrders = this.state.openOrders.map((sellerOrder) => {
-      console.log("orders placed!!", sellerOrder);
+      console.log("open orders placed!!", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         let logoPath;
         if(orderProduct.product.productImages.length === 0){
@@ -393,7 +403,7 @@ export default class orders extends Component {
     });
 
     let ordersPlaced = this.state.orders.map((sellerOrder) => {
-      console.log("orders placed!!", sellerOrder);
+      console.log("all orders placed!!", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         let logoPath;
         if(orderProduct.product.productImages.length === 0){
@@ -595,7 +605,7 @@ export default class orders extends Component {
                 {ordersPlaced}
               </div>
               <div
-                class="tab-pane fade show active"
+                class="tab-pane fade"
                 id="nav-open-orders"
                 role="tabpanel"
                 aria-labelledby="nav-open-orders-tab"

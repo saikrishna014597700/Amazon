@@ -259,7 +259,7 @@ export default class AdminReports extends Component {
     if (!localStorage.getItem("id")) {
       redirectVar = <Redirect to="/login" />;
     } else {
-      if (localStorage.getItem("role") != "Seller") {
+      if (localStorage.getItem("role") != "Admin") {
         redirectVar = <Redirect to="/login" />;
       }
     }
@@ -382,7 +382,9 @@ export default class AdminReports extends Component {
     return (
       <div className="auth-wrapper">
         {redirectVar}
-        <div className="auth-inner3">
+        <div className="auth-inner4">
+          <h3>Inventory Listings</h3>
+          <br />
           <div class="card text-center">
             <div className="card">
               <Form

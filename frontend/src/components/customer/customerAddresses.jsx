@@ -58,7 +58,7 @@ export default class customerAddresses extends Component {
   addAddress() {
 
     var newAddress = {
-      _id : undefined,
+      _id : "-1",
       name:"",
       street1:"",
       street2:"",

@@ -50,11 +50,11 @@ class Navbar extends Component {
       });
     }else if (localStorage.getItem("role") === "Seller"){
       this.setState({
-        redirectVar: <Redirect to="/viewAllSellerProducts" />
+        redirectVar: <Redirect to="/homePage" />
       });
     }else if (localStorage.getItem("role") === "Customer"){
       this.setState({
-        redirectVar: <Redirect to="/home" />,
+        redirectVar: <Redirect to="/homePage" />,
       });
     }
 
@@ -69,7 +69,7 @@ class Navbar extends Component {
   goToSearch = () => {
     this.setState({ 
      // redirect: `/search/${this.state.searchTerm}`,
-      redirectVar:  <Redirect to={`/search/${this.state.searchTerm}`}  />  
+      redirectVar:  <Redirect to={`/search/${this.state.searchTerm}/${this.state.searchCategory}`}  />  
     });
   };
 
@@ -193,7 +193,7 @@ class Navbar extends Component {
               {" "}
               Your Profile
             </a>
-            <a className="dropdown-item" href="/viewAllSellerProducts">
+            <a className="dropdown-item" href="/homePage">
               {" "}
               Your Inventory
             </a>

@@ -139,7 +139,7 @@ export default class addressSelect extends Component {
                   borderRadius: "4px",
                   boxSizing: "border-box",
                 }}
-                onChange={(e) => this.changeHandler(e, "address1")}
+                onChange={(e) => this.changeHandler(e, "street1")}
               ></input>
             </div>
             <div className="row">Address Line 2:</div>
@@ -154,7 +154,7 @@ export default class addressSelect extends Component {
                   borderRadius: "4px",
                   boxSizing: "border-box",
                 }}
-                onChange={(e) => this.changeHandler(e, "address2")}
+                onChange={(e) => this.changeHandler(e, "street2")}
               ></input>
             </div>
             <div className="row">City:</div>

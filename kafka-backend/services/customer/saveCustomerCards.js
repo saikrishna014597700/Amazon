@@ -13,6 +13,10 @@ let saveCustomerCards = async (msg, callback) => {
   let err = {};
   var cards = []
   const today = moment();
+  if(msg._id = "-1"){
+    console.log("new card");
+    msg._id = undefined
+  }
   try {
    
     if(msg._id != undefined){
