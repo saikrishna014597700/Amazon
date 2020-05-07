@@ -100,6 +100,62 @@ router.get("/all-sellers", async (req, res) => {
   });
 });
 
+router.get("/all-orders", async (req, res) => {
+  let msg = req.body;
+  msg.route = "get_all_orders";
+  msg.status = req.query.status;
+  kafka.make_request("getAllOrders", msg, function (err, results) {
+    if (err) {
+      console.log("Errorrr", err);
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Success", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.resultArray);
+    }
+  });
+});
+
+router.get("/orders_by_seller_name", async (req, res) => {
+  let msg = req.body;
+  msg.route = "orders_by_seller_name";
+  msg.searchTerm = req.query.searchTerm;
+  msg.status = req.query.status;
+  kafka.make_request("getAllOrders", msg, function (err, results) {
+    if (err) {
+      console.log("Errorrr", err);
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Success", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results.resultArray);
+    }
+  });
+});
+
+router.get("/reports", async (req, res) => {
+  let msg = req.body;
+  msg.route = "reports";
+  msg.searchTerm = req.query.searchTerm;
+  msg.status = req.query.status;
+  kafka.make_request("getReports", msg, function (err, results) {
+    if (err) {
+      console.log("Errorrr", err);
+      msg.error = err.data;
+      return res.status(err.status).send(err.data);
+    } else {
+      console.log("Success", results);
+      msg.status = results.status;
+      logger.info(msg);
+      return res.status(results.status).send(results);
+    }
+  });
+});
+
 router.get("/products-by-seller/:sellerId", async (req, res) => {
   let msg = req.body;
   msg.route = "products_by_seller";

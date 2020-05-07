@@ -25,8 +25,10 @@ import Navbar from "./components/common/navbar";
 import ProductView from "./components/common/productView";
 import ProductDescription from "./components/product-module/productDescription";
 import Cart from "./components/cart-module/cart";
+import AdminReports from "./components/admin-module/adminReports";
 import InventoryListings from "./components/admin-module/InventoryListings";
 import SellerListings from "./components/admin-module/SellerListings";
+import AdminOrders from "./components/admin-module/adminOrders";
 import AddressDetails from "./components/cart-module/selectAddress";
 import SelectCard from "./components/cart-module/selectCard";
 import Checkout from "./components/cart-module/checkout";
@@ -53,15 +55,27 @@ class Main extends Component {
           <Route path="/sellerReports" component={SellerReports} />
           <Route path="/sellerProfile" component={SellerProfile} />
           <Route path="/orderDetailPage/:id" component={OrderDetailPage} />
-          <Route path="/productTrackingDetails/:id/:id" component={ProductTrackingDetails}/>
-          <Route path="/viewAllSellerProducts" component={ViewAllSellerProducts}/>
-          <Route path="/editProductDetails/:id" component={EditProductDetails}/>
+          <Route
+            path="/productTrackingDetails/:id/:id"
+            component={ProductTrackingDetails}
+          />
+          <Route
+            path="/viewAllSellerProducts"
+            component={ViewAllSellerProducts}
+          />
+          <Route
+            path="/editProductDetails/:id"
+            component={EditProductDetails}
+          />
+
+          <Route path="/admin-orders" component={AdminOrders} />
+          <Route path="/admin-reports" component={AdminReports} />
           <Route path="/inventory-listings" component={InventoryListings} />
           <Route path="/seller-listings" component={SellerListings} />
           <Route path="/product-view" component={ProductView} />
-          <Route path="/selectAddress" component={AddressDetails}/>
-          <Route path="/selectCard" component={SelectCard}/>
-          <Route path="/checkout" component={Checkout}/>
+          <Route path="/selectAddress" component={AddressDetails} />
+          <Route path="/selectCard" component={SelectCard} />
+          <Route path="/checkout" component={Checkout} />
         </div>
       </Router>
     );
