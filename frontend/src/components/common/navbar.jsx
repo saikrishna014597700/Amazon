@@ -19,7 +19,7 @@ class Navbar extends Component {
       redirectVar: null,
       redirect: null,
       productCategories: [],
-      cartSize:0
+      cartSize: 0,
     };
     this.onMenuClick = this.onMenuClick.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
@@ -83,8 +83,8 @@ class Navbar extends Component {
             });
             localStorage.setItem("cartSize", cartSize);
             this.setState({
-              cartSize:cartSize
-            })
+              cartSize: cartSize,
+            });
           }
         }
       });
@@ -409,7 +409,7 @@ class Navbar extends Component {
       );
     }
     return (
-      <div style={{width:"100%"}}>
+      <div style={{ width: "100%" }}>
         {redirectVar}
         {this.state.redirectVar}
         {navBar}
