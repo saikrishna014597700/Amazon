@@ -22,7 +22,7 @@ let getSellerOrders = async (msg, callback) => {
     FROM map_order_product
     WHERE sellerId = ${msg.sellerId}
     GROUP BY order_Id
-      ORDER BY create_date ASC`,
+      ORDER BY create_date DESC`,
       async (err, sqlResult) => {
         if (sqlResult && sqlResult.length > 0) {
           Object.keys(sqlResult).forEach(function (key) {

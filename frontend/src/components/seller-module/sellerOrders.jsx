@@ -122,12 +122,12 @@ export default class SellerOrders extends Component {
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
         let logoPath;
-        if(orderProduct.product.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = orderProduct.product.productImages[0]
+        if (orderProduct.product.productImages.length === 0) {
+          logoPath =
+            "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        } else {
+          logoPath = orderProduct.product.productImages[0];
         }
-
 
         return (
           <div>
@@ -154,6 +154,9 @@ export default class SellerOrders extends Component {
                         marginLeft: "20px",
                       }}
                     >
+                      <h5 class="card-title">
+                        Status : {orderProduct.productTracking.status}
+                      </h5>
                       <p class="card-text">
                         <a href="#" class="card-link">
                           {orderProduct.product.productName}
@@ -297,10 +300,11 @@ export default class SellerOrders extends Component {
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
         let logoPath;
-        if(orderProduct.product.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = orderProduct.product.productImages[0]
+        if (orderProduct.product.productImages.length === 0) {
+          logoPath =
+            "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        } else {
+          logoPath = orderProduct.product.productImages[0];
         }
         return (
           <div>
@@ -452,10 +456,11 @@ export default class SellerOrders extends Component {
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
         let logoPath;
-        if(orderProduct.product.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = orderProduct.product.productImages[0]
+        if (orderProduct.product.productImages.length === 0) {
+          logoPath =
+            "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        } else {
+          logoPath = orderProduct.product.productImages[0];
         }
         return (
           <div>
@@ -607,10 +612,11 @@ export default class SellerOrders extends Component {
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
         let logoPath;
-        if(orderProduct.product.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = orderProduct.product.productImages[0]
+        if (orderProduct.product.productImages.length === 0) {
+          logoPath =
+            "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        } else {
+          logoPath = orderProduct.product.productImages[0];
         }
         return (
           <div>
@@ -638,7 +644,7 @@ export default class SellerOrders extends Component {
                       }}
                     >
                       <h5 class="card-title">
-                        {orderProduct.productTracking.status}
+                        Status : {orderProduct.productTracking.status}
                       </h5>
                       <p class="card-text">
                         <a href="#" class="card-link">

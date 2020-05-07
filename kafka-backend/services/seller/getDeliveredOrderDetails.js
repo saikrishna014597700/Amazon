@@ -18,7 +18,7 @@ let getDeliveredOrderDetails = async (msg, callback) => {
     var query = `SELECT order_Id, GROUP_CONCAT(product_id) as product_id,GROUP_CONCAT(quantity) as quantity
     FROM map_order_product
     WHERE sellerId = ${msg.sellerId} AND status = "Delivered"
-    GROUP BY order_Id`;
+    GROUP BY order_Id order by create_date DESC`;
     console.log("Delivered", query);
     pool.query(query, async (err, sqlResult) => {
       if (sqlResult && sqlResult.length > 0) {

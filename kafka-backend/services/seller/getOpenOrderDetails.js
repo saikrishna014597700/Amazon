@@ -18,8 +18,8 @@ let getOpenOrderDetails = async (msg, callback) => {
     pool.query(
       `SELECT order_Id, GROUP_CONCAT(product_id) as product_id,GROUP_CONCAT(quantity) as quantity
     FROM map_order_product
-    WHERE sellerId = ${msg.sellerId} AND status = "Shipped"
-    GROUP BY order_Id`,
+    WHERE sellerId = ${msg.sellerId} AND (status = "Shipped" or status = "Ordered")
+    GROUP BY order_Id order by create_date DESC`,
       async (err, sqlResult) => {
         if (sqlResult && sqlResult.length > 0) {
           Object.keys(sqlResult).forEach(function (key) {

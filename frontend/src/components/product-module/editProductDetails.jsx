@@ -19,6 +19,7 @@ export default class EditProductDetails extends Component {
       redirect: null,
       formData: [],
       categories: [],
+      productChange: false,
     };
     this.handleImageChange = this.handleImageChange.bind(this);
   }
@@ -27,6 +28,9 @@ export default class EditProductDetails extends Component {
     console.log("sellerProductsTest", this.state.sellerProductsTest);
     this.setState({
       formData: this.state.formData.concat(e.target.files[0]),
+    });
+    this.setState({
+      productChange: true,
     });
   }
 
@@ -95,6 +99,9 @@ export default class EditProductDetails extends Component {
       this.setState({
         sellerProductsTest: sellerProductt,
       });
+      this.setState({
+        productChange: true,
+      });
     });
   };
 
@@ -108,7 +115,7 @@ export default class EditProductDetails extends Component {
   async editProduct(event) {
     var changedProdObj;
     console.log("In ", this.state.sellerProductsTest);
-    if (this.state.sellerProductsTest.length != 0) {
+    if (this.state.productChange) {
       console.log("In If");
       changedProdObj = this.state.sellerProductsTest;
       const payload = {
@@ -142,7 +149,7 @@ export default class EditProductDetails extends Component {
               `http://localhost:3001/api/product/getProductDetails/${this.props.match.params.id}`
             )
             .then((response) => {
-              alert("Updated successfully");
+              // alert("Updated successfully");
               console.log("Pro are::", response);
               this.setState({
                 sellerProducts: [].concat(response.data),

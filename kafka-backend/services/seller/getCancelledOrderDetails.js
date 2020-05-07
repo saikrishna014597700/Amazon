@@ -19,7 +19,7 @@ let getCancelledOrderDetails = async (msg, callback) => {
       `SELECT order_Id, GROUP_CONCAT(product_id) as product_id,GROUP_CONCAT(quantity) as quantity
     FROM map_order_product
     WHERE sellerId = ${msg.sellerId} AND status = "Cancelled"
-    GROUP BY order_Id`,
+    GROUP BY order_Id order by create_date DESC`,
       async (err, sqlResult) => {
         console.log("Cancelled orders", sqlResult);
         if (sqlResult && sqlResult.length > 0) {
