@@ -190,7 +190,13 @@ class ProductView extends React.Component {
     );
 
     products = this.state?.products?.map((sellerProduct) => {
-      return (
+      let logoPath;
+        if(sellerProduct.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = sellerProduct.productImages[0]
+        }
+       return (
         <div className="col-md-3" style={{ margin: 5 }}>
           <div className="ui card">
             {/* <div className="image"> */}
@@ -207,7 +213,7 @@ class ProductView extends React.Component {
               <div className="image-container" id={sellerProduct._id}>
                 <div className="image">
                   <img
-                    src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                    src={logoPath}
                     style={{ maxWidth: "100%" }}
                   />
                 </div>

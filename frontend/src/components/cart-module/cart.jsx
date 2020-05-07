@@ -277,24 +277,26 @@ export default class extends Component {
       return <Redirect to={this.state.redirect} />;
     }
     let productsDiv = this.state.productDetails.map((product, i) => {
+      let logoPath;
+        if(product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = product.productImages[0]
+        }
       return (
         <div className="row">
           <hr style={{ width: "850px", marginLeft: "-18px" }}></hr>
           <table style={{ width: "850px", height: "150px" }}>
             <tr>
-              <td style={{ width: "10%" }}>
-                <input type="checkbox"></input>
-              </td>
+             
               <td style={{ width: "20%" }}>
                 <img
-                  src={productImage}
-                  style={{ width: "100%", height: "150px", cursor: "pointer" }}
-                  onClick={() => {
-                    this.setState({ selectedImage: productImage });
-                  }}
+                  src={logoPath}
+                  style={{ width: "150px", height: "150px", cursor: "pointer" }}
+                  
                 ></img>
               </td>
-              <td style={{ width: "60%" }}>
+              <td style={{ width: "70%",marginLeft:"20px" }}>
                 <div className="row">
                   <a href={"/sellerProfile/"+product.sellerId}>{product.sellerName}</a>
                 </div>
@@ -338,24 +340,25 @@ export default class extends Component {
       );
     });
     let saveForLaterDiv = this.state.saveForLaterProducts.map((product) => {
+      let logoPath;
+      if(product.productImages.length === 0){
+        logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+      }else{
+        logoPath = product.productImages[0]
+      }
       return (
         <div className="row">
           <hr style={{ width: "850px", marginLeft: "-18px" }}></hr>
           <table style={{ width: "850px", height: "150px" }}>
             <tr>
-              <td style={{ width: "10%" }}>
-                <input type="checkbox"></input>
-              </td>
               <td style={{ width: "20%" }}>
                 <img
-                  src={productImage}
-                  style={{ width: "100%", height: "150px", cursor: "pointer" }}
-                  onClick={() => {
-                    this.setState({ selectedImage: productImage });
-                  }}
+                  src={logoPath}
+                  style={{ width: "150px", height: "150px", cursor: "pointer" }}
+                  
                 ></img>
               </td>
-              <td style={{ width: "60%" }}>
+              <td style={{ width: "70%" ,marginLeft:"20px"}}>
                 <div className="row">
                   <a href="/product/:{product._id}">{product.productName}</a>
                 </div>
@@ -415,13 +418,6 @@ export default class extends Component {
                   Subtotal ({this.state.productDetails.length} item) : &nbsp;
                   <div style={{ color: "#b05753" }}>
                     ${this.state.cartPrice}
-                  </div>
-                </div>
-                <div className="row">
-                  <input type="checkbox" style={{ marginTop: "4px" }}></input>
-                  &nbsp;
-                  <div style={{ fontSize: "14px" }}>
-                    This item contains gift
                   </div>
                 </div>
                 <div className="row" style={{ marginTop: "10px" }}>

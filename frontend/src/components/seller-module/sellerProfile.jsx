@@ -16,11 +16,12 @@ class SelerProfile extends React.Component {
     super(props);
     this.state = {
       sellerId: localStorage.getItem("id"),
-      role: "Seller",
+      role: localStorage.getItem("role"),
       sellerName: "",
       street: "",
       city: "",
       state: "",
+      dis:0,
       zipCode: "",
       sellerProfile: {},
       editMode: false,
@@ -123,27 +124,39 @@ class SelerProfile extends React.Component {
   };
 
   componentDidMount() {
-    this.getSellerProfile(this.state.sellerId);
+    // console.log(this.props.match.params.id)
+    this.getSellerProfile(this.props.match.params.id);
   }
 
   render() {
 
     let redirectVar = null;
+    let butts=null;
     if(!localStorage.getItem("id")){
-        redirectVar = <Redirect to= "/login"/>
-    }else{
-      if(localStorage.getItem("role") != "Seller"){
-        redirectVar = <Redirect to= "/login"/>
-      }
-    }
+        redirectVar = <Redirect to= "/login"/>}
+    // }else{
+    //   if(!localStorage.getItem("role") == "Seller"){
+    //     redirectVar = <Redirect to= "/login"/>
+    //   }
+    // }
+    if(localStorage.getItem("role")=="Seller")
+    {
+    butts=  ( <div style = {{marginLeft : "300px"}}>
+    <input type="file" style = {{marginLeft : "300px !important",width:"20%"}} name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
 
+<button className="Amazon" style = {{marginLeft : "250px",width:"150px",marginTop:"-65px"}} type="submit" onClick = {(e)=>this.uploadPic()}>
+                  <b>Upload Profile Pic</b>
+              </button>
+              </div>
+    )}
+   
     let profilePath = null;
-    console.log("profilePath before change::",profilePath , )
+    console.log("profilePath before change::",profilePath )
     if(localStorage.getItem("imagePath")!="undefined"){
       console.log("true")
       profilePath = (<img
         alt=""
-        src={localStorage.getItem("imagePath")}
+        src={this.state?.sellerProfile?.imagePath}
         id="avatar-image"
         style={{width:"220px",height:"220px",borderRadius:"50%",marginTop:"85px",marginLeft:"20px",border:"1px"}}
       />)
@@ -186,13 +199,16 @@ class SelerProfile extends React.Component {
 {/* <p>{this.state?.sellerProfile?.sellerName}</p> */}
                        
                       </div >
-                      <div style = {{marginLeft : "300px"}}>
+                      
+                      {butts}
+                     {/* { <div style = {{marginLeft : "300px"}}>
                       <input type="file" style = {{marginLeft : "300px !important",width:"20%"}} name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
                 
                 <button className="Amazon" style = {{marginLeft : "250px",width:"150px",marginTop:"-65px"}} type="submit" onClick = {(e)=>this.uploadPic()}>
                                     <b>Upload Profile Pic</b>
                                 </button>
                                 </div>
+                     } */}
 
 
                     
@@ -268,7 +284,7 @@ class SelerProfile extends React.Component {
             </button>
             <button
               className="Amazon"
-              style={{ width: "130px" ,marginLeft:"191px",marginTop:"-46px"}}
+              style={{ width: "130px" ,marginLeft:"191px",marginTop:"-37.5px"}}
               onClick={(e) => this.noShowEditForm()}
             >
               Cancel
@@ -276,9 +292,10 @@ class SelerProfile extends React.Component {
           </div>
         ) : (
          < div class="card" style={{width:"860px",marginLeft:"300px"}} >
-         <div className="col">
+         {/* <div className="col"> */}
               {" "}
               {"Seller" === this.state?.role ? (
+               
                 <button
                   className="Amazon"
                   style={{ width: "130px",marginLeft:"600px"}}
@@ -290,8 +307,8 @@ class SelerProfile extends React.Component {
               ) : (
                 ""
               )}
-            </div>
-              <div style={{marginLeft:"30px",marginTop:"-40px"}} >
+            {/* </div> */}
+              <div style={{marginLeft:"30px",marginTop:"auto"}} >
                 <div><p style={{fontWeight:"bold"}} >Name:</p> {this.state?.sellerProfile?.sellerName}</div> 
                 <div>
                 <p style={{fontWeight:"bold"}} > Street:</p> {this.state?.sellerProfile?.sellerAddress?.street}
@@ -305,25 +322,8 @@ class SelerProfile extends React.Component {
                 <div>
                 <p style={{fontWeight:"bold"}} >  Zip Code: </p>{this.state?.sellerProfile?.sellerAddress?.zip_code}
                 </div>
-           
-             </div> 
-       
-            {/* <div className="col">
-              {" "}
-              {"Seller" === this.state?.role ? (
-                <button
-                  className="Amazon"
-                  style={{ width: "130px" }}
-                  onClick={(e) => this.showEditForm()}
-                >
-                  {" "}
-                  Edit your Profile
-                </button>
-              ) : (
-                ""
-              )}
-            </div> */}
-      
+                <br></br>
+             </div>
           </div>
         )}
       </div>

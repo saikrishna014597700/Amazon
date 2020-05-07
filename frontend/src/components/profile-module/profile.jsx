@@ -90,7 +90,7 @@ class Profile extends Component {
 
   async handleChange(e) {
     this.setState({
-      [e.target.name]: e.target.files[0],
+      [e.target.name]: e.target.value,
     });
     console.log(e.target.name," ",e.target.value)
   }
@@ -99,8 +99,9 @@ class Profile extends Component {
   {
     const data=
     {
+      id: localStorage.getItem("id"),
       name: this.state.name,
-      user_image: this.state.user_image
+      
     }
     axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
@@ -124,8 +125,12 @@ class Profile extends Component {
     let redirectVar = null;
     if(!localStorage.getItem("id")){
         redirectVar = <Redirect to= "/login"/>
-        
+    }else {
+      if (localStorage.getItem("role") != "Customer") {
+        redirectVar = <Redirect to="/login" />;
+      }
     }
+
     let candr= this.state.arr.map((msg)=> 
     {
       // <p>List of Comments added:</p>

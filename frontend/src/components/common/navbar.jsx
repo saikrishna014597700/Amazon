@@ -189,7 +189,7 @@ class Navbar extends Component {
       } else if (localStorage.getItem("role") === "Seller") {
         dropdowns = (
           <div>
-            <a className="dropdown-item" href="/sellerProfile">
+            <a className="dropdown-item" href={"/sellerProfile/" + localStorage.getItem("id")}>
               {" "}
               Your Profile
             </a>
