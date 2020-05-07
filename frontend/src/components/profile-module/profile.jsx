@@ -102,6 +102,7 @@ class Profile extends Component {
       name: this.state.name,
       user_image: this.state.user_image
     }
+    axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/auth/profile/", data)
       .then((response) => {
