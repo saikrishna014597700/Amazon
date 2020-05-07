@@ -106,10 +106,14 @@ class SelerProfile extends React.Component {
         this.setState({
           sellerProfile: res.data,
           editMode: false,
+         
         });
+        await localStorage.setItem("name",this.state?.sellerProfile?.sellerName)
+        await this.getSellerProfile(this.props.match.params.id);
         console.log("new seller::::", res);
         // this.getSellerProfile(this.state.sellerId);
       });
+      
   };
 
   getSellerProfile = (sellerId) => {
@@ -139,7 +143,7 @@ class SelerProfile extends React.Component {
     //     redirectVar = <Redirect to= "/login"/>
     //   }
     // }
-    if(localStorage.getItem("role")=="Seller")
+    if(localStorage.getItem("id")==this.props.match.params.id)
     {
     butts=  ( <div style = {{marginLeft : "300px"}}>
     <input type="file" style = {{marginLeft : "300px !important",width:"20%"}} name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
@@ -292,9 +296,8 @@ class SelerProfile extends React.Component {
           </div>
         ) : (
          < div class="card" style={{width:"860px",marginLeft:"300px"}} >
-         {/* <div className="col"> */}
               {" "}
-              {"Seller" === this.state?.role ? (
+              {this.props.match.params.id === this.state?.sellerId ? (
                
                 <button
                   className="Amazon"
@@ -307,7 +310,6 @@ class SelerProfile extends React.Component {
               ) : (
                 ""
               )}
-            {/* </div> */}
               <div style={{marginLeft:"30px",marginTop:"auto"}} >
                 <div><p style={{fontWeight:"bold"}} >Name:</p> {this.state?.sellerProfile?.sellerName}</div> 
                 <div>

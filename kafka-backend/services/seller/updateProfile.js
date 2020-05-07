@@ -4,6 +4,7 @@ const Product = require("../../models/product");
 const moment = require("moment");
 var mongoose = require("mongoose");
 // const redisClient = require("../../utils/redisConfig");
+const pool = require("../../utils/mysqlConnection");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 
 let updateProfile = async (msg, callback) => {
@@ -13,6 +14,10 @@ let updateProfile = async (msg, callback) => {
   msg.body.updateDate = today.format();
   try {
     console.log("Seller is and body", +msg.sellerId, msg.body);
+    pool.query('UPDATE `users` set `name`=? WHERE `id` = ? ', [msg.body.sellerName,msg.sellerId],async function(error,result)
+    {
+        console.log(result)
+    })
     Seller.findOne({ userId: +msg.sellerId })
       .then((seller) => {
         seller.set(msg.body);

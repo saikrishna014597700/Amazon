@@ -92,6 +92,7 @@ class Navbar extends Component {
   };
 
   async componentDidMount() {
+    axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
       .get("http://localhost:3001/api/admin/get-product-categories")
       .then((response) => {
@@ -100,6 +101,7 @@ class Navbar extends Component {
           productCategories: response.data,
         });
       });
+      axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/getCompleteCart/", {
         userId: this.state.userId,
