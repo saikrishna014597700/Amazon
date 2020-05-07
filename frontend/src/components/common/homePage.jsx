@@ -43,16 +43,12 @@ export default class HomePage extends Component {
   }
 
   async componentDidMount() {
-    // console.log("state=>" + this.state.searchCategory);
-    // await this.setState({
-    //   searchTerm: this.props.match.params.searchTerm,
-    // });
+    
     if (localStorage.getItem("role") == "Seller") {
       await this.setState({
         sellerId: localStorage.getItem("id"),
       });
     }
-    // console.log("here in search==>" + this.state.searchTerm);
     await this.viewSeachResults();
   }
 
@@ -162,6 +158,10 @@ export default class HomePage extends Component {
   }
 
   render() {
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
@@ -271,6 +271,7 @@ export default class HomePage extends Component {
     );
     let sellerProducts = this.state.products.map((sellerProduct) => {
       return (
+        
         <div
           className="col-md-3"
           style={{
@@ -280,6 +281,7 @@ export default class HomePage extends Component {
             borderColor: "#efefef",
           }}
         >
+          {redirectVar}
           <div className="row" style={{ margin: 10 }}>
             <img
               src={require("../../utils/product.jpg")}

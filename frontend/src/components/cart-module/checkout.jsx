@@ -51,7 +51,7 @@ export default class checkout extends Component {
                     "response for product details=>" + JSON.stringify(res)
                   );
                   res.data[0].quantity = product.quantity;
-                  res.data[0].status = "ordered";
+                  res.data[0].status = "Ordered";
                   res.data[0].productId = productId;
                   products.push(res.data[0]);
                   let price = parseInt(res.data[0].price, 10);

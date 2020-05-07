@@ -18,7 +18,7 @@ export default class productDescription extends Component {
       product: {
         productImages:[]
       },
-      productId: "5e9d9d90278fd64044dc6945",
+      productId: "",
       rating: 4.5,
       reviews: [],
       selectedImage: productImage,
@@ -93,7 +93,7 @@ export default class productDescription extends Component {
   };
 
   async componentDidMount() {
-    this.updateViewCount();
+    
     var id = localStorage.getItem("id");
     if (id) {
       // console.log("in this id=>" + id);
@@ -161,6 +161,7 @@ export default class productDescription extends Component {
           // console.log("this state =>" + JSON.stringify(this.state));
         });
       });
+      this.updateViewCount();
   }
   changeRating(newRating, name) {
     this.setState({
