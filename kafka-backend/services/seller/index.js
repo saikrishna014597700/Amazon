@@ -12,6 +12,7 @@ const { getParticularOrderDetails } = require("./getParticularOrderDetails");
 const { updateProfile } = require("./updateProfile");
 const { getTotalSalesSumForSeller } = require("./getTotalSalesSumForSeller");
 const { getSellerProfile } = require("./sellerProfile");
+const { getMonthWiseSalesSum } = require("./getMonthWiseSalesSum");
 
 let handle_request = (msg, callback) => {
   switch (msg.route) {
@@ -50,6 +51,9 @@ let handle_request = (msg, callback) => {
       break;
     case "total_sales_sum":
       getTotalSalesSumForSeller(msg, callback);
+      break;
+    case "monthwise_total_sales_sum":
+      getMonthWiseSalesSum(msg, callback);
       break;
   }
 };

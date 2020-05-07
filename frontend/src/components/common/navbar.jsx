@@ -34,15 +34,31 @@ class Navbar extends Component {
     localStorage.removeItem("role");
     localStorage.removeItem("name");
     localStorage.removeItem("imagePath");
+    localStorage.removeItem("cartSize");
+    localStorage.removeItem("token");
+
     this.setState({
       redirectVar: <Redirect to="/login" />,
     });
   }
 
   goToHome = () => {
-    this.setState({
-      redirectVar: <Redirect to="/homePage" />,
-    });
+
+    if(localStorage.getItem("role") === "Admin"){
+      this.setState({
+        redirectVar: <Redirect to="/inventory-listings" />
+      });
+    }else if (localStorage.getItem("role") === "Seller"){
+      this.setState({
+        redirectVar: <Redirect to="/homePage" />
+      });
+    }else if (localStorage.getItem("role") === "Customer"){
+      this.setState({
+        redirectVar: <Redirect to="/homePage" />,
+      });
+    }
+
+    
   };
 
   goToCart = () => {
@@ -51,15 +67,28 @@ class Navbar extends Component {
     });
   };
   goToSearch = () => {
-    this.setState({
-      redirectVar: <Redirect to={`/search/${this.state.searchTerm}`} />,
+    this.setState({ 
+     // redirect: `/search/${this.state.searchTerm}`,
+      redirectVar:  <Redirect to={`/search/${this.state.searchTerm}`}  />  
     });
   };
 
   goToOrders = () => {
+
+    if(localStorage.getItem("role") === "Customer")
     this.setState({
       redirectVar: <Redirect to="/orders" />,
     });
+    else if(localStorage.getItem("role") === "Seller"){
+      console.log("Seller")
+      this.setState({
+        redirectVar: <Redirect to="/sellerOrders" />,
+      });
+    }else if (localStorage.getItem("role") === "Admin"){
+      this.setState({
+        redirectVar: <Redirect to="/admin-orders" />,
+      });
+    }
   };
 
   async componentDidMount() {
@@ -192,6 +221,18 @@ class Navbar extends Component {
               {" "}
               Inventory Listings
             </a>
+            <a className="dropdown-item" href="/admin-orders">
+              {" "}
+              Admin Orders
+            </a>
+            <a className="dropdown-item" href="/admin-reports">
+              {" "}
+              Admin reports
+            </a>
+            <a className="dropdown-item" href="/seller-listings">
+              {" "}
+              Seller Listings
+            </a>
           </div>
         );
       }
@@ -203,9 +244,52 @@ class Navbar extends Component {
         src={require("../../utils/navBarLogo.jpg")}
       />
     );
+
+   
+
+
     if (!localStorage.getItem("id")) {
       navBar = "";
     } else {
+      let cartRole;
+      if(localStorage.getItem("role") === "Customer"){
+        cartRole = (<li
+          class="nav-item"
+          style={{
+            marginTop: "25px",
+            marginLeft: "50px",
+            color: "white",
+            // width: "25%",
+            position: "relative",
+            cursor: "pointer",
+          }}
+          onClick={this.goToCart}
+          >
+          {/*  */}
+          <div style={{ position: "absolute", marginLeft: "-30px" }}>
+            <Glyph type="shopping-cart" />
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              verticalAlign: "top",
+              alignItems: "center",
+              display: "flex",
+            }}
+          >
+            <div
+              style={{
+                zIndex: 20,
+                verticalAlign: "top",
+                borderRadius: "50px",
+              }}
+              className="badge"
+            >
+              {localStorage.getItem("cartSize")}
+            </div>
+          </div>
+        </li>)
+      }
       navBar = (
         <nav
           class="navbar navbar-expand-lg navbar-light bg-light"
@@ -369,42 +453,7 @@ class Navbar extends Component {
                   </div>
                 </a>
               </li>
-              <li
-                class="nav-item"
-                style={{
-                  marginTop: "25px",
-                  marginLeft: "50px",
-                  color: "white",
-                  // width: "25%",
-                  position: "relative",
-                  cursor: "pointer",
-                }}
-                onClick={this.goToCart}
-              >
-                {/*  */}
-                <div style={{ position: "absolute", marginLeft: "-30px" }}>
-                  <Glyph type="shopping-cart" />
-                </div>
-                <div
-                  style={{
-                    position: "absolute",
-                    verticalAlign: "top",
-                    alignItems: "center",
-                    display: "flex",
-                  }}
-                >
-                  <div
-                    style={{
-                      zIndex: 20,
-                      verticalAlign: "top",
-                      borderRadius: "50px",
-                    }}
-                    className="badge"
-                  >
-                    {localStorage.getItem("cartSize")}
-                  </div>
-                </div>
-              </li>
+              {cartRole}
             </ul>
           </div>
         </nav>

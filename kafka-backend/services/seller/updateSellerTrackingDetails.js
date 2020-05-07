@@ -56,6 +56,42 @@ let updateSellerTrackingDetails = async (msg, callback) => {
           });
         }
       );
+    } else if (msg.trackingStatus == "Delivered") {
+      await Order.update(
+        {
+          _id: msg.orderId,
+          products: { $elemMatch: { productId: msg.productId } },
+        },
+        {
+          $addToSet: {
+            "products.$.trackingInfo": data,
+          },
+          $set: {
+            "products.$.status": "Delivered",
+          },
+        },
+        async function (err, updated) {
+          console.log("Result isss", updated);
+          var isertQUERY = `update map_order_product set status = "Delivered" where order_Id =  "${msg.orderId}" and product_id = "${msg.productId}"`;
+          await pool.query(isertQUERY, async (err, sqlResult) => {
+            if (sqlResult && sqlResult.affectedRows > 0) {
+              response.result = await Order.findById({
+                _id: msg.orderId,
+                products: { productId: msg.productId },
+              });
+              console.log("Par Product", response.result);
+              response.status = STATUS_CODE.SUCCESS;
+              response.data = MESSAGES.SUCCESS;
+              return callback(null, response);
+              return callback(null, response);
+            } else {
+              response.status = STATUS_CODE.SUCCESS;
+              response.data = MESSAGES.DATA_NOT_FOUND;
+              return callback(null, response);
+            }
+          });
+        }
+      );
     } else {
       await Order.update(
         {

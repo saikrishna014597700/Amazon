@@ -12,7 +12,7 @@ const config = {
   awsAccessKey: "AKIAIVVSEWVULCHONKKA",
   awsSecretAccessKey: "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",
   awsPermission: "public-read",
-  redisHost: "54.173.125.207",
+  redisHost: "localhost",
   redisPort: 6379,
   mongoDBURI:
     "mongodb+srv://amazonuser:amazonuser@amazoncluster-zqunn.mongodb.net/amazonDB?retryWrites=true&w=majority",

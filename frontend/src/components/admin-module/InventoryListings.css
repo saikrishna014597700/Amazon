@@ -3,18 +3,17 @@
 } */
 
 .product-unavailable {
-  color: #8080806b
+  color: #8080806b;
 }
-
 
 .category-button {
   width: 200px;
-  color: #F8C15D;
+  color: #f8c15d;
 }
 
 .add-product-dialogue {
   width: 800px;
-  height: 800px
+  height: 800px;
 }
 
 .seller-listings {
@@ -29,5 +28,5 @@
 }
 
 .amazon-link {
-  color: #05444d !important
+  color: #05444d !important;
 }

@@ -36,6 +36,12 @@ let getReports = async (msg, callback) => {
     //     ORDER BY create_date ASC`;
     //   console.log(constructedQuery);
     // }
+    const top10HighestRated = await Product.find(
+      {},
+      { productName: 1, avgRating: 1 }
+    )
+      .sort({ avgRating: -1 })
+      .limit(10);
 
     const OrdersperDay =
       "SELECT COUNT(DISTINCT order_id) as order_count, create_date \
@@ -64,6 +70,12 @@ let getReports = async (msg, callback) => {
     group by product_Id \
     Order by sum(product_sales_um) desc limit 5";
 
+    const top10MostViewedProducts = `SELECT DISTINCT product_Id, view_Count \
+            FROM amazonDB.product_analytics \
+            where create_date=${msg.date} \
+            Order by view_Count desc limit 10`;
+
+    response.results["top10HighestRated"] = top10HighestRated;
     response.results["OrdersperDay"] = await query(pool, OrdersperDay).catch(
       (e) => {
         console.log("Error", e);
