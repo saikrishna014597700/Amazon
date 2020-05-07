@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const kafka = require("../kafka/client");
 const pool = require("../utils/mysqlConnection");
-// const { checkAuth } = require("../utils/passport");
+const { checkAuth } = require("../utils/passport");
 const { secret } = require('../utils/config');
 const { validateAccount } = require("../validations/accountValidations");
 const { STATUS_CODE, MESSAGES } = require("../utils/constants");
@@ -47,7 +47,7 @@ router.post("/signup", async (req, res) => {
   });
 });
 
-router.post("/profile", async (req, res) => {
+router.post("/profile",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req body for profile", req.body);
   console.log("tye",typeof(msg.user_image))
@@ -89,7 +89,7 @@ router.post("/signin", async (req, res) => {
       if(results.data=="Successful")
       {
         const payload = {
-          user_id: req.body.email,
+          user_id: results.id,
         };
         const token = jwt.sign(payload, secret, {
           expiresIn: 900000 // in seconds
@@ -106,7 +106,7 @@ router.post("/signin", async (req, res) => {
   });
 });
 
-router.post("/userprofile", async (req, res) => {
+router.post("/userprofile",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req body for user profile", req.body);
   msg.route = "user_profile";

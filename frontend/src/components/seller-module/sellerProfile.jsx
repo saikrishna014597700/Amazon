@@ -139,19 +139,19 @@ class SelerProfile extends React.Component {
 
     let profilePath = null;
     console.log("profilePath before change::",profilePath , )
-    if(localStorage.getItem("imagePath")){
+    if(localStorage.getItem("imagePath")!="undefined"){
       console.log("true")
       profilePath = (<img
         alt=""
         src={localStorage.getItem("imagePath")}
         id="avatar-image"
-        style={{width:"220px",height:"220px",borderRadius:"50%",marginTop:"85px",marginLeft:"20px"}}
+        style={{width:"220px",height:"220px",borderRadius:"50%",marginTop:"85px",marginLeft:"20px",border:"1px"}}
       />)
     }else{
       console.log("false")
-      profilePath = (<img
+      profilePath =(<img
         alt=""
-        src={require("../product-module/shoe.jpg")}
+        src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
         
         id="avatar-image"
         style={{width:"220px",height:"220px",borderRadius:"50%",marginTop:"85px",marginLeft:"20px"}}
@@ -163,6 +163,7 @@ class SelerProfile extends React.Component {
       // <div className="seller-profile">
       <div>
         <div className="a-section updated-profile-image-holder desktop">
+       
        <div
                         className="a-section a-spacing-none desktop cover-photo"
                         style={{
@@ -176,15 +177,20 @@ class SelerProfile extends React.Component {
                       >
                       
                         {profilePath}
+                        <h1 style={{marginLeft:"350px",marginTop:"-70px"}}>{this.state?.sellerProfile?.sellerName}</h1>
+                       
+                        
+                        
+                        
                         </div>
 {/* <p>{this.state?.sellerProfile?.sellerName}</p> */}
                        
                       </div >
                       <div style = {{marginLeft : "300px"}}>
-                      <input type="file" style = {{magrinLeft : "300px !important",width:"20%"}} name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
+                      <input type="file" style = {{marginLeft : "300px !important",width:"20%"}} name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
                 
-                <button variant="primary" style = {{magrinLeft : "300px !important"}} type="submit" onClick = {(e)=>this.uploadPic()}>
-                                    <b>Update</b>
+                <button className="Amazon" style = {{marginLeft : "250px",width:"150px",marginTop:"-65px"}} type="submit" onClick = {(e)=>this.uploadPic()}>
+                                    <b>Upload Profile Pic</b>
                                 </button>
                                 </div>
 
@@ -262,37 +268,47 @@ class SelerProfile extends React.Component {
             </button>
             <button
               className="Amazon"
-              style={{ width: "130px" ,marginLeft:"191px",marginTop:"-37px"}}
+              style={{ width: "130px" ,marginLeft:"191px",marginTop:"-46px"}}
               onClick={(e) => this.noShowEditForm()}
             >
               Cancel
             </button>
           </div>
         ) : (
-         < div class="card" style={{width:"500px",marginLeft:"300px"}} >
-          {/* <div className="row"> */}
-            <div className="col-3">
-             
+         < div class="card" style={{width:"860px",marginLeft:"300px"}} >
+         <div className="col">
+              {" "}
+              {"Seller" === this.state?.role ? (
+                <button
+                  className="Amazon"
+                  style={{ width: "130px",marginLeft:"600px"}}
+                  onClick={(e) => this.showEditForm()}
+                >
+                  {" "}
+                  Edit your Profile
+                </button>
+              ) : (
+                ""
+              )}
             </div>
-            {/* <div className="col-6"> */}
-              <section>
-                <div>Name: {this.state?.sellerProfile?.sellerName}</div>
+              <div style={{marginLeft:"30px",marginTop:"-40px"}} >
+                <div><p style={{fontWeight:"bold"}} >Name:</p> {this.state?.sellerProfile?.sellerName}</div> 
                 <div>
-                  Street: {this.state?.sellerProfile?.sellerAddress?.street}
+                <p style={{fontWeight:"bold"}} > Street:</p> {this.state?.sellerProfile?.sellerAddress?.street}
                 </div>
                 <div>
-                  City: {this.state?.sellerProfile?.sellerAddress?.city}
+                <p style={{fontWeight:"bold"}} > City: </p> {this.state?.sellerProfile?.sellerAddress?.city}
                 </div>
                 <div>
-                  State: {this.state?.sellerProfile?.sellerAddress?.state}
+                <p style={{fontWeight:"bold"}} >  State: </p>{this.state?.sellerProfile?.sellerAddress?.state}
                 </div>
                 <div>
-                  Zip Code: {this.state?.sellerProfile?.sellerAddress?.zip_code}
+                <p style={{fontWeight:"bold"}} >  Zip Code: </p>{this.state?.sellerProfile?.sellerAddress?.zip_code}
                 </div>
-              </section>
-            {/* </div> */}
-            <br></br>
-            <div className="col">
+           
+             </div> 
+       
+            {/* <div className="col">
               {" "}
               {"Seller" === this.state?.role ? (
                 <button
@@ -306,8 +322,8 @@ class SelerProfile extends React.Component {
               ) : (
                 ""
               )}
-            </div>
-          {/* </div> */}
+            </div> */}
+      
           </div>
         )}
       </div>

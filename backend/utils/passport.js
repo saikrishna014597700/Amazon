@@ -13,14 +13,18 @@ function auth() {
   passport.use(
     new JwtStrategy(opts, function (jwt_payload, done) {
       const user_id = jwt_payload.user_id;
-      let sql = `CALL users_get('${user_id}')`;
-      pool.query(sql, (err, sqlResult) => {
+      console.log("in passport",user_id)
+      let sql = "SELECT * FROM `users` WHERE `id` = ? "
+      pool.query(sql, user_id,(err, sqlResult) => {
         if (err) {
+          console.log("one")
           return done(err, null);
         }
-        if (sqlResult && sqlResult.length > 0 && sqlResult[0][0].status == 1) {
-          return done(null, sqlResult[0][0].email_id);
-        } else if(sqlResult && sqlResult.length > 0 && sqlResult[0][0].status == 0){
+        if (sqlResult) {
+          console.log("two")
+          return done(null, sqlResult);
+        } else 
+        {
           return done(null, false);
         }
       });

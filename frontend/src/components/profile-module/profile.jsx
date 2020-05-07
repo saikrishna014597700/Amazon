@@ -55,6 +55,7 @@ class Profile extends Component {
     let ra=0
     let rv=0
     var k=[]
+    axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
     .post("http://localhost:3001/api/auth/userprofile/", data)
     .then((response) => {
@@ -142,17 +143,19 @@ class Profile extends Component {
     });
 
     let profilePath = null;
-    if(localStorage.getItem("imagePath")){
+    if(localStorage.getItem("imagePath")!="undefined"){
       profilePath = (<img
         alt=""
         src={localStorage.getItem("imagePath")}
         id="avatar-image"
       />)
     }else{
+      console.log('in here')
       profilePath = (<img
-        alt=""
-        src={require("./../product-module/shoe.jpg")}
-        id="avatar-image"
+        alt="AZ"
+        src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+        
+        // id="avatar-image"
       />)
     }
     return (
@@ -259,12 +262,22 @@ class Profile extends Component {
                           height:"305px"
                         }}
                       >
-                        <img
-                          alt=""
-                          src="./profile_files/amzn1.account.AGOG57CB4RUEYI3BYYUPZFO7KGEQ"
-                          className="cover-photo-with-cropping"
-                          id="cover-image-with-cropping"
-                        />
+
+                      <div  >
+                     <span style={{marginLeft:"487px",marginTop:"260px"}}>
+                          <input
+                            type="text"
+                            name="name"
+                            width="20rem"
+                            style={{marginTop:"250px"}}
+                            defaultValue={localStorage.getItem("name")}
+                            onChange={this.handleChange}
+                          />
+                          <button className="Amazon" style={{marginTop:"-55px",marginLeft:"690px",width:"60px"}} onClick={this.savename}>Save</button>
+                          </span>
+                        </div>
+                
+                       
                       </div>
                       <div className="a-section">
                         <div className="a-row desktop cover-photo-edit-icon">
@@ -304,20 +317,13 @@ class Profile extends Component {
                                   className="imageUploadLabel"
                                   htmlFor="coverUploadInput"
                                 >
-                                  <span className="a-size-small a-color-base upload-photo">
-                                    Upload
-                                  </span>
+                                
                                 </label>
                               </div>
                             </div>
                           </div>
                         </div>
-                        <div
-                          className="a-popover-preload"
-                          id="a-popover-cover-photo-delete-popover"
-                        >
-                        
-                        </div>
+                       
                         <div
                           className="a-popover-preload"
                           id="a-popover-cover-photo-desktop-crop-popover"
@@ -395,12 +401,7 @@ class Profile extends Component {
                     className="a-section desktop avatar-image-container"
                   >
                     <div className="a-section">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        id="avatarUploadInput"
-                        name="avatar"
-                      />
+                     
                       <canvas id="resizingCanvas" />
                       <span
                         className="a-declarative"
@@ -425,46 +426,13 @@ class Profile extends Component {
                   </div>
                 </div>
                 <hr></hr>
-                <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
-                <hr></hr>
-                <button variant="primary" type="submit" onClick = {(e)=>this.uploadPic()}>
+                <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} style={{width:"250px"}}/>
+                <button className="Amazon" style={{marginLeft:"270px",marginTop:"-50px",width:"90px"}} type="submit" onClick = {(e)=>this.uploadPic()}>
                                     <b>Update</b>
                                 </button>
                 
-                <div className="desktop padded card name-header-card">
-                  <div className="a-row">
-                    <div
-                      id="customer-profile-name-header"
-                      className="a-section desktop name-header-widget"
-                    >
-                      <div className="a-row header" />
-                      <div className="a-row a-spacing-none name-container">
-                        <span className="a-size-extra-large">
-                          <input
-                            type="text"
-                            name="name"
-                            defaultValue={localStorage.getItem("name")}
-                            onChange={this.handleChange}
-                          />
-                          <button onClick={this.savename}>Save</button>
-                        </span>
-                      </div>
-                      <div className="a-section desktop inline-edit-container" />
-                      <div className="name-header-footer-placeholder" />
-                      <div className="a-row name-header-footer-container">
-                       
-                          <span className="a-button a-button-normal a-button-primary name-header-edit-profile-button">
-                            <span className="a-button-inner">
-                              <button className="a-button-text" type="button" style={{width:"10px"}}>
-                                Edit your profile
-                              </button>
-                            </span>
-                          </span>
-                       
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                
+                  
               </div>
             </div>
           </div>
