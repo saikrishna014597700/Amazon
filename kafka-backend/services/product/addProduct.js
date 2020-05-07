@@ -4,6 +4,7 @@ const moment = require("moment");
 var mongoose = require("mongoose");
 // const redisClient = require("../../utils/redisConfig");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
+const pool = require("../../utils/mysqlConnection");
 
 let addProduct = async (msg, callback) => {
   let response = {};
@@ -16,67 +17,67 @@ let addProduct = async (msg, callback) => {
       price: msg.price,
       category: msg.category,
       isDeleted: 0,
-      sellerId: "123",
+      sellerId: msg.sellerId,
       createDate: today.format(),
       updateDate: today.format(),
     });
-    // console.log("product is", product);
-    await productNew.save();
-    // let tweet = await Tweets.findById(msg.tweet_id);
-    // let user = await Users.findById(msg.user_id);
-
-    // if (!tweet || !user) {
-    //   err.status = STATUS_CODE.BAD_REQUEST;
-    //   err.data = MESSAGES.DATA_NOT_FOUND;
-    //   return callback(err, null);
-    // }
-
-    // if (user.bookmarks.includes(msg.tweet_id)) {
-    //   err.status = STATUS_CODE.CREATED_SUCCESSFULLY;
-    //   err.data = MESSAGES.CREATE_SUCCESSFUL;
-    //   return callback(err, null);
-    // } else {
-    //   let userUpdated = await Users.findByIdAndUpdate(msg.user_id, {
-    //     $push: { bookmarks: msg.tweet_id },
-    //   });
-
-    //   if (!userUpdated) {
-    //     throw err;
-    //   } else {
-    //     let bookmarks = await Users.findById(msg.user_id, {
-    //       bookmarks: 1,
-    //       _id: 0,
-    //     }).populate({
-    //       path: "bookmarks",
-    //       populate: {
-    //         path: "tweet_owner",
-    //         model: "User",
-    //         select: "first_name last_name user_name user_image",
-    //       },
-    //     });
-    //     let formattedBookmarks = [];
-    //     bookmarks.bookmarks.map((tweet) => {
-    //       formattedBookmarks.push(
-    //         Object.assign({}, tweet._doc, {
-    //           likes_count: tweet.likes.length,
-    //           retweets_count: tweet.retweeters.length,
-    //           replies_count: tweet.replies.length,
-    //         })
-    //       );
-    //     });
-    // redisClient.setex(
-    //   msg.user_id,
-    //   36000,
-    //   JSON.stringify(formattedBookmarks)
-    // );
-
-    response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
-    response.data = MESSAGES.CREATE_SUCCESSFUL;
-    return callback(null, response);
-    //   }
-    // }
+    console.log("product is", msg.category);
+    // await Product.create();
+    var productId;
+    await Product.create(productNew, async function (error, results) {
+      productId = results._id;
+      console.log("results:::", results);
+      try {
+        var catId;
+        var query = `select id from product_categories where category = "${msg.category}"`;
+        console.log("query1", query);
+        await pool.query(query, async (err, sqlResult) => {
+          if (err) {
+            console.log("Error", error);
+          }
+          console.log("sqlResult", sqlResult);
+          if (sqlResult && sqlResult.length > 0) {
+            Object.keys(sqlResult).forEach(async function (key) {
+              var row = sqlResult[key];
+              catId = row.id;
+              console.log("Before If", catId);
+              if (catId) {
+                var isertQUERY = `INSERT INTO product_analytics (product_Id,seller_Id,view_Count,price,product_sales_um,quantity,product_name,category_id,create_date) values ("${productId}",${
+                  msg.sellerId
+                },${msg.price},0,0,0,"${
+                  msg.productName
+                }",${catId},${today.format("L")})`;
+                console.log("Got Cat ID", isertQUERY);
+                await pool.query(isertQUERY, async (err, sqlResult) => {
+                  console.log("Got Result", sqlResult);
+                  if (sqlResult && sqlResult.affectedRows > 0) {
+                    response.result = productId;
+                    response.status = STATUS_CODE.SUCCESS;
+                    response.data = MESSAGES.CREATE_SUCCESSFUL;
+                    return callback(null, response);
+                  } else {
+                    response.status = STATUS_CODE.SUCCESS;
+                    response.data = MESSAGES.DATA_NOT_FOUND;
+                    return callback(null, response);
+                  }
+                });
+              }
+            });
+          } else {
+            response.status = STATUS_CODE.SUCCESS;
+            response.data = MESSAGES.DATA_NOT_FOUND;
+            return callback(null, response);
+          }
+        });
+      } catch (error) {
+        console.log("Error occ while savng product" + error);
+        err.status = STATUS_CODE.INTERNAL_SERVER_ERROR;
+        err.data = MESSAGES.INTERNAL_SERVER_ERROR;
+        return callback(err, null);
+      }
+    });
   } catch (error) {
-    console.log("Error occ while savong product" + error);
+    console.log("Error occ while savng product" + error);
     err.status = STATUS_CODE.INTERNAL_SERVER_ERROR;
     err.data = MESSAGES.INTERNAL_SERVER_ERROR;
     return callback(err, null);

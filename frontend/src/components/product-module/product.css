@@ -65,8 +65,8 @@ html,
   font-size: 16px;
   cursor: pointer;
   float: right;
+  height: 45px !important;
 }
-
 .success {
   border-color: #1569e0;
   color: #1569e0;

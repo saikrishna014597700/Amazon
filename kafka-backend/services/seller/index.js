@@ -10,7 +10,7 @@ const {
 const { productTrackingDetails } = require("./productTrackingDetails");
 const { getParticularOrderDetails } = require("./getParticularOrderDetails");
 const { updateProfile } = require("./updateProfile");
-//const { addAddress } = require("./addAddress");
+const { getTotalSalesSumForSeller } = require("./getTotalSalesSumForSeller");
 const { getSellerProfile } = require("./sellerProfile");
 
 let handle_request = (msg, callback) => {
@@ -47,6 +47,9 @@ let handle_request = (msg, callback) => {
     //   break;
     case "seller_profile":
       getSellerProfile(msg, callback);
+      break;
+    case "total_sales_sum":
+      getTotalSalesSumForSeller(msg, callback);
       break;
   }
 };

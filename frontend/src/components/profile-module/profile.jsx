@@ -25,6 +25,27 @@ class Profile extends Component {
     this.handleImageChange=this.handleImageChange.bind(this)
   }
 
+  async uploadPic(){
+    let fileData = new FormData()
+    console.log('fileData in state',this.state.formData)
+    fileData.append("file", this.state.formData)
+
+    var data = {
+      type : this.state.formData.type,
+      path:  this.state.formData.name
+    }
+    await axios.post("http://localhost:3001/api/file/uploadImage/?userId="+localStorage.getItem("id"),fileData,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }}).then((res)=>{
+        localStorage.setItem("imagePath",res.data.Location)
+        console.log("response:",res)
+        this.setState({
+          logout:false
+        })
+     })
+  }
+
   async componentDidMount()
   {
     const data=
@@ -33,35 +54,44 @@ class Profile extends Component {
     }
     let ra=0
     let rv=0
+    var k=[]
     await axios
     .post("http://localhost:3001/api/auth/userprofile/", data)
     .then((response) => {
       var x=response.data
-      var k=[]
-      console.log(x)
+      console.log("x is",x)
+      
       for(let i=0;i<x.length;i++)
       {
-        k.push(x[i].reviewAndRatings)
-        if(x[i].reviewAndRatings.rating!=="")
+        // k.push(x[i])
+        
+        for(let j=0;j<x[i].reviewAndRatings.length;j++)
+        {
+          if(x[i].reviewAndRatings[j].review)
+          k.push({"id":x[i]._id,"productName":x[i].productName,"review":x[i].reviewAndRatings[j].review})
+          
+        if(x[i].reviewAndRatings[j].rating)
         ra+=1
-        if(x[i].reviewAndRatings.review!=="")
+        if(x[i].reviewAndRatings[j].review)
         rv+=1
+        }
       }
-      // console.log(ra," ",rv)
+      console.log(k)
       this.setState({
         trating: ra,
         treview: rv,
-        arr: response.data
+        arr: k
       })
-      console.log(this.state.arr)
+     
   });
+  console.log("arr",this.state.arr)
   };
 
   async handleChange(e) {
     this.setState({
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.files[0],
     });
-    console.log(e.target.value);
+    console.log(e.target.name," ",e.target.value)
   }
 
   async savename()
@@ -82,7 +112,7 @@ class Profile extends Component {
 
   async handleImageChange(e)  {
     this.setState({
-      [e.target.name]: e.target.files[0],
+     formData: e.target.files[0],
     });
     console.log(e.target.name," ",e.target.value)
   };
@@ -103,13 +133,28 @@ class Profile extends Component {
           Comment added on: {msg.productName}
         </div>
         <div class="card-body">
-          <p style={{fontWeight:"bold"}}><Link>{msg.reviewAndRatings[0].review} </Link></p>
+          <p style={{fontWeight:"bold"}}><Link to={"/product/"+msg.id} >{msg.review} </Link></p>
          
         </div>
       </div>
 
       )
     });
+
+    let profilePath = null;
+    if(localStorage.getItem("imagePath")){
+      profilePath = (<img
+        alt=""
+        src={localStorage.getItem("imagePath")}
+        id="avatar-image"
+      />)
+    }else{
+      profilePath = (<img
+        alt=""
+        src={require("./../product-module/shoe.jpg")}
+        id="avatar-image"
+      />)
+    }
     return (
       <div>
         {redirectVar}
@@ -366,16 +411,12 @@ class Profile extends Component {
                           <div
                             className="a-section a-spacing-none circular-avatar-image"
                             style={{
-                              backgroundImage:
-                                'url("//d1k8kvpjaf8geh.cloudfront.net/gp/profile/assets/search_avatar-8059b2ed8a963eda51ee0b024a379bc98b88e8b72ba77c7c37204308ce09b47b.png")',
+                              // backgroundImage:
+                              //   'url("//d1k8kvpjaf8geh.cloudfront.net/gp/profile/assets/search_avatar-8059b2ed8a963eda51ee0b024a379bc98b88e8b72ba77c7c37204308ce09b47b.png")',
                               backgroundSize: "contain",
                             }}
                           >
-                            <img
-                              alt=""
-                              src={require("../product-module/shoe.jpg")}
-                              id="avatar-image"
-                            />
+                            {profilePath}
 
                           </div>
                         </div>
@@ -386,7 +427,7 @@ class Profile extends Component {
                 <hr></hr>
                 <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} />
                 <hr></hr>
-                <button variant="primary" type="submit">
+                <button variant="primary" type="submit" onClick = {(e)=>this.uploadPic()}>
                                     <b>Update</b>
                                 </button>
                 

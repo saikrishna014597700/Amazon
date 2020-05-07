@@ -22,7 +22,7 @@ let saveOrder = async (msg, callback) => {
       response.result = orderStatus;
       response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
       response.data = MESSAGES.CREATE_SUCCESSFUL;
-      console.log("response in backend is =>"+JSON.stringify(response))
+      console.log("response in backend is =>" + JSON.stringify(response));
       return callback(null, response);
     });
     // await orderNew.save();

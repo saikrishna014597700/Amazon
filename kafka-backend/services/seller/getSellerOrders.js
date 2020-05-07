@@ -20,7 +20,7 @@ let getSellerOrders = async (msg, callback) => {
     pool.query(
       `SELECT order_Id, GROUP_CONCAT(product_id) as product_id,GROUP_CONCAT(quantity) as quantity
     FROM map_order_product
-    WHERE sellerId = "123"
+    WHERE sellerId = ${msg.sellerId}
     GROUP BY order_Id
       ORDER BY create_date ASC`,
       async (err, sqlResult) => {
@@ -95,6 +95,10 @@ let getSellerOrders = async (msg, callback) => {
           console.log("resultArray is", resultArray);
           response.status = STATUS_CODE.SUCCESS;
           response.data = MESSAGES.CREATE_SUCCESSFUL;
+          return callback(null, response);
+        } else {
+          response.status = STATUS_CODE.SUCCESS;
+          response.data = MESSAGES.DATA_NOT_FOUND;
           return callback(null, response);
         }
       }

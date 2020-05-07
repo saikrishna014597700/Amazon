@@ -4,7 +4,7 @@ import "./product.css";
 import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import $ from "jquery";
-import {Redirect} from "react-router"
+import { Redirect } from "react-router";
 
 export default class AddProduct extends Component {
   constructor() {
@@ -15,10 +15,13 @@ export default class AddProduct extends Component {
       price: "",
       category: "",
       sellerProducts: [],
+      categories: [],
+      formData: [],
     };
     this.addProduct = this.addProduct.bind(this);
     this.viewAllSellerProducts = this.viewAllSellerProducts.bind(this);
     this.scroll = this.scroll.bind(this);
+    this.handleImageChange = this.handleImageChange.bind(this);
   }
   scroll(direction, id) {
     console.log("id here=>" + id);
@@ -26,12 +29,36 @@ export default class AddProduct extends Component {
     let pos = $("#" + id).scrollLeft() + far;
     $("#" + id).animate({ scrollLeft: pos }, 100);
   }
-  our;
+
+  handleImageChange(e, index) {
+    this.setState({
+      formData: this.state.formData.concat(e.target.files[0]),
+    });
+  }
+
+  async componentDidMount() {
+    await axios
+      .get("http://localhost:3001/api/admin/get-product-categories")
+      .then((res) => {
+        console.log("response is::", res);
+        this.setState({
+          categories: res.data,
+        });
+      });
+  }
+
+  setCategory(e) {
+    console.log("event", e.target.value);
+    this.setState({
+      category: e.target.value,
+    });
+  }
 
   async viewAllSellerProducts(event) {
     const payload = {
       sellerId: localStorage.getItem("id"),
     };
+
     axios
       .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
       .then((response) => {
@@ -49,22 +76,97 @@ export default class AddProduct extends Component {
       productDesc: this.state.productDesc,
       price: this.state.price,
       category: this.state.category,
+      sellerId: localStorage.getItem("id"),
     };
     axios
       .post("http://localhost:3001/api/product/addProduct/", payload)
-      .then((response) => {});
+      .then((response) => {
+        console.log("Response is", response.data);
+        if (response.status == 200 && response.data) {
+          var imagesData = [];
+          this.state.formData.map(async (form) => {
+            let fileData = new FormData();
+            fileData.append("file", form);
+            imagesData.push(fileData);
+            await axios
+              .post(
+                "http://localhost:3001/api/file/uploadImages/?productId=" +
+                  response.data,
+                fileData,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                }
+              )
+              .then((res) => {
+                console.log("Adding Product");
+              });
+          });
+          alert(`Added a product successfully`);
+        } else alert("Error occurred creating a product");
+      });
   }
 
   render() {
     let redirectVar = null;
-    if(!localStorage.getItem("id")){
-        redirectVar = <Redirect to= "/login"/>
-    }else{
-      if(localStorage.getItem("role") != "Seller"){
-        redirectVar = <Redirect to= "/login"/>
+    if (!localStorage.getItem("id")) {
+      redirectVar = <Redirect to="/login" />;
+    } else {
+      if (localStorage.getItem("role") != "Seller") {
+        redirectVar = <Redirect to="/login" />;
       }
     }
+
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
+      let imagesHTML;
+
+      if (sellerProduct.productImages.length === 0) {
+        return (
+          <div>
+            <div className="image">
+              <img
+                src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                style={{ maxWidth: "100%" }}
+              />
+            </div>
+            <div className="image">
+              <img
+                src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                style={{ maxWidth: "100%" }}
+              />
+            </div>
+            <div className="image">
+              <img
+                src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                style={{ maxWidth: "100%" }}
+              />
+            </div>
+            <div className="image">
+              <img
+                src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                style={{ maxWidth: "100%" }}
+              />
+            </div>
+            <div className="image">
+              <img
+                src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+                style={{ maxWidth: "100%" }}
+              />
+            </div>
+          </div>
+        );
+      } else {
+        //use this imagesHTML instead of ****hardcoding images****
+        imagesHTML = sellerProduct.productImages.map((image) => {
+          return (
+            <div className="image">
+              <img src={image} style={{ maxWidth: "100%" }} />
+            </div>
+          );
+        });
+      }
+
       return (
         <div className="col-md-3" style={{ margin: 5 }}>
           <div class="ui card">
@@ -80,6 +182,7 @@ export default class AddProduct extends Component {
               </div>
               <div className="col-md-8">
                 <div className="image-container" id={sellerProduct._id}>
+                  {/* ****hardcoding images****   you can delete from here to */}
                   <div className="image">
                     <img
                       src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
@@ -212,26 +315,80 @@ export default class AddProduct extends Component {
                         <strong>Category</strong>
                         <select
                           placeholder="Select Category"
-                          defaultValue=""
                           class="form-control"
                           name="category"
-                          onChange={(e) =>
-                            this.setState({
-                              category: e.target.value,
-                            })
-                          }
+                          onChange={(e) => this.setCategory(e)}
                         >
-                          <option value="Electronics">Electronics</option>
-                          <option value="Kitchen">Kitchen</option>
-                          <option value="Clothing">Clothing</option>
-                          <option value="Furniture">Furniture</option>
-                          <option value="Rentals">Rentals</option>
+                          {this.state.categories.map((e, key) => {
+                            return (
+                              <option key={key} value={e.category}>
+                                {e.category}
+                              </option>
+                            );
+                          })}
                         </select>
                       </div>
-                      <div
-                        className="form-group"
-                        style={{ paddingTop: "12px" }}
-                      >
+                      <div style={{ paddingTop: "12px" }}>
+                        <div className="form-group">
+                          <strong>Image 1</strong>
+                          <input
+                            type="file"
+                            name="user_image"
+                            accept="image/*"
+                            className="form-control"
+                            aria-label="Image"
+                            aria-describedby="basic-addon1"
+                            onChange={(e) => this.handleImageChange(e, 0)}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <strong>Image 2</strong>
+                          <input
+                            type="file"
+                            name="user_image"
+                            accept="image/*"
+                            className="form-control"
+                            aria-label="Image"
+                            aria-describedby="basic-addon1"
+                            onChange={(e) => this.handleImageChange(e, 1)}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <strong>Image 3</strong>
+                          <input
+                            type="file"
+                            name="user_image"
+                            accept="image/*"
+                            className="form-control"
+                            aria-label="Image"
+                            aria-describedby="basic-addon1"
+                            onChange={(e) => this.handleImageChange(e, 2)}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <strong>Image 4</strong>
+                          <input
+                            type="file"
+                            name="user_image"
+                            accept="image/*"
+                            className="form-control"
+                            aria-label="Image"
+                            aria-describedby="basic-addon1"
+                            onChange={(e) => this.handleImageChange(e, 3)}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <strong>Image 5</strong>
+                          <input
+                            type="file"
+                            name="user_image"
+                            accept="image/*"
+                            className="form-control"
+                            aria-label="Image"
+                            aria-describedby="basic-addon1"
+                            onChange={(e) => this.handleImageChange(e, 4)}
+                          />
+                        </div>
                         <Button
                           variant="warning"
                           size="lg"
@@ -267,7 +424,8 @@ export default class AddProduct extends Component {
         </div>
         <div className="row">
           {redirectVar}
-          {sellerProducts}</div>
+          {sellerProducts}
+        </div>
       </div>
     );
   }

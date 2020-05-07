@@ -170,7 +170,36 @@ html,
 .menu-btn.open .menu-toggler::after {
   transform: rotate(-45deg) translate(13px, 13px);
 }
-input[type="text"]{
+input[type="text"] {
   border-radius: 0px !important;
   border-width: 0px !important;
+}
+.navbar-nav {
+  list-style-type: "none" !important;
+}
+
+.a-unordered-list li,
+ul li {
+  list-style-type: none;
+}
+
+.badge {
+  padding-left: 9px;
+  padding-right: 9px;
+  -webkit-border-radius: 9px;
+  -moz-border-radius: 9px;
+  border-radius: 9px;
+}
+
+.badge {
+  background-color: #c67605;
+  vertical-align: bottom;
+  border-radius: 100px;
+}
+
+.glyphicon{
+  font-size: 30px;
+}
+.glyphicon.search{
+  font-size: 10px;
 }

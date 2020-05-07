@@ -25,46 +25,75 @@ export default class SellerOrders extends Component {
   }
 
   async componentDidMount() {
+    await this.fetchSellerOrders();
+  }
+
+  async fetchSellerOrders() {
     var sellerId = localStorage.getItem("id");
-    axios
+    var sellerOrdersTemp;
+    var deliveredOrdersTemp;
+    var cancelledOrdersTemp;
+    var openOrdersTemp;
+    await axios
       .get(`http://localhost:3001/api/seller/getOrderDetails/${sellerId}`)
       .then((response) => {
-        console.log("Pro are::", response);
-        this.setState({
-          sellerOrders: this.state.sellerOrders.concat(response.data),
-        });
-        console.log("Pro are::", this.state.sellerOrders);
+        console.log("Pro are::1", response.data);
+        if (response.data) {
+          sellerOrdersTemp = response.data;
+          // this.setState({
+          //   sellerOrders: sellerOrdersTemp,
+          // });
+        }
       });
-    axios
+    await axios
       .get(
         `http://localhost:3001/api/seller/getDeliveredOrderDetails/${sellerId}`
       )
       .then((response) => {
-        console.log("Pro are::", response);
-        this.setState({
-          deliveredOrders: this.state.deliveredOrders.concat(response.data),
-        });
-        console.log("Pro are::", this.state.sellerOrders);
+        if (response.data) {
+          console.log("Pro are::2", response.data);
+          deliveredOrdersTemp = response.data;
+        }
       });
-    axios
+    await axios
       .get(
         `http://localhost:3001/api/seller/getCancelledOrderDetails/${sellerId}`
       )
       .then((response) => {
-        console.log("Pro are::", response);
-        this.setState({
-          cancelledOrders: this.state.cancelledOrders.concat(response.data),
-        });
-        console.log("Pro are::", this.state.sellerOrders);
+        if (response.data) {
+          console.log("Pro are::3", response.data);
+          cancelledOrdersTemp = response.data;
+        }
       });
-    axios
+    await axios
       .get(`http://localhost:3001/api/seller/getOpenOrderDetails/${sellerId}`)
       .then((response) => {
-        console.log("Pro are::", response);
-        this.setState({
-          openOrders: this.state.openOrders.concat(response.data),
-        });
-        console.log("Pro are::", this.state.sellerOrders);
+        if (response.data) {
+          console.log("Pro are::4", response.data);
+          openOrdersTemp = response.data;
+        }
+      });
+    console.log("Data sss", sellerOrdersTemp);
+    await this.setState({
+      sellerOrders: sellerOrdersTemp,
+      deliveredOrders: deliveredOrdersTemp,
+      cancelledOrders: cancelledOrdersTemp,
+      openOrders: openOrdersTemp,
+    });
+  }
+
+  async cancelProduct(e, orderId, prodId) {
+    console.log("cancel this prod", prodId, "from order ", orderId);
+    var payload = {
+      prodId: prodId,
+      orderId: orderId,
+    };
+    await axios
+      .post("http://localhost:3001/api/orders/cancelOrder", payload)
+      .then(async (res) => {
+        console.log("response is::", res);
+        alert(res.data);
+        await this.fetchSellerOrders();
       });
   }
 
@@ -76,23 +105,30 @@ export default class SellerOrders extends Component {
   // };
 
   render() {
-
     let redirectVar = null;
-    if(!localStorage.getItem("id")){
-        redirectVar = <Redirect to= "/login"/>
-    }else{
-      if(localStorage.getItem("role") != "Seller"){
-        redirectVar = <Redirect to= "/login"/>
+    if (!localStorage.getItem("id")) {
+      redirectVar = <Redirect to="/login" />;
+    } else {
+      if (localStorage.getItem("role") != "Seller") {
+        redirectVar = <Redirect to="/login" />;
       }
     }
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
 
-    let openOrders = this.state.openOrders.map((sellerOrder) => {
+    let openOrders = this.state.openOrders?.map((sellerOrder) => {
       console.log("seller", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
+
+
         return (
           <div>
             <div class="card">
@@ -101,7 +137,7 @@ export default class SellerOrders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",
@@ -148,6 +184,7 @@ export default class SellerOrders extends Component {
                         height: "50px",
                         float: "right",
                         marginRight: "20px",
+                        marginTop: "15%",
                       }}
                       block
                       onClick={(event) => this.addProduct(event)}
@@ -163,7 +200,13 @@ export default class SellerOrders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.cancelProduct(
+                          event,
+                          sellerOrder.order._id,
+                          orderProduct.product._id
+                        )
+                      }
                     >
                       Cancel Product
                     </Button>
@@ -249,10 +292,16 @@ export default class SellerOrders extends Component {
       );
     });
 
-    let cancelledOrders = this.state.cancelledOrders.map((sellerOrder) => {
+    let cancelledOrders = this.state.cancelledOrders?.map((sellerOrder) => {
       console.log("seller", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
         return (
           <div>
             <div class="card">
@@ -261,7 +310,7 @@ export default class SellerOrders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",
@@ -308,25 +357,14 @@ export default class SellerOrders extends Component {
                         height: "50px",
                         float: "right",
                         marginRight: "20px",
+                        marginTop: "30%",
                       }}
                       block
                       onClick={(event) => this.addProduct(event)}
                     >
                       View Product
                     </Button>
-                    <Button
-                      variant="light"
-                      style={{
-                        width: "280px",
-                        height: "50px",
-                        float: "right",
-                        marginRight: "20px",
-                      }}
-                      block
-                      onClick={(event) => this.addProduct(event)}
-                    >
-                      Cancel Product
-                    </Button>
+
                     <Button
                       variant="light"
                       style={{
@@ -409,10 +447,16 @@ export default class SellerOrders extends Component {
       );
     });
 
-    let deliveredOrders = this.state.deliveredOrders.map((sellerOrder) => {
+    let deliveredOrders = this.state.deliveredOrders?.map((sellerOrder) => {
       console.log("seller", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
         return (
           <div>
             <div class="card">
@@ -421,7 +465,7 @@ export default class SellerOrders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",
@@ -468,25 +512,14 @@ export default class SellerOrders extends Component {
                         height: "50px",
                         float: "right",
                         marginRight: "20px",
+                        marginTop: "15%",
                       }}
                       block
                       onClick={(event) => this.addProduct(event)}
                     >
                       View Product
                     </Button>
-                    <Button
-                      variant="light"
-                      style={{
-                        width: "280px",
-                        height: "50px",
-                        float: "right",
-                        marginRight: "20px",
-                      }}
-                      block
-                      onClick={(event) => this.addProduct(event)}
-                    >
-                      Cancel Product
-                    </Button>
+
                     <Button
                       variant="light"
                       style={{
@@ -569,10 +602,16 @@ export default class SellerOrders extends Component {
       );
     });
 
-    let ordersPlaced = this.state.sellerOrders.map((sellerOrder) => {
+    let ordersPlaced = this.state.sellerOrders?.map((sellerOrder) => {
       console.log("seller", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
+        let logoPath;
+        if(orderProduct.product.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = orderProduct.product.productImages[0]
+        }
         return (
           <div>
             <div class="card">
@@ -581,7 +620,7 @@ export default class SellerOrders extends Component {
                   <th style={{ width: "20%" }}>
                     <img
                       class="card-img-left"
-                      src={logo}
+                      src={logoPath}
                       alt="Card image cap"
                       style={{
                         width: "300px",
@@ -631,11 +670,12 @@ export default class SellerOrders extends Component {
                         height: "50px",
                         float: "right",
                         marginRight: "20px",
+                        marginTop: "15%",
                       }}
                       block
                       onClick={(event) => this.addProduct(event)}
                     >
-                      View Product
+                      View Productt
                     </Button>
                     <Button
                       variant="light"
@@ -646,7 +686,13 @@ export default class SellerOrders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.cancelProduct(
+                          event,
+                          sellerOrder.order._id,
+                          orderProduct.product._id
+                        )
+                      }
                     >
                       Cancel Product
                     </Button>
@@ -732,7 +778,7 @@ export default class SellerOrders extends Component {
       <div>
         {redirectVar}
         <div className="auth-wrapper">
-          <div className="auth-inner">
+          <div className="auth-inner3">
             <h3>Your Orders</h3>
             <br />
             <br />

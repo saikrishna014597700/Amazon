@@ -5,6 +5,7 @@ import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import $ from "jquery";
 import { Redirect } from "react-router";
+import { Link } from "react-router-dom";
 
 export default class viewAllSellerProducts extends Component {
   constructor(props) {
@@ -76,19 +77,46 @@ export default class viewAllSellerProducts extends Component {
 
   render() {
     let redirectVar = null;
-    if(!localStorage.getItem("id")){
-        redirectVar = <Redirect to= "/login"/>
-    }else{
-      if(localStorage.getItem("role") != "Seller"){
-        redirectVar = <Redirect to= "/login"/>
+    if (!localStorage.getItem("id")) {
+      redirectVar = <Redirect to="/login" />;
+    } else {
+      if (localStorage.getItem("role") != "Seller") {
+        redirectVar = <Redirect to="/login" />;
       }
     }
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
+      let imagesHTML;
+
+      if(sellerProduct.productImages.length === 0){
+        imagesHTML = (
+          <div>
+          <div className="image">
+            <img
+              src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+              style={{ maxWidth: "100%" }}
+            />
+          </div>
+          </div>
+       )
+      }else{
+        imagesHTML = sellerProduct.productImages.map((image)=>{
+          return(
+          <div className="image">
+          <img src= {image} style={{ maxWidth: "100%" }}
+          />
+          </div>
+          )
+       })
+    }
+
+
       return (
         <div className="col-md-3" style={{ margin: 5 }}>
+          <br />
+          <br />
           <div class="ui card">
             {/* <div class="image"> */}
             <div className="row" style={{ margin: 10 }}>
@@ -100,40 +128,11 @@ export default class viewAllSellerProducts extends Component {
                   &#10094;
                 </a>
               </div>
-              <div className="col-md-8">
-                <div className="image-container" id={sellerProduct._id}>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                  <div className="image">
-                    <img
-                      src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  </div>
-                </div>
-              </div>
+            <div className="col-md-8">
+           <div className="image-container" id={sellerProduct._id}>
+          {imagesHTML}
+           </div>
+             </div> 
               <div className="col-md-1" style={{ paddingTop: "50px" }}>
                 <a
                   className="next"
@@ -167,26 +166,36 @@ export default class viewAllSellerProducts extends Component {
             </div>
             <hr style={{ height: "2px", backgroundColor: "gray" }}></hr>
             <div class="extra content">
-              <a href="#" style={{ fontSize: "15" }}>
-                {/* <i aria-hidden="true" class="user icon"></i> */}
-                View Product
-              </a>
-              <button
-                class="btn success"
-                onClick={(event) =>
-                  this.editProductDetails(event, sellerProduct._id)
-                }
+              <Link
+                style={{ fontSize: "18", float: "left", marginLeft: "10px" }}
+                to={{
+                  pathname: `/product/${sellerProduct._id}`,
+                }}
               >
-                View Profile
-              </button>
+
+                View Product
+              </Link>
+              <Link
+                style={{ fontSize: "18", float: "right", marginRight: "10px" }}
+                to={{
+                  pathname: `/editProductDetails/${sellerProduct._id}`,
+                }}
+              >
+                Edit Product
+              </Link>
+              <br />
+              <br />
             </div>
           </div>
         </div>
       );
     });
-    return <div className="row">
-      {redirectVar}
-      {sellerProducts}</div>;
+    return (
+      <div className="row">
+        {redirectVar}
+        {sellerProducts}
+      </div>
+    );
   }
 }
 

@@ -18,9 +18,10 @@ let getCancelledOrderDetails = async (msg, callback) => {
     pool.query(
       `SELECT order_Id, GROUP_CONCAT(product_id) as product_id,GROUP_CONCAT(quantity) as quantity
     FROM map_order_product
-    WHERE sellerId = "123" AND status = "Cancelled"
+    WHERE sellerId = ${msg.sellerId} AND status = "Cancelled"
     GROUP BY order_Id`,
       async (err, sqlResult) => {
+        console.log("Cancelled orders", sqlResult);
         if (sqlResult && sqlResult.length > 0) {
           Object.keys(sqlResult).forEach(function (key) {
             var row = sqlResult[key];
@@ -92,6 +93,10 @@ let getCancelledOrderDetails = async (msg, callback) => {
           console.log("resultArray is", resultArray);
           response.status = STATUS_CODE.SUCCESS;
           response.data = MESSAGES.CREATE_SUCCESSFUL;
+          return callback(null, response);
+        } else {
+          response.status = STATUS_CODE.SUCCESS;
+          response.data = MESSAGES.DATA_NOT_FOUND;
           return callback(null, response);
         }
       }

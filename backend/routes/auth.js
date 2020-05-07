@@ -98,7 +98,7 @@ router.post("/signin", async (req, res) => {
         res.status = STATUS_CODE.SUCCESS;
         res.token = jwtToken;
   
-        return res.send({id:results.id,role:results.role,token:jwtToken,name:results.name})
+        return res.send({id:results.id,role:results.role,token:jwtToken,name:results.name,imagePath:results.imagePath})
 
       }
       

@@ -17,12 +17,50 @@ export default class EditProductDetails extends Component {
       sellerProducts: [],
       sellerProductsTest: [],
       redirect: null,
+      formData: [],
+      categories: [],
     };
+    this.handleImageChange = this.handleImageChange.bind(this);
+  }
+
+  handleImageChange(e) {
+    console.log("sellerProductsTest", this.state.sellerProductsTest);
+    this.setState({
+      formData: this.state.formData.concat(e.target.files[0]),
+    });
+  }
+
+  async removeImage(image) {
+    var productId = this.props.match.params.id;
+    console.log("remove productId::", productId, "imagePath:::", image);
+
+    var data = {
+      productId: productId,
+      imagePath: image,
+    };
+
+    await axios
+      .post("http://localhost:3001/api/file/removeProductImage", data)
+      .then(async (res) => {
+        console.log("success", res);
+        await axios
+          .get(
+            `http://localhost:3001/api/product/getProductDetails/${productId}`
+          )
+          .then((response) => {
+            console.log("Pro are::", response);
+            alert("deleted image");
+            this.setState({
+              sellerProducts: this.state.sellerProducts.concat(response.data),
+            });
+            //console.log("Pro are::", this.state.sellerProducts);
+          });
+      });
   }
 
   async componentDidMount() {
     var productId = this.props.match.params.id;
-    axios
+    await axios
       .get(`http://localhost:3001/api/product/getProductDetails/${productId}`)
       .then((response) => {
         console.log("Pro are::", response);
@@ -31,14 +69,27 @@ export default class EditProductDetails extends Component {
         });
         console.log("Pro are::", this.state.sellerProducts);
       });
+    await axios
+      .get("http://localhost:3001/api/admin/get-product-categories")
+      .then((res) => {
+        console.log("response is::", res);
+        this.setState({
+          categories: res.data,
+        });
+      });
   }
 
   handleReduxChange = (e, id, name) => {
-    console.log("Before", id, name, this.state.sellerProductsTest);
     const sellerProduct = this.state.sellerProducts;
     sellerProduct.map((sellerProductt) => {
       if (sellerProductt._id === id) {
-        sellerProductt[name] = e.target.value;
+        if (sellerProductt[name] == "category") {
+          this.setState({
+            category: e.target.value,
+          });
+        } else {
+          sellerProductt[name] = e.target.value;
+        }
       }
       console.log("Id iss", sellerProductt);
       this.setState({
@@ -47,21 +98,63 @@ export default class EditProductDetails extends Component {
     });
   };
 
+  // setCategory(e) {
+  //   console.log("event", e.target.value);
+  //   this.setState({
+  //     category: e.target.value,
+  //   });
+  // }
+
   async editProduct(event) {
-    console.log("New pro", this.state.sellerProductsTest);
-    const payload = {
-      _id: this.props.match.params.id,
-      productObj: this.state.sellerProductsTest,
-    };
-    axios
-      .post("http://localhost:3001/api/product/editProduct/", payload)
-      .then((response) => {
-        console.log("Final res is", response);
-        this.setState({
-          sellerProducts: response.data,
+    var changedProdObj;
+    console.log("In ", this.state.sellerProductsTest);
+    if (this.state.sellerProductsTest.length != 0) {
+      console.log("In If");
+      changedProdObj = this.state.sellerProductsTest;
+      const payload = {
+        _id: this.props.match.params.id,
+        productObj: changedProdObj,
+      };
+      await axios
+        .post("http://localhost:3001/api/product/editProduct/", payload)
+        .then(async (response) => {
+          this.state.formData.map(async (form) => {
+            let fileData = new FormData();
+            fileData.append("file", form);
+            //imagesData.push(fileData)
+            await axios
+              .post(
+                "http://localhost:3001/api/file/uploadImages/?productId=" +
+                  this.props.match.params.id,
+                fileData,
+                {
+                  headers: {
+                    "Content-Type": "multipart/form-data",
+                  },
+                }
+              )
+              .then(async (res) => {
+                console.log("success", res);
+              });
+          });
+          await axios
+            .get(
+              `http://localhost:3001/api/product/getProductDetails/${this.props.match.params.id}`
+            )
+            .then((response) => {
+              alert("Updated successfully");
+              console.log("Pro are::", response);
+              this.setState({
+                sellerProducts: [].concat(response.data),
+              });
+            });
+          alert("Updated successfully");
         });
-        alert("Updated successfully");
-      });
+    } else {
+      console.log("In else");
+      alert("Edit the product");
+    }
+    console.log("New pro", changedProdObj);
   }
 
   async deleteProduct(event) {
@@ -87,6 +180,71 @@ export default class EditProductDetails extends Component {
     }
     let sellerProducts = this.state.sellerProducts.map((sellerProduct) => {
       console.log("P name", sellerProduct.productName);
+
+      let imagesHTML;
+      let imagesHTMLforAdd;
+
+      let multpileAdds;
+
+      imagesHTML = sellerProduct.productImages.map((image) => {
+        return (
+          <div className="form-group">
+            <div className="row" style={{ marginLeft: "15px" }}>
+              <img
+                src={image}
+                style={{
+                  width: "50px",
+                  height: "65px",
+                  cursor: "pointer",
+                  marginRight: "15px",
+                }}
+              ></img>
+              <Button
+                variant="warning"
+                style={{ width: "85px" }}
+                block
+                onClick={(event) => this.removeImage(image)}
+              >
+                Remove
+              </Button>
+            </div>
+          </div>
+        );
+      });
+
+      // console.log("remaining length::",5-sellerProduct.productImages.length)
+
+      //(i)=>{
+      let len = sellerProduct.productImages.length;
+      let arr = [];
+      for (let index = 0; index < 5 - len; index++) {
+        arr.push(index);
+      }
+
+      imagesHTMLforAdd = arr.map((pp) => {
+        return (
+          <div className="form-group">
+            <strong>Image </strong>
+            <input
+              type="file"
+              name="user_image"
+              accept="image/*"
+              className="form-control"
+              aria-label="Image"
+              aria-describedby="basic-addon1"
+              onChange={(e) => this.handleImageChange(e)}
+            />
+          </div>
+        );
+      });
+
+      // multpileAdds =
+
+      //}
+      console.log("imagesHTMLforAdd", imagesHTMLforAdd);
+      //console.log("imagesHTMLforAdd", imagesHTMLforAdd)
+      //}
+
       return (
         <div className="auth-wrapper">
           <div className="auth-inner1">
@@ -151,6 +309,10 @@ export default class EditProductDetails extends Component {
                       </div>
                       <div className="form-group">
                         <strong>Category</strong>
+                        <div>{sellerProduct.category}</div>
+                      </div>
+                      <div className="form-group">
+                        <strong>Change Category</strong>
                         <select
                           placeholder="Select Category"
                           defaultValue={sellerProduct.category}
@@ -164,13 +326,18 @@ export default class EditProductDetails extends Component {
                             )
                           }
                         >
-                          <option value="Electronics">Electronics</option>
-                          <option value="Kitchen">Kitchen</option>
-                          <option value="Clothing">Clothing</option>
-                          <option value="Furniture">Furniture</option>
-                          <option value="Rentals">Rentals</option>
+                          {this.state.categories.map((e, key) => {
+                            return (
+                              <option key={key} value={e.category}>
+                                {e.category}
+                              </option>
+                            );
+                          })}
                         </select>
                       </div>
+
+                      {imagesHTML}
+                      {imagesHTMLforAdd}
                       <div
                         className="form-group"
                         style={{ paddingTop: "12px" }}

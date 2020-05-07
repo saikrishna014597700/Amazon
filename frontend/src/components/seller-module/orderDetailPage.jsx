@@ -109,7 +109,7 @@ export default class OrderDetailsPage extends Component {
     return (
       <div>
         <div className="auth-wrapper">
-          <div className="auth-inner">
+          <div className="auth-inner3">
             <h4>Order Details</h4>
             <br />
             {order}
