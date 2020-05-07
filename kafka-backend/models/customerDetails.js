@@ -62,7 +62,7 @@ var card = new Schema({
 
 var customerDetails = new Schema({
   userId: { type: Number, required: true },
-  name: { type: String },
+  firstName: { type: String },
   customerAddresses: [address],
   customerCards: [card],
   createDate: { type: Date },

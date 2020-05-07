@@ -31,15 +31,15 @@ class SignUp extends Component {
       password: this.state.password,
       role: this.state.option
     }
-    axios
+    await axios
       .post("http://localhost:3001/api/auth/signup/", data)
       .then((response) => {
         this.setState({
           msg: response.data
         })
-        console.log("line 34",response)
+        console.log("line 40",response)
       });
-    console.log("36",data)}
+    console.log("42",this.state.msg)}
   }
 
   render() {
@@ -48,6 +48,8 @@ class SignUp extends Component {
     if(localStorage.getItem("id")){
       redirectVar= <Redirect to="/home" />
     }
+    if(this.state.msg=="Created Successfully")
+    redirectVar= <Redirect to="/login" />
     return (
       <div>
         {redirectVar}
