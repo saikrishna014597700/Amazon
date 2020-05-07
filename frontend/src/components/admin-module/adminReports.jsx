@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Button, FormGroup } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 // import DatePicker from "react-bootstrap-date-picker";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -7,14 +7,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import "./admin.css";
 import axios from "axios";
 import { Redirect } from "react-router";
-import { Bar, Line, Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import Env from "../../helpers/Env";
-// import {
-//   MuiPickersUtilsProvider,
-//   KeyboardTimePicker,
-//   KeyboardDatePicker,
-// } from "@material-ui/pickers";
-// import DateFnsUtils from "@date-io/date-fns";
 
 export default class AdminReports extends Component {
   constructor() {
@@ -31,11 +25,12 @@ export default class AdminReports extends Component {
       graphNames: {
         top5Sellers: "Top 5 Sellers by total sales amount",
         top5Users: "Top 5 customers by total purchase amount",
-        top5Products: "Top 5 ost sold products",
+        top5Products: "Top 5 most sold products",
         top10HighestRated: "top 10 highest rated products",
       },
       dateForOrderCount: "",
       orderCount: "",
+      createdDate: new Date(),
     };
   }
 
@@ -52,35 +47,26 @@ export default class AdminReports extends Component {
     });
   };
 
+  convert = (str) => {
+    var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
+  };
+
   getOrderCountByDate = async (event) => {
-    const dateForOrderCount = "2020-04-16";
     const orderCount = this.state.sellerReports.OrdersperDay.filter((order) => {
-      // let createdDate = new Date(
-      //   new Date(order.create_date).setHours(0, 0, 0, 0)
-      // );
-      console.log("createdDate ", this.state.createdDate?.getTime());
-      console.log(
-        "order.create_date",
-        new Date(new Date(order.create_date).setHours(0, 0, 0, 0)).getTime(),
-        order.create_date
-      );
-      const selectedDate = new Date(dateForOrderCount);
+      const selectedDate = new Date(this.state.createdDate);
       let temp = new Date(new Date().setDate(selectedDate.getDate));
       temp = new Date(temp.setMonth(selectedDate));
       temp = new Date(temp.setFullYear(temp.setMonth(selectedDate)));
-      console.log("dateForOrderCount", temp, dateForOrderCount);
       if (
-        // new Date(new Date().setHours(0, 0, 0, 0)).getTime(order.create_date) ===
-        // new Date(new Date(dateForOrderCount).setHours(0, 0, 0, 0)).getTime()
-
-        this.state.createdDate?.getTime() ===
-        new Date(new Date(order.create_date).setHours(0, 0, 0, 0)).getTime()
+        this.convert(this.state.createdDate) ===
+        this.convert(new Date(order.create_date))
       ) {
         console.log("matched order", order);
         return order.order_count;
       } else return 0;
-
-      // return order;
     });
     console.log("orderCount", orderCount[0]);
     await this.setState({ orderCount: orderCount[0] });
@@ -93,9 +79,10 @@ export default class AdminReports extends Component {
     this.mostViewedProductsFinal();
   };
 
-  mostViewedProductsFinal = () => {
+  mostViewedProductsFinal = async () => {
+    const date = await this.convert(this?.state?.createdDate);
     axios
-      .get(`${Env.host}/api/admin/most-viewed-jobs?date=2020-04-16`)
+      .get(`${Env.host}/api/admin/most-viewed-jobs?date=${date}`)
       .then(async (response) => {
         console.log("Admin Reports are::", response);
         await this.setState({
@@ -114,6 +101,7 @@ export default class AdminReports extends Component {
       });
       this.getChart();
       this.MostRatedProducts();
+      this.getReportingByDate();
     });
   }
 
@@ -128,18 +116,14 @@ export default class AdminReports extends Component {
         " }";
       analyticsArray.push(test);
     });
-    // console.log("analyticsArrayState", analyticsArray);
     await this.setState({
       analyticsArrayState: analyticsArray,
     });
-    // console.log("componentWillMount");
     var labels = [];
     var data = [];
     var backgroundColor = [];
-    // let report = this.state.sellerReports.map((order) => {});
     this.state.sellerReports[this.state.graphSelection].map((order) => {
       labels.push(order.name);
-      // labels.push("Hi");
       data.push(order.sales);
       backgroundColor.push("rgba(245, 212, 122)");
     });
@@ -167,18 +151,14 @@ export default class AdminReports extends Component {
         '{ "y": ' + product.avgRating + ', "x": ' + product.productName + " }";
       analyticsArray.push(test);
     });
-    // console.log("analyticsArrayState", analyticsArray);
     await this.setState({
       analyticsArrayStateMostRated: analyticsArray,
     });
-    // console.log("componentWillMount");
     var labels = [];
     var data = [];
     var backgroundColor = [];
-    // let report = this.state.sellerReports.map((order) => {});
     this.state.sellerReports.top10HighestRated.map((product) => {
       labels.push(product.productName);
-      // labels.push("Hi");
       data.push(product.avgRating);
       backgroundColor.push("rgba(254, 190, 98)");
     });
@@ -187,7 +167,7 @@ export default class AdminReports extends Component {
     var datasets = [];
     state.labels = labels;
     var x = {};
-    x.label = this.state.graphNames[this.state.graphSelection];
+    x.label = "Top 10 Most Rated Products";
     x.data = data;
     x.backgroundColor = backgroundColor;
     datasets.push(x);
@@ -204,7 +184,7 @@ export default class AdminReports extends Component {
     this.state.mostViewedProducts?.map((product) => {
       var test =
         '{ "y": ' +
-        product.view_Count +
+        product.view_count +
         ', "x": ' +
         product.product_name +
         " }";
@@ -221,7 +201,7 @@ export default class AdminReports extends Component {
     this.state.mostViewedProducts?.map((product) => {
       labels.push(product.product_name);
       // labels.push("Hi");
-      data.push(product.view_Count);
+      data.push(product.view_count);
       backgroundColor.push("rgba(254, 190, 98)");
     });
 
@@ -229,7 +209,7 @@ export default class AdminReports extends Component {
     var datasets = [];
     state.labels = labels;
     var x = {};
-    x.label = this.state.graphNames[this.state.graphSelection];
+    x.label = "Top 10 Most Viewed Products per day";
     x.data = data;
     x.backgroundColor = backgroundColor;
     datasets.push(x);
@@ -245,8 +225,10 @@ export default class AdminReports extends Component {
     this.setState({ redirect: `/viewAllsellerOrders` });
   }
 
-  handleDateChange = (date) => {
-    this.setState({ createdDate: date });
+  handleDateChange = async (date) => {
+    await this.setState({ createdDate: date });
+    // this.setState({ userGivenDate: date });
+    console.log("createdDate::::", this.state.createdDate);
     this.getReportingByDate();
   };
 
@@ -307,83 +289,14 @@ export default class AdminReports extends Component {
             // },
           }}
         />
-
-        {/* {
-          <Line
-            data={this.state.chartData}
-            options={{
-              title: {
-                display: this.props.displayTitle,
-                text: "Largest Cities In " + this.props.location,
-                fontSize: 25,
-              },
-              legend: {
-                display: this.props.displayLegend,
-                position: this.props.legendPosition,
-              },
-            }}
-          />
-        }
-        <Pie
-          data={this.state.chartData}
-          options={{
-            title: {
-              display: this.props.displayTitle,
-              text: "Largest Cities In " + this.props.location,
-              fontSize: 25,
-            },
-            legend: {
-              display: this.props.displayLegend,
-              position: this.props.legendPosition,
-            },
-          }}
-        /> */}
       </div>
     );
 
-    // let report = this.state.sellerReports.map((order) => {
-    //   return (
-    //     <div>
-    //       <div class="card">
-    //         <br />
-    //         {/* <div class="card text-center">
-    //           <div class="card-header"> */}
-    //         <br />
-    //         <table style={{ width: "100%" }}>
-    //           <tr>
-    //             <th>Product Name</th>
-    //             <th>Quantity</th>
-    //             <th>Price</th>
-    //             <th>View Count</th>
-    //             <th>Total Sales Amount</th>
-    //           </tr>
-    //           <tr>
-    //             <td>{order.product_name}</td>
-    //             <td>{order.quantity}</td>
-    //             <td>{order.price}</td>
-    //             <td>{order.view_count}</td>
-    //             <td>{order.product_sales_um}</td>
-    //           </tr>
-    //           <br />
-    //           <br />
-    //         </table>
-
-    //         <br />
-    //         {/* </div>
-    //         </div> */}
-    //       </div>
-    //     </div>
-    //   );
-    // });
-
-    // graphSelection(){
-
-    // }
     return (
       <div className="auth-wrapper">
         {redirectVar}
         <div className="auth-inner4">
-          <h3>Inventory Listings</h3>
+          <h3>Reports Dashboard</h3>
           <br />
           <div class="card text-center">
             <div className="card">
@@ -396,63 +309,36 @@ export default class AdminReports extends Component {
                   controlId="exampleForm.ControlInput5"
                   className="float-left"
                 >
-                  {/* <Form.Control
-                    type="text"
-                    className="search-input"
-                    name="dateForOrderCount"
-                    placeholder="Enter date..."
-                    autoComplete="off"
-                    onKeyUp={this.onKeyUp}
-                    onChange={this.searchHandleOnChange}
-                  /> */}
                   <DatePicker
                     placeholderText="Please select a date"
+                    default
                     selected={this.state.createdDate}
                     onSelect={this.handleDateChange}
-                    // showTimeSelect
                     dateFormat="MM/dd/yyyy"
                   />
                 </Form.Group>
-                {/* <div className="apply-btn-container float-left"> */}
-                {/* <button
-                  className="Amazon"
-                  style={{
-                    width: "130px",
-                    height: "32px",
-                    "margin-left": "5px",
-                  }}
-                  onClick={this.getReportingByDate}
-                >
-                  Search
-                </button> */}
               </Form>
-              {!!this.state.createdDate ? (
-                <div>
-                  {!!this.state.orderCount?.order_count ? (
-                    <h4>
-                      The total number of orders made on this date is{" "}
-                      {this.state.orderCount?.order_count}
-                    </h4>
-                  ) : (
-                    <h4>The total number of orders made on this date is 0</h4>
-                  )}
-                </div>
-              ) : (
-                ""
-              )}
+              {/* {!!this.state.createdDate ? ( */}
+              <div>
+                {!!this.state.orderCount?.order_count ? (
+                  <h4>
+                    The total number of orders made on this date is{" "}
+                    {this.state.orderCount?.order_count}
+                  </h4>
+                ) : (
+                  <h4>The total number of orders made on this date is 0</h4>
+                )}
+              </div>
 
               {top10ViewedProductsGraph}
             </div>
             <br />
-
-            {/* {report} */}
           </div>
           <Form>
             <Form.Control
               style={{ width: "200px" }}
               as="select"
               name="graphSelection"
-              // value="No Selection"
               onChange={this.handleOnChange}
             >
               <option value="top5Sellers">Top 5 Sellers</option>

@@ -21,10 +21,11 @@ let getMostViewedProducts = async (msg, callback) => {
   //order the orders by create_date
 
   try {
-    const top10MostViewedProducts = `SELECT DISTINCT product_Id, product_name, view_Count \
-            FROM amazonDB.product_analytics \
+    const top10MostViewedProducts = `SELECT count(product_Id) as view_count, product_name, product_Id \
+            FROM amazonDB.product_view_mapping \
             where create_date="${msg.date}" \
-            Order by view_Count desc limit 10`;
+            GROUP BY product_Id \
+            Order by count(product_Id) desc limit 10`;
 
     resultArray = await query(pool, top10MostViewedProducts).catch((e) => {
       console.log("Error", e);
