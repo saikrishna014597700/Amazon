@@ -9,12 +9,10 @@ class Home extends Component {
   }
 
   render() {
-
     let redirectVar = null;
-        if(!localStorage.getItem("id")){
-            redirectVar = <Redirect to= "/login"/>
-            
-        }
+    if (!localStorage.getItem("id")) {
+      redirectVar = <Redirect to="/login" />;
+    }
     return (
       <div>
         {redirectVar}
@@ -45,9 +43,13 @@ class Home extends Component {
               <Link to="sellerProfile">Seller Profile</Link>
               {/* <Route path="/sellerProfile" component={SellerProfile} /> */}
               <br />
-              <Link to="/inventory-listings">Inventory Listings</Link>
+              <Link to="/inventory-listings">Admin Inventory Listings</Link>
               <br />
-              <Link to="/seller-listings">Seller Listings</Link>
+              <Link to="/seller-listings">Admin Seller Listings</Link>
+              <br />
+              <Link to="/admin-orders">Admin Orders</Link>
+              <br />
+              <Link to="//admin-reports">Admin Reports</Link>
             </ul>
           </div>
         </div>

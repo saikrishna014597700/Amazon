@@ -17,6 +17,7 @@ let getSellerOrders = async (msg, callback) => {
 
   try {
     var resultArray = [];
+    console.log("1");
     pool.query(
       `SELECT order_Id, GROUP_CONCAT(product_id) as product_id,GROUP_CONCAT(quantity) as quantity
     FROM map_order_product
@@ -25,6 +26,7 @@ let getSellerOrders = async (msg, callback) => {
       ORDER BY create_date DESC`,
       async (err, sqlResult) => {
         if (sqlResult && sqlResult.length > 0) {
+          console.log("2");
           Object.keys(sqlResult).forEach(function (key) {
             var row = sqlResult[key];
             console.log("Res is2", row);
@@ -33,22 +35,26 @@ let getSellerOrders = async (msg, callback) => {
             var orderProductsQuantityArray = [];
             orderProductsIdObj.orderId = row.order_Id;
             if (row.product_id && String(row.product_id).includes(",")) {
+              console.log("3");
               orderProductsIdObj.orderProductsIdArray = row.product_id.split(
                 ","
               );
             } else {
+              console.log("4");
               orderProductsIdArray.push(row.product_id);
               orderProductsIdObj.orderProductsIdArray = orderProductsIdArray;
             }
             if (row.quantity && String(row.quantity).includes(",")) {
+              console.log("5");
               orderProductsIdObj.orderProductsQuantityArray = row.quantity.split(
                 ","
               );
             } else {
+              console.log("6");
               orderProductsQuantityArray.push(row.quantity);
               orderProductsIdObj.orderProductsQuantityArray = orderProductsQuantityArray;
             }
-
+            console.log("7");
             ordersProductsIdArray.push(orderProductsIdObj);
           });
 
@@ -65,6 +71,7 @@ let getSellerOrders = async (msg, callback) => {
             var quantOrder = 0;
             await arrayItem.orderProductsIdArray.reduce(
               async (promise, arrayproItem) => {
+                console.log("7");
                 await promise;
                 order.products.forEach((orderTemp) => {
                   console.log("orderTemp", orderTemp.productId, arrayproItem);
