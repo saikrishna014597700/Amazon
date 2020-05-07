@@ -56,7 +56,8 @@ class Main extends Component {
           <Route path="/cart" component={Cart} />
           <Route path="/sellerOrders" component={SellerOrders} />
           <Route path="/sellerReports" component={SellerReports} />
-          <Route path="/sellerProfile" component={SellerProfile} />
+          {/* <Route path="/sellerProfile" component={SellerProfile} /> */}
+          <Route path="/sellerProfile/:id" component={SellerProfile} />
           <Route path="/orderDetailPage/:id" component={OrderDetailPage} />
           <Route
             path="/productTrackingDetails/:id/:id"

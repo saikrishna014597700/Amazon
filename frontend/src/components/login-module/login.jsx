@@ -37,6 +37,7 @@ export default class Login extends Component {
               err:1
             });
           else {
+            
             console.log("IDDDD", response.data.id);
             localStorage.setItem("id", response.data.id);
             localStorage.setItem("role", response.data.role);
@@ -90,7 +91,7 @@ export default class Login extends Component {
       <div>
         {redirectvar}
         <div className="auth-wrapper">
-          <div className="auth-inner">
+          <div className="auth-inner" style={{marginTop:"10px"}}>
             <div className="container">
               <div className="row">
                 <p style={{ color: "red" }}> {errormsg} </p>

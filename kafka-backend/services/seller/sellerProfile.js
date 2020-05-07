@@ -5,6 +5,10 @@ const moment = require("moment");
 var mongoose = require("mongoose");
 // const redisClient = require("../../utils/redisConfig");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
+const pool = require("../../utils/mysqlConnection");
+const sleep = (milliseconds) => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
 
 let getSellerProfile = async (msg, callback) => {
   let response = {};
@@ -12,12 +16,26 @@ let getSellerProfile = async (msg, callback) => {
   try {
     console.log("Seller is and body", +msg.sellerId, msg.body);
     Seller.findOne({ userId: +msg.sellerId })
-      .then((res) => {
-        response.result = res;
+      .then(async (res) => {
+
+        var sellerObj = res.toObject();
+        await pool.query(`select imagePath from users where id = ${msg.sellerId}`, async (err, sqlResult) => {
+          if (!err) {
+            console.log("sqlResult for imagePaths", await sqlResult[0].imagePath)
+            if (await sqlResult[0].imagePath) {
+              sellerObj.imagePath = await sqlResult[0].imagePath
+              console.log("sellerObj:::", sellerObj)
+              return sellerObj;
+            }
+          }
+        })
+        sleep(500).then(() => {
+        response.result = sellerObj;
         response.status = STATUS_CODE.SUCCESS;
         response.data = MESSAGES.SUCCESS;
         console.log("Seller update response:::", response);
         return callback(null, response);
+        });
       })
       .catch((err) => {
         console.log("Error occ while updating seller", err);

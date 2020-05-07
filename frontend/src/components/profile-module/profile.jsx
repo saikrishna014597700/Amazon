@@ -90,7 +90,7 @@ class Profile extends Component {
 
   async handleChange(e) {
     this.setState({
-      [e.target.name]: e.target.files[0],
+      [e.target.name]: e.target.value,
     });
     console.log(e.target.name," ",e.target.value)
   }
@@ -99,8 +99,9 @@ class Profile extends Component {
   {
     const data=
     {
+      id: localStorage.getItem("id"),
       name: this.state.name,
-      user_image: this.state.user_image
+      
     }
     axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios

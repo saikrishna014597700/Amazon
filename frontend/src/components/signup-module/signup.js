@@ -54,7 +54,7 @@ class SignUp extends Component {
       <div>
         {redirectVar}
         <div className="auth-wrapper">
-          <div className="auth-inner">
+          <div className="auth-inner" style={{marginTop:"10px"}}>
             <div className="container">
               <div className="row">
               <p style={{color:"red"}}>{this.state.msg} </p>
