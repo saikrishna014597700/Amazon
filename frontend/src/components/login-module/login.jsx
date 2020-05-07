@@ -56,9 +56,9 @@ export default class Login extends Component {
 	if(localStorage.getItem("role") === "Admin"){
 		redirectvar = <Redirect to="/inventory-listings" />;
 	}else if (localStorage.getItem("role") === "Seller"){
-		redirectvar = <Redirect to="/viewAllSellerProducts" />
+		redirectvar = <Redirect to="/homePage" />
 	}else if (localStorage.getItem("role") === "Customer"){
-		redirectvar = <Redirect to="/home"/>
+		redirectvar = <Redirect to="/homePage"/>
 	}
 
     return (

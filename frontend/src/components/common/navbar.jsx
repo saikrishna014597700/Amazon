@@ -69,7 +69,7 @@ class Navbar extends Component {
   goToSearch = () => {
     this.setState({ 
      // redirect: `/search/${this.state.searchTerm}`,
-      redirectVar:  <Redirect to={`/search/${this.state.searchTerm}`}  />  
+      redirectVar:  <Redirect to={`/search/${this.state.searchTerm}/${this.state.searchCategory}`}  />  
     });
   };
 

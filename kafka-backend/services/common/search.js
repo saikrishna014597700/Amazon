@@ -57,7 +57,7 @@ let search = async (msg, callback) => {
     let page = parseInt(msg.page);
 
     let skip = (page - 1) * limit;
-    console.log("before search  sort:" + sellerId);
+    console.log("before search  sort:" + sellerId+":"+minPrice+":"+maxPrice+":"+rating+":c"+category+"::"+msg.searchTerm);
     var products = await Product.find({
       productName: { $regex: msg.searchTerm, $options: "i" },
       category: { $regex: category, $options: "i" },
@@ -76,7 +76,7 @@ let search = async (msg, callback) => {
     });
     sellers.forEach(async (seller) => {
       let pros = await Product.find({
-        sellerId: seller._id,
+        // sellerId: seller._id,
         category: { $regex: category, $options: "i" },
         avgRating: { $gte: rating },
         isDeleted: 0,

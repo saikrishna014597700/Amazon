@@ -37,12 +37,14 @@ export default class productDescription extends Component {
       productId: this.state.productId,
     };
     let finalQuantity = this.state.quantity;
+    let productExists = false;
     await axios
       .post("http://localhost:3001/api/cart/getCart/", payload)
       .then((response) => {
         console.log("in get cart response",response)
         if (response) {
           if (response.data.length != 0) {
+            productExists = true;
             let quantity = response.data[0].quantity;
             finalQuantity = parseInt(quantity,10) + parseInt(this.state.quantity,10);
             cartSize = response.data.length;
@@ -56,7 +58,7 @@ export default class productDescription extends Component {
       quantity: finalQuantity,
     };
 
-    if (finalQuantity == 1) {
+    if (!productExists) {
       await axios
         .post("http://localhost:3001/api/cart/addToCart/", payload)
         .then((res) => {
@@ -145,7 +147,7 @@ export default class productDescription extends Component {
                 review.userId
             )
             .then((res) => {
-              // console.log("addresses::", res.data);
+              console.log("reviews::", res.data);
               review.username = res.data.firstName;
             });
         });

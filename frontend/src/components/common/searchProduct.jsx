@@ -46,6 +46,7 @@ export default class SearchProduct extends Component {
     // console.log("state=>" + this.state.searchCategory);
     await this.setState({
       searchTerm: this.props.match.params.searchTerm,
+      searchCategory: this.props.match.params.searchCategory
     });
     if (localStorage.getItem("role") == "Seller") {
       await this.setState({

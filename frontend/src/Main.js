@@ -49,7 +49,7 @@ class Main extends Component {
           <Route path="/addProduct" component={AddProduct} />
           <Route path="/orders" component={Orders} />
           <Route path="/Profile" component={Profile} />
-          <Route path="/search/:searchTerm" component={SearchProduct} />
+          <Route path="/search/:searchTerm/:searchCategory" component={SearchProduct} />
           <Route path="/customerCards" component={customerCards} />
           <Route path="/customerAddresses" component={customerAddresses} />
           <Route path="/product/:id" component={ProductDescription} />
