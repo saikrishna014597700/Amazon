@@ -82,7 +82,7 @@ export default class AdminOrders extends Component {
     if (!localStorage.getItem("id")) {
       redirectVar = <Redirect to="/login" />;
     } else {
-      if (localStorage.getItem("role") != "Seller") {
+      if (localStorage.getItem("role") != "Admin") {
         redirectVar = <Redirect to="/login" />;
       }
     }
@@ -243,7 +243,6 @@ export default class AdminOrders extends Component {
         {redirectVar}
         <div className="auth-wrapper">
           <div className="auth-inner4">
-            <h3>All Orders</h3>
             <Form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -251,10 +250,14 @@ export default class AdminOrders extends Component {
             >
               <table style={{ width: "100%" }}>
                 <tr>
+                  <th>
+                    <h4>ADMIN ORDERS</h4>
+                  </th>
                   <th>Search by</th>
                   <th>Filter by</th>
                 </tr>
                 <tr>
+                  <td></td>
                   <td>
                     <Form.Group
                       controlId="exampleForm.ControlInput5"
@@ -289,6 +292,7 @@ export default class AdminOrders extends Component {
                   </td>
                 </tr>
                 <tr>
+                  <td></td>
                   <td>
                     {" "}
                     <button

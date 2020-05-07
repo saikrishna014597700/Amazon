@@ -248,6 +248,7 @@ class InventoryListings extends React.Component {
     return (
       <React.Fragment>
         <article className="auth-inner4">
+          <h3>Inventory Listings</h3>
           {/* <div className="row">InventoryListings</div> */}
           <div className="row">
             <div className="col-6">

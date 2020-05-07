@@ -28,6 +28,12 @@ export default class SellerOrders extends Component {
     await this.fetchSellerOrders();
   }
 
+  viewProduct(id) {
+    this.setState({
+      redirect: `/product/${id}`,
+    });
+  }
+
   async fetchSellerOrders() {
     var sellerId = localStorage.getItem("id");
     var sellerOrdersTemp;
@@ -158,9 +164,14 @@ export default class SellerOrders extends Component {
                         Status : {orderProduct.productTracking.status}
                       </h5>
                       <p class="card-text">
-                        <a href="#" class="card-link">
+                        <Link
+                          to={{
+                            pathname: `/product/${orderProduct.product._id}`,
+                          }}
+                        >
+                          {" "}
                           {orderProduct.product.productName}
-                        </a>
+                        </Link>
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}
@@ -190,7 +201,9 @@ export default class SellerOrders extends Component {
                         marginTop: "15%",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.viewProduct(orderProduct.product._id)
+                      }
                     >
                       View Product
                     </Button>
@@ -332,9 +345,14 @@ export default class SellerOrders extends Component {
                       }}
                     >
                       <p class="card-text">
-                        <a href="#" class="card-link">
+                        <Link
+                          to={{
+                            pathname: `/product/${orderProduct.product._id}`,
+                          }}
+                        >
+                          {" "}
                           {orderProduct.product.productName}
-                        </a>
+                        </Link>
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}
@@ -364,7 +382,9 @@ export default class SellerOrders extends Component {
                         marginTop: "30%",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.viewProduct(orderProduct.product._id)
+                      }
                     >
                       View Product
                     </Button>
@@ -488,9 +508,14 @@ export default class SellerOrders extends Component {
                       }}
                     >
                       <p class="card-text">
-                        <a href="#" class="card-link">
+                        <Link
+                          to={{
+                            pathname: `/product/${orderProduct.product._id}`,
+                          }}
+                        >
+                          {" "}
                           {orderProduct.product.productName}
-                        </a>
+                        </Link>
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}
@@ -520,7 +545,9 @@ export default class SellerOrders extends Component {
                         marginTop: "15%",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.viewProduct(orderProduct.product._id)
+                      }
                     >
                       View Product
                     </Button>
@@ -647,9 +674,14 @@ export default class SellerOrders extends Component {
                         Status : {orderProduct.productTracking.status}
                       </h5>
                       <p class="card-text">
-                        <a href="#" class="card-link">
+                        <Link
+                          to={{
+                            pathname: `/product/${orderProduct.product._id}`,
+                          }}
+                        >
+                          {" "}
                           {orderProduct.product.productName}
-                        </a>
+                        </Link>
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}
@@ -679,7 +711,9 @@ export default class SellerOrders extends Component {
                         marginTop: "15%",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.viewProduct(orderProduct.product._id)
+                      }
                     >
                       View Product
                     </Button>
