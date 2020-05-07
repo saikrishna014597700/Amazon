@@ -120,11 +120,13 @@ export default class SearchProduct extends Component {
 
   async componentDidUpdate(prevProps) {
     if (
-      this.props.match.params.searchTerm != prevProps.match.params.searchTerm
+      this.props.match.params.searchTerm != prevProps.match.params.searchTerm || 
+      this.props.match.params.searchCategory!= prevProps.match.params.searchCategory 
     ) {
       console.log("here in update=>");
       await this.setState({
         searchTerm: this.props.match.params.searchTerm,
+        searchCategory: this.props.match.params.searchCategory
       });
       this.viewSeachResults();
     }
@@ -271,6 +273,12 @@ export default class SearchProduct extends Component {
       </div>
     );
     let sellerProducts = this.state.products.map((sellerProduct) => {
+      let logoPath;
+        if(sellerProduct.productImages.length === 0){
+          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        }else{
+          logoPath = sellerProduct.productImages[0]
+        }
       return (
         <div
           className="col-md-3"
@@ -283,7 +291,7 @@ export default class SearchProduct extends Component {
         >
           <div className="row" style={{ margin: 10 }}>
             <img
-              src={require("../../utils/product.jpg")}
+              src={logoPath}
               style={{ height: "250px" }}
             />
           </div>
