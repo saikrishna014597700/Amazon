@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 
 import "./InventoryListings.css";
 import Env from "../../helpers/Env";
+import { Redirect } from "react-router";
+
 class SellerListings extends React.Component {
   constructor(props) {
     super(props);
@@ -39,6 +41,14 @@ class SellerListings extends React.Component {
     this.getAllSellers();
   }
   render() {
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+      redirectVar = <Redirect to= "/login"/>
+  }else{
+    if(localStorage.getItem("role") != "Admin"){
+      redirectVar = <Redirect to= "/login"/>
+    }
+  }
     let sellerListings = this.state?.sellers?.map((seller) => {
       let imagePath;
 
@@ -138,6 +148,7 @@ class SellerListings extends React.Component {
             </div>
           </Form>
         </div>
+        {redirectVar}
         {sellerListings}
         {this.state?.sellers?.map((seller) => (
           <section className="card">

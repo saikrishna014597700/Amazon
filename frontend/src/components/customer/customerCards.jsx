@@ -59,7 +59,7 @@ export default class customerCards extends Component {
   addCard() {
 
     var newCard = {
-      _id : undefined,
+      _id : "-1",
       cardNo:"",
       nameOnCard:"",
       cvv:"",
