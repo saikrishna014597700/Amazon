@@ -3,6 +3,7 @@ const Product = require("../../models/product");
 const Seller = require("../../models/seller");
 const moment = require("moment");
 var mongoose = require("mongoose");
+
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 
 let search = async (msg, callback) => {
@@ -57,7 +58,20 @@ let search = async (msg, callback) => {
     let page = parseInt(msg.page);
 
     let skip = (page - 1) * limit;
-    console.log("before search  sort:" + sellerId+":"+minPrice+":"+maxPrice+":"+rating+":c"+category+"::"+msg.searchTerm);
+    console.log(
+      "before search  sort:" +
+        sellerId +
+        ":" +
+        minPrice +
+        ":" +
+        maxPrice +
+        ":" +
+        rating +
+        ":c" +
+        category +
+        "::" +
+        msg.searchTerm
+    );
     var products = await Product.find({
       productName: { $regex: msg.searchTerm, $options: "i" },
       category: { $regex: category, $options: "i" },
@@ -65,36 +79,66 @@ let search = async (msg, callback) => {
       isDeleted: 0,
       price: { $gte: minPrice, $lte: maxPrice },
       sellerId: { $regex: sellerId, $options: "i" },
-    })
-      .sort(sort)
-      .skip(skip)
-      .limit(limit);
+    });
+    // .sort(sort)
+    // .skip(skip)
+    // .limit(limit);
 
     console.log("search results befe:::", products.length);
     var sellers = await Seller.find({
       sellerName: { $regex: msg.searchTerm, $options: "i" },
     });
-    sellers.forEach(async (seller) => {
+    // Object.keys(sellers).forEach(async function (key) {
+    //   console.log("sellerid is =>", sellers[key]);
+    //   let userId = "" + sellers[key].userId;
+    //   let pros = await Product.find({
+    //     sellerId: userId,
+    //     category: { $regex: category, $options: "i" },
+    //     avgRating: { $gte: rating },
+    //     isDeleted: 0,
+    //     price: { $gte: minPrice, $lte: maxPrice },
+    //   })
+    //     .sort(sort)
+    //     .skip(skip)
+    //     .limit(limit);
+    //   console.log("pros is =>" + pros.length);
+    //   Array.prototype.push.apply(products, pros);
+    // });
+
+    await sellers.reduce(async (promise, seller) => {
+      await promise;
+      console.log("sellerid is =>", seller);
+      let userId = "" + seller.userId;
       let pros = await Product.find({
-        // sellerId: seller._id,
+        sellerId: userId,
         category: { $regex: category, $options: "i" },
         avgRating: { $gte: rating },
         isDeleted: 0,
         price: { $gte: minPrice, $lte: maxPrice },
-        sellerId: { $regex: sellerId, $options: "i" },
-      })
-        .sort(sort)
-        .skip(skip)
-        .limit(limit);
+      });
+      // .sort(sort)
+      // .skip(skip)
+      // .limit(limit);
       console.log("pros is =>" + pros.length);
       Array.prototype.push.apply(products, pros);
-    });
+    }, Promise.resolve());
     console.log("search results:::", products.length);
 
-    response.result = products;
-    response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
-    response.data = MESSAGES.CREATE_SUCCESSFUL;
-    return callback(null, response);
+    if (skip < products.length && skip + limit < products.length) {
+      response.result = products.slice(skip, skip + limit);
+      response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
+      response.data = MESSAGES.CREATE_SUCCESSFUL;
+      return callback(null, response);
+    } else if (skip < products.length) {
+      response.result = products.slice(skip, products.length);
+      response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
+      response.data = MESSAGES.CREATE_SUCCESSFUL;
+      return callback(null, response);
+    } else {
+      response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
+      response.data = MESSAGES.CREATE_SUCCESSFUL;
+      return callback(null, response);
+    }
   } catch (error) {
     console.log("Error occ while savong product" + error);
     err.status = STATUS_CODE.INTERNAL_SERVER_ERROR;

@@ -3,6 +3,7 @@ const Seller = require("../../models/seller");
 const Product = require("../../models/product");
 const moment = require("moment");
 var mongoose = require("mongoose");
+const redisClient = require("../../utils/redisConfig");
 // const redisClient = require("../../utils/redisConfig");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const pool = require("../../utils/mysqlConnection");

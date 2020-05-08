@@ -126,7 +126,11 @@ export default class SearchProduct extends Component {
       console.log("here in update=>");
       await this.setState({
         searchTerm: this.props.match.params.searchTerm,
-        searchCategory: this.props.match.params.searchCategory
+        searchCategory: this.props.match.params.searchCategory,
+        page:1,
+        limit:10,
+        maxPrice: -1,
+        minPrice: -1,
       });
       this.viewSeachResults();
     }
@@ -159,7 +163,8 @@ export default class SearchProduct extends Component {
 
   changeLimit = async (e) =>{
     await this.setState({
-      limit:e.target.value
+      limit:e.target.value,
+      page:1
     })
     this.viewSeachResults();
   }
@@ -272,7 +277,7 @@ export default class SearchProduct extends Component {
         </div>
       </div>
     );
-    let sellerProducts = this.state.products.map((sellerProduct) => {
+    let sellerProducts = this.state.products?.map((sellerProduct) => {
       let logoPath;
         if(sellerProduct.productImages.length === 0){
           logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";

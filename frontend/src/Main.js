@@ -67,10 +67,10 @@ class Main extends Component {
             path="/adminProductTrackingDetails/:id/:id"
             component={AdminProductTrackingDetails}
           />
-          <Route
+          {/* <Route
             path="/viewAllSellerProducts"
             component={ViewAllSellerProducts}
-          />
+          /> */}
           <Route
             path="/editProductDetails/:id"
             component={EditProductDetails}
