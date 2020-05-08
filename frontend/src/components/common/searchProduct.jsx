@@ -7,15 +7,15 @@ import $ from "jquery";
 import StarRatings from "react-star-ratings";
 import StarRatingComponent from "react-star-rating-component";
 import { Redirect } from "react-router";
-import ClipLoader from 'react-spinners/ClipLoader';
-import { css } from '@emotion/core';
+import ClipLoader from "react-spinners/ClipLoader";
+import { css } from "@emotion/core";
 
 const override = css`
-    display:  block;
-    margin: auto;
-    margin-top:250px;
-    border-color: rgb(254, 190, 98);
-    border: 5px solid rgb(254, 190, 98);
+  display: block;
+  margin: auto;
+  margin-top: 250px;
+  border-color: rgb(254, 190, 98);
+  border: 5px solid rgb(254, 190, 98);
 `;
 import Env from "../../helpers/Env";
 
@@ -32,9 +32,9 @@ export default class SearchProduct extends Component {
       maxPrice: -1,
       minPrice: -1,
       sellerId: null,
-      limit:10,
-      page:1,
-      loading:true
+      limit: 10,
+      page: 1,
+      loading: true,
     };
     this.viewSeachResults = this.viewSeachResults.bind(this);
     //this.overlaydiv = this.overlaydiv.bind(this)
@@ -43,7 +43,7 @@ export default class SearchProduct extends Component {
   async sortChange(e) {
     await this.setState({
       sort: e.target.value,
-      loading:true
+      loading: true,
     });
     this.viewSeachResults();
   }
@@ -57,12 +57,17 @@ export default class SearchProduct extends Component {
   }
 
   async componentDidMount() {
-    // console.log("state=>" + this.state.searchCategory);
+    console.log(
+      "state=> searchTerm: " +
+        this.props.match.params.searchTerm +
+        ":cat:" +
+        this.props.match.params.searchCategory
+    );
     await this.setState({
       searchTerm: this.props.match.params.searchTerm,
-      searchCategory: this.props.match.params.searchCategory
+      searchCategory: this.props.match.params.searchCategory,
     });
-    
+
     // console.log("here in search==>" + this.state.searchTerm);
     await this.viewSeachResults();
   }
@@ -73,22 +78,21 @@ export default class SearchProduct extends Component {
     await this.setState({
       minPrice: minPrice,
       maxPrice: maxPrice,
-      loading:true
+      loading: true,
     });
     this.viewSeachResults();
   };
 
   async viewSeachResults() {
-    if(!this.state.loading){
-      this.overlaydiv.style.display="none"; 
-    }
-    else{
-      this.overlaydiv.style.display="block";
+    if (!this.state.loading) {
+      this.overlaydiv.style.display = "none";
+    } else {
+      this.overlaydiv.style.display = "block";
     }
 
     var sellerId;
     if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
+      sellerId = localStorage.getItem("id");
     }
     const payload = {
       searchTerm: this.state.searchTerm,
@@ -102,7 +106,9 @@ export default class SearchProduct extends Component {
       sellerId: sellerId,
     };
     console.log("payload before search=>", payload);
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .post(`${Env.host}/api/common/search/`, payload)
       .then(async (response) => {
@@ -110,35 +116,36 @@ export default class SearchProduct extends Component {
         let len = response.data.length;
         var json = {};
         for (var i = 0; i < len; i++) {
-          if(! json[response.data[i].sellerId]){
-          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-          await axios
-            .get(
-              `${Env.host}/api/seller/profile/${response.data[i].sellerId}`
-            )
-            .then((seller) => {
-              // console.log("each seller name=>" + seller.data.sellerName);
-              response.data[i].sellerName = seller.data.sellerName;
-            });
-        }else{
-          console.log("in map")
-          response.data[i].sellerName = json[response.data[i].sellerId];
+          if (!json[response.data[i].sellerId]) {
+            axios.defaults.headers.common[
+              "authorization"
+            ] = localStorage.getItem("token");
+            await axios
+              .get(
+                `${Env.host}/api/seller/profile/${response.data[i].sellerId}`
+              )
+              .then((seller) => {
+                // console.log("each seller name=>" + seller.data.sellerName);
+                response.data[i].sellerName = seller.data.sellerName;
+              });
+          } else {
+            console.log("in map");
+            response.data[i].sellerName = json[response.data[i].sellerId];
+          }
         }
-      }
-      if(response.data === ""){
-        response.data = []
-        this.overlaydiv.style.display="none";
-      }
+        if (response.data === "") {
+          response.data = [];
+          this.overlaydiv.style.display = "none";
+        }
         await this.setState({
           products: response.data,
-          loading :false,
-          sellerId:sellerId
+          loading: false,
+          sellerId: sellerId,
         });
-        if(!this.state.loading){
-          this.overlaydiv.style.display="none";
-        }
-        else{
-          this.overlaydiv.style.display="block";
+        if (!this.state.loading) {
+          this.overlaydiv.style.display = "none";
+        } else {
+          this.overlaydiv.style.display = "block";
         }
       });
   }
@@ -149,8 +156,8 @@ export default class SearchProduct extends Component {
   }
   ratingFilter = async (rating) => {
     await this.setState({
-      rating:rating,
-      loading:true
+      rating: rating,
+      loading: true,
     });
     this.viewSeachResults();
   };
@@ -163,15 +170,16 @@ export default class SearchProduct extends Component {
 
   async componentDidUpdate(prevProps) {
     if (
-      this.props.match.params.searchTerm != prevProps.match.params.searchTerm || 
-      this.props.match.params.searchCategory!= prevProps.match.params.searchCategory 
+      this.props.match.params.searchTerm != prevProps.match.params.searchTerm ||
+      this.props.match.params.searchCategory !=
+        prevProps.match.params.searchCategory
     ) {
       console.log("here in update=>");
       await this.setState({
         searchTerm: this.props.match.params.searchTerm,
         searchCategory: this.props.match.params.searchCategory,
-        page:1,
-        limit:10,
+        page: 1,
+        limit: 10,
         maxPrice: -1,
         minPrice: -1,
       });
@@ -185,35 +193,35 @@ export default class SearchProduct extends Component {
     });
   };
 
-  prevClick = async (e)=>{
-    let page = this.state.page-1;
-    if(page>0){
+  prevClick = async (e) => {
+    let page = this.state.page - 1;
+    if (page > 0) {
       await this.setState({
-        page:page,
-        loading:true
+        page: page,
+        loading: true,
       });
       this.viewSeachResults();
     }
-  }
-  nextClick = async (e)=>{
-    let page = this.state.page+1;
-    if(page>0){
+  };
+  nextClick = async (e) => {
+    let page = this.state.page + 1;
+    if (page > 0) {
       await this.setState({
-        page:page,
-        loading:true
+        page: page,
+        loading: true,
       });
       this.viewSeachResults();
     }
-  }
+  };
 
-  changeLimit = async (e) =>{
+  changeLimit = async (e) => {
     await this.setState({
-      limit:e.target.value,
-      page:1,
-      loading:true
-    })
+      limit: e.target.value,
+      page: 1,
+      loading: true,
+    });
     this.viewSeachResults();
-  }
+  };
 
   render() {
     if (this.state.redirect) {
@@ -226,7 +234,10 @@ export default class SearchProduct extends Component {
           &nbsp;&nbsp;
           <button onClick={(e) => this.nextClick(e)}>next</button>
           &nbsp;&nbsp;
-          <select defaultValue={this.state.limit} onChange={(e) => this.changeLimit(e)}>
+          <select
+            defaultValue={this.state.limit}
+            onChange={(e) => this.changeLimit(e)}
+          >
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
@@ -325,11 +336,12 @@ export default class SearchProduct extends Component {
     );
     let sellerProducts = this.state.products.map((sellerProduct) => {
       let logoPath;
-        if(sellerProduct.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = sellerProduct.productImages[0]
-        }
+      if (sellerProduct.productImages.length === 0) {
+        logoPath =
+          "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+      } else {
+        logoPath = sellerProduct.productImages[0];
+      }
       return (
         <div
           className="col-md-3"
@@ -341,10 +353,7 @@ export default class SearchProduct extends Component {
           }}
         >
           <div className="row" style={{ margin: 10 }}>
-            <img
-              src={logoPath}
-              style={{ height: "250px" }}
-            />
+            <img src={logoPath} style={{ height: "250px" }} />
           </div>
           <div
             className="row"
@@ -383,17 +392,27 @@ export default class SearchProduct extends Component {
         </div>
       );
     });
-    
+
     return (
       <div>
-        <div id = "overlay" ref={ref=>this.overlaydiv=ref} style = {{display:"block",zIndex:"1",alignItems:"center",alignContent:"center", height:"100%"}}>
-         <ClipLoader
-          css={override}
-          sizeUnit={"px"}
-          size={75}
-          color={'#123abc'}
-          loading={this.state.loading}
-        />
+        <div
+          id="overlay"
+          ref={(ref) => (this.overlaydiv = ref)}
+          style={{
+            display: "block",
+            zIndex: "1",
+            alignItems: "center",
+            alignContent: "center",
+            height: "100%",
+          }}
+        >
+          <ClipLoader
+            css={override}
+            sizeUnit={"px"}
+            size={75}
+            color={"#123abc"}
+            loading={this.state.loading}
+          />
         </div>
         <div className="row">
           <div
@@ -419,10 +438,20 @@ export default class SearchProduct extends Component {
               </select>
             </div>
 
-            <div className="row" style={{fontSize:"20px",fontWeight:"bold"}}>
-            <div className="row" style={{fontSize:"20px",fontWeight:"bold",marginLeft:"15px"}}>
+            <div
+              className="row"
+              style={{ fontSize: "20px", fontWeight: "bold" }}
+            >
+              <div
+                className="row"
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "bold",
+                  marginLeft: "15px",
+                }}
+              >
                 Search Results : {this.state.searchTerm}
-            </div>
+              </div>
             </div>
             <br></br>
             <div className="row">{sellerProducts}</div>

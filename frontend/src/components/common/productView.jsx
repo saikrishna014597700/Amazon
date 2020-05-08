@@ -8,6 +8,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 
 import { Link } from "react-router-dom";
+import { Redirect } from "react-router";
 import Env from "../../helpers/Env";
 import StarRatings from "react-star-ratings";
 
@@ -34,7 +35,9 @@ class ProductView extends React.Component {
 
   getProductsBySeller = async () => {
     // localhost: 3001 / api / admin / products - by - seller / 33;
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .get(
         `${Env.host}/api/admin/products-by-seller/${this.props?.location?.sellerId}`
@@ -49,11 +52,11 @@ class ProductView extends React.Component {
           });
           for (var i in res.data) {
             if (res.data[i].sellerId) {
-              axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+              axios.defaults.headers.common[
+                "authorization"
+              ] = localStorage.getItem("token");
               await axios
-                .get(
-                  `${Env.host}/api/seller/profile/${res.data[i].sellerId}`
-                )
+                .get(`${Env.host}/api/seller/profile/${res.data[i].sellerId}`)
                 .then((seller) => {
                   res.data[i].sellerName = seller.data.sellerName;
                 });
@@ -62,7 +65,9 @@ class ProductView extends React.Component {
           }
         }
       });
-      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .get(
         `${Env.host}/api/seller/getTotalSalesSumForSeller/${this.props?.location?.sellerId}`
@@ -89,13 +94,19 @@ class ProductView extends React.Component {
       year: e.target.value,
     });
   }
-
+  viewProduct = (product) => {
+    this.setState({
+      redirect: `/product/${product._id}`,
+    });
+  };
   async getMonthWiseSalesSum(e) {
     const data = {
       month: this.state.month,
       year: this.state.year,
     };
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .post(
         `${Env.host}/api/seller/getMonthWiseSalesSum/${this.props?.location?.sellerId}`,
@@ -114,6 +125,9 @@ class ProductView extends React.Component {
   }
 
   render() {
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
     let products = "";
     // if (this.state.productsAvailable) {
     // console.log("enetered iff in ");
@@ -196,80 +210,81 @@ class ProductView extends React.Component {
     );
 
     products = this.state?.products?.map((sellerProduct) => {
-    //   let logoPath;
-    //     if(sellerProduct.productImages.length === 0){
-    //       logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-    //     }else{
-    //       logoPath = sellerProduct.productImages[0]
-    //     }
-    //    return (
-    //     <div className="col-md-3" style={{ margin: 5 }}>
-    //       <div className="ui card">
-    //         {/* <div className="image"> */}
-    //         <div className="row" style={{ margin: 10 }}>
-    //           {/* <div className="col-md-1" style={{ paddingTop: "50px" }}>
-    //               <a
-    //                 className="prev"
-    //                 onClick={this.scroll.bind(null, -1, sellerProduct._id)}
-    //               >
-    //                 &#10094;
-    //               </a>
-    //             </div> */}
+      //   let logoPath;
+      //     if(sellerProduct.productImages.length === 0){
+      //       logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+      //     }else{
+      //       logoPath = sellerProduct.productImages[0]
+      //     }
+      //    return (
+      //     <div className="col-md-3" style={{ margin: 5 }}>
+      //       <div className="ui card">
+      //         {/* <div className="image"> */}
+      //         <div className="row" style={{ margin: 10 }}>
+      //           {/* <div className="col-md-1" style={{ paddingTop: "50px" }}>
+      //               <a
+      //                 className="prev"
+      //                 onClick={this.scroll.bind(null, -1, sellerProduct._id)}
+      //               >
+      //                 &#10094;
+      //               </a>
+      //             </div> */}
 
-    //           <div className="image-container" id={sellerProduct._id}>
-    //             <div className="image">
-    //               <img
-    //                 src={logoPath}
-    //                 style={{ maxWidth: "100%" }}
-    //               />
-    //             </div>
-    //           </div>
-    //         </div>
-    //         <div className="content">
-    //           <div
-    //             className="row"
-    //             style={{
-    //               fontWeight: "bold",
-    //               fontSize: "20",
-    //               margin: 10,
-    //               textAlign: "center",
-    //             }}
-    //           >
-    //             {sellerProduct.productName}
-    //           </div>
-    //           <div className="row" style={{ margin: 10, textAlign: "center" }}>
-    //             Seller: {sellerProduct.sellerName}
-    //           </div>
-    //           <div className="row" style={{ margin: 10, textAlign: "center" }}>
-    //             {sellerProduct.productDesc}
-    //           </div>
-    //           <div className="row" style={{ margin: 10, textAlign: "center" }}>
-    //             ${sellerProduct.price}
-    //           </div>
-    //         </div>
-    //         <hr style={{ height: "2px", backgroundColor: "gray" }}></hr>
-    //         <div className="extra content">
-    //           <Link
-    //             style={{ fontSize: "15", marginLeft: "70px" }}
-    //             to={{
-    //               pathname: `/product/${sellerProduct._id}`,
-    //             }}
-    //           >
-    //             {" "}
-    //             View Product
-    //           </Link>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   );
-    // });
-    // }
-    let logoPath;
-        if(sellerProduct.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = sellerProduct.productImages[0]
-        }
+      //           <div className="image-container" id={sellerProduct._id}>
+      //             <div className="image">
+      //               <img
+      //                 src={logoPath}
+      //                 style={{ maxWidth: "100%" }}
+      //               />
+      //             </div>
+      //           </div>
+      //         </div>
+      //         <div className="content">
+      //           <div
+      //             className="row"
+      //             style={{
+      //               fontWeight: "bold",
+      //               fontSize: "20",
+      //               margin: 10,
+      //               textAlign: "center",
+      //             }}
+      //           >
+      //             {sellerProduct.productName}
+      //           </div>
+      //           <div className="row" style={{ margin: 10, textAlign: "center" }}>
+      //             Seller: {sellerProduct.sellerName}
+      //           </div>
+      //           <div className="row" style={{ margin: 10, textAlign: "center" }}>
+      //             {sellerProduct.productDesc}
+      //           </div>
+      //           <div className="row" style={{ margin: 10, textAlign: "center" }}>
+      //             ${sellerProduct.price}
+      //           </div>
+      //         </div>
+      //         <hr style={{ height: "2px", backgroundColor: "gray" }}></hr>
+      //         <div className="extra content">
+      //           <Link
+      //             style={{ fontSize: "15", marginLeft: "70px" }}
+      //             to={{
+      //               pathname: `/product/${sellerProduct._id}`,
+      //             }}
+      //           >
+      //             {" "}
+      //             View Product
+      //           </Link>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   );
+      // });
+      // }
+      let logoPath;
+      if (sellerProduct.productImages.length === 0) {
+        logoPath =
+          "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+      } else {
+        logoPath = sellerProduct.productImages[0];
+      }
       return (
         <div
           className="col-md-3"
@@ -281,10 +296,7 @@ class ProductView extends React.Component {
           }}
         >
           <div className="row" style={{ margin: 10 }}>
-            <img
-              src={logoPath}
-              style={{ height: "250px" }}
-            />
+            <img src={logoPath} style={{ height: "250px" }} />
           </div>
           <div
             className="row"
@@ -322,7 +334,7 @@ class ProductView extends React.Component {
           </div>
         </div>
       );
-  });
+    });
 
     return (
       <div>
@@ -335,7 +347,6 @@ class ProductView extends React.Component {
           {monthWiseSalesAmount}
           <h6>Products </h6>
           <div className="row">{products}</div>
-          
         </div>
       </div>
     );

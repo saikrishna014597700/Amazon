@@ -307,14 +307,14 @@ export default class SellerReports extends Component {
                 <th>Product Name</th>
                 <th>Quantity</th>
                 <th>Price</th>
-                <th>View Count</th>
+                {/* <th>View Count</th> */}
                 <th>Total Sales Amount</th>
               </tr>
               <tr>
                 <td>{order.product_name}</td>
                 <td>{order.quantity}</td>
                 <td>{order.price}</td>
-                <td>{order.view_count}</td>
+                {/* <td>{order.view_count}</td> */}
                 <td>{order.product_sales_um}</td>
               </tr>
               <br />

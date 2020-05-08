@@ -16,14 +16,15 @@ export default class addressSelect extends Component {
   async componentDidMount() {
     let id = localStorage.getItem("id");
     this.setState({
-      userId:id
-    })
+      userId: id,
+    });
     let userId = id;
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .get(
-        `${Env.host}/api/customerDetails/getCustomerAddresses/?userId=` +
-          userId
+        `${Env.host}/api/customerDetails/getCustomerAddresses/?userId=` + userId
       )
       .then((res) => {
         console.log("addresses::", res.data);
@@ -33,15 +34,17 @@ export default class addressSelect extends Component {
       });
   }
   selectAddress = async (address) => {
-    await this.setState({
-      selectedAddress: address,
-    });
-    localStorage.setItem("selectedAddress",JSON.stringify(address));
-    console.log("localsss=>"+localStorage.getItem("selectedAddress"));
-    console.log(
-      "this.state.address=>" + JSON.stringify(this.state.selectedAddress)
-    );
-    await this.setState({ redirect: `/selectCard` });
+    if (document.forms["newaddress"].reportValidity()) {
+      await this.setState({
+        selectedAddress: address,
+      });
+      localStorage.setItem("selectedAddress", JSON.stringify(address));
+      console.log("localsss=>" + localStorage.getItem("selectedAddress"));
+      console.log(
+        "this.state.address=>" + JSON.stringify(this.state.selectedAddress)
+      );
+      await this.setState({ redirect: `/selectCard` });
+    }
   };
 
   changeHandler(event, name) {
@@ -85,6 +88,7 @@ export default class addressSelect extends Component {
               Deliver to this address
             </button>
           </div>
+
           <br></br>
         </div>
       );
@@ -112,7 +116,7 @@ export default class addressSelect extends Component {
 
         <div className="row">
           <div className="col-md-8">
-            <div className="row addAddressHeading">Add a new Address</div>
+            {/* <div className="row addAddressHeading">Add a new Address</div>
             <br></br>
             <div className="row">Full Name:</div>
             <div className="row">
@@ -245,6 +249,119 @@ export default class addressSelect extends Component {
                 Deliver to this address
               </button>
             </div>
+          </div> */}
+
+            <form id="newaddress">
+              <div className="row">
+                <div className="col-sm">
+                  <p style={{ marginBottom: "0px", marginTop: "3px" }}>Name</p>
+                  <div className="form-group">
+                    <input
+                      style={{ width: "90%" }}
+                      type="text"
+                      required
+                      onChange={(e) => this.changeHandler(e, "name")}
+                    />
+                  </div>
+                  <p style={{ marginBottom: "0px", marginTop: "3px" }}>
+                    street2
+                  </p>
+                  <div className="form-group">
+                    <input
+                      style={{ width: "90%" }}
+                      type="text"
+                      required
+                      onChange={(e) => this.changeHandler(e, "street2")}
+                    />
+                  </div>
+                  <p style={{ marginBottom: "0px", marginTop: "3px" }}>
+                    state{" "}
+                  </p>
+                  <div className="form-group">
+                    <input
+                      style={{ width: "90%" }}
+                      type="text"
+                      pattern="^(?:(A[KLRZ]|C[AOT]|D[CE]|FL|GA|HI|I[ADLN]|K[SY]|LA|M[ADEINOST]|N[CDEHJMVY]|O[HKR]|P[AR]|RI|S[CD]|T[NX]|UT|V[AIT]|W[AIVY]))$"
+                      required
+                      onChange={(e) => this.changeHandler(e, "state")}
+                    />
+                  </div>
+                  <p style={{ marginBottom: "0px", marginTop: "3px" }}>
+                    Country
+                  </p>
+                  <div className="form-group">
+                    <input
+                      style={{ width: "90%" }}
+                      type="text"
+                      required
+                      onChange={(e) => this.changeHandler(e, "country")}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm">
+                  <p style={{ marginBottom: "0px", marginTop: "3px" }}>
+                    street1
+                  </p>
+                  <div className="form-group">
+                    <input
+                      style={{ width: "90%" }}
+                      required
+                      type="text"
+                      onChange={(e) => this.changeHandler(e, "street1")}
+                    />
+                  </div>
+                  <p style={{ marginBottom: "0px", marginTop: "3px" }}>City </p>
+                  <div className="form-group">
+                    <input
+                      style={{ width: "90%" }}
+                      type="text"
+                      required
+                      onChange={(e) => this.changeHandler(e, "city")}
+                    />
+                  </div>
+                  <p style={{ marginBottom: "0px", marginTop: "3px" }}>
+                    {" "}
+                    Zip Code{" "}
+                  </p>
+                  <div className="form-group">
+                    <input
+                      style={{ width: "90%" }}
+                      type="text"
+                      pattern="^[0-9]{5}(?:-[0-9]{4})?$"
+                      required
+                      onChange={(e) => this.changeHandler(e, "zip_code")}
+                    />
+                  </div>
+                  <p style={{ marginBottom: "0px", marginTop: "3px" }}>
+                    {" "}
+                    Phone Number{" "}
+                  </p>
+                  <div className="form-group">
+                    <input
+                      style={{ width: "90%" }}
+                      type="text"
+                      pattern="[\d]{10}"
+                      required
+                      onChange={(e) => this.changeHandler(e, "phoneno")}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button
+                className="Amazon"
+                onClick={(e) => this.selectAddress(this.state.selectedAddress)}
+                style={{
+                  float: "right",
+                  marginBottom: "5px",
+                  marginRight: "5px",
+                  width: "200px",
+                }}
+              >
+                {" "}
+                Deliver to this address
+              </button>
+            </form>
           </div>
         </div>
       </div>

@@ -41,7 +41,11 @@ export default class AdminOrders extends Component {
         console.log("Pro are::", this.state.openOrders);
       });
   }
-
+  viewProduct(id) {
+    this.setState({
+      redirect: `/product/${id}`,
+    });
+  }
   async redirectToProductsPage(event) {
     this.setState({ redirect: `/viewAllsellerOrders` });
   }
@@ -176,7 +180,9 @@ export default class AdminOrders extends Component {
                         marginTop: "10%",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.viewProduct(orderProduct.product._id)
+                      }
                     >
                       View Product
                     </Button>
