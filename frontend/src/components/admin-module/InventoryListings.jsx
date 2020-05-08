@@ -47,7 +47,9 @@ class InventoryListings extends React.Component {
   };
 
   getCategories = async () => {
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .get(`${Env.host}/api/admin/get-product-categories`)
       .then((res) => {
@@ -76,7 +78,9 @@ class InventoryListings extends React.Component {
   }
 
   getProductsByCategory = (categoryId) => {
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
       .get(`${Env.host}/api/admin/products/${categoryId}`)
       .then(async (res) => {
@@ -89,7 +93,9 @@ class InventoryListings extends React.Component {
         } else {
           for (var i in res.data.result) {
             if (res.data.result[i].sellerId) {
-              axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+              axios.defaults.headers.common[
+                "authorization"
+              ] = localStorage.getItem("token");
               await axios
                 .get(
                   `${Env.host}/api/seller/profile/${res.data.result[i].sellerId}`
@@ -111,7 +117,9 @@ class InventoryListings extends React.Component {
 
   addCategory = () => {
     const categoryData = { categoryName: this.state.categoryName };
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
       .post(`${Env.host}/api/admin/add-category`, categoryData)
       .then(async (res) => {
@@ -121,7 +129,9 @@ class InventoryListings extends React.Component {
   };
 
   deleteCategory = () => {
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
       .delete(
         `${Env.host}/api/admin/delete-category/${this.state?.selectedCategory?.id}`
@@ -154,12 +164,20 @@ class InventoryListings extends React.Component {
     }
   };
 
+  viewProduct = (product) => {
+    this.setState({
+      redirect: `/product/${product._id}`,
+    });
+  };
+
   render() {
     let redirectVar = null;
     if (!localStorage.getItem("id")) {
       redirectVar = <Redirect to="/login" />;
     }
-
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
     let products = "";
     console.log("Abcc", this.state.defaultCatName);
     if (this.state.productsAvailable) {
@@ -278,17 +296,21 @@ class InventoryListings extends React.Component {
           </div>
           <div className="row">
             {!!this.state?.productsAvailable && products ? (
-              <div className="row" style={{width:"100%", marginLeft:"15px"}}>
-                
+              <div
+                className="row"
+                style={{ width: "100%", marginLeft: "15px" }}
+              >
                 {/* <div className="row">
                   &nbsp;
                 </div> */}
                 <br></br>
-                <h5 style={{ marginLeft: "20px", marginTop:"20px" }}>
+                <h5 style={{ marginLeft: "20px", marginTop: "20px" }}>
                   Selected Category : {this.state.defaultCatName}
                 </h5>
                 <br />
-                <div className="row" style={{width:"100%"}}>{products}</div>
+                <div className="row" style={{ width: "100%" }}>
+                  {products}
+                </div>
                 <br />
               </div>
             ) : (
