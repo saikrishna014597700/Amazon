@@ -371,6 +371,13 @@ export default class HomePage extends Component {
         );
       }
 
+      let divDisplay = "";
+      if(!this.state.loading){
+        this.overlaydiv.style.display="none";
+      }
+      else{
+        this.overlaydiv.style.display="block";
+      }
       return (
         <div
           className="col-md-3"
@@ -425,6 +432,7 @@ export default class HomePage extends Component {
     return (
       <div>
         {redirectVar}
+        <div id = "overlay" ref={ref=>this.overlaydiv=ref} style = {{display:"block"}}>
         <ClipLoader
           css={override}
           sizeUnit={"px"}
@@ -432,6 +440,7 @@ export default class HomePage extends Component {
           color={"#123abc"}
           loading={this.state.loading}
         />
+        </div>
         <div className="row">
           <div
             className="col-md-2"

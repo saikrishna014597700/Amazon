@@ -40,6 +40,9 @@ export default class SellerReports extends Component {
         });
 
         var analyticsArray = [];
+        if (response.data == "") {
+          response.data = [];
+          }
         response.data.map((order) => {
           var test =
             '{ "y": ' +
