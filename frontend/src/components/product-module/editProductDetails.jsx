@@ -42,11 +42,12 @@ export default class EditProductDetails extends Component {
       productId: productId,
       imagePath: image,
     };
-
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/file/removeProductImage", data)
       .then(async (res) => {
         console.log("success", res);
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios
           .get(
             `http://localhost:3001/api/product/getProductDetails/${productId}`
@@ -64,6 +65,7 @@ export default class EditProductDetails extends Component {
 
   async componentDidMount() {
     var productId = this.props.match.params.id;
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(`http://localhost:3001/api/product/getProductDetails/${productId}`)
       .then((response) => {
@@ -73,6 +75,7 @@ export default class EditProductDetails extends Component {
         });
         console.log("Pro are::", this.state.sellerProducts);
       });
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get("http://localhost:3001/api/admin/get-product-categories")
       .then((res) => {
@@ -122,6 +125,7 @@ export default class EditProductDetails extends Component {
         _id: this.props.match.params.id,
         productObj: changedProdObj,
       };
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
         .post("http://localhost:3001/api/product/editProduct/", payload)
         .then(async (response) => {
@@ -129,6 +133,7 @@ export default class EditProductDetails extends Component {
             let fileData = new FormData();
             fileData.append("file", form);
             //imagesData.push(fileData)
+            axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios
               .post(
                 "http://localhost:3001/api/file/uploadImages/?productId=" +
@@ -144,6 +149,7 @@ export default class EditProductDetails extends Component {
                 console.log("success", res);
               });
           });
+          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .get(
               `http://localhost:3001/api/product/getProductDetails/${this.props.match.params.id}`
@@ -168,6 +174,7 @@ export default class EditProductDetails extends Component {
     const payload = {
       _id: this.props.match.params.id,
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .post("http://localhost:3001/api/product/deleteProduct/", payload)
       .then((response) => {

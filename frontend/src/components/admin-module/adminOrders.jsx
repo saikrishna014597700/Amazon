@@ -28,6 +28,7 @@ export default class AdminOrders extends Component {
 
   async componentDidMount() {
     console.log("ENeterd componentDidMount");
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(`${Env.host}/api/admin/all-orders?status=${this.state.status}`)
       .then(async (response) => {
@@ -54,6 +55,7 @@ export default class AdminOrders extends Component {
   };
 
   getOrdersBySearch = () => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(
         `${Env.host}/api/admin/orders_by_seller_name?searchTerm=${this.state.searchTerm}`
@@ -66,6 +68,7 @@ export default class AdminOrders extends Component {
   };
 
   getOrdersbyStatus = () => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(`${Env.host}/api/admin/all-orders?status=${this.state.status}`)
       .then(async (response) => {

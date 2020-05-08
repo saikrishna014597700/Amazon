@@ -42,6 +42,7 @@ export default class ProductDetails extends Component {
             prodId : prodId,
             orderId:orderId
         }
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios.post("http://localhost:3001/api/orders/cancelOrder", payload).then((res) => {
             console.log('response is::', res)
             alert(res.data)

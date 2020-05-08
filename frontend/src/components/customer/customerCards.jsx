@@ -38,6 +38,7 @@ export default class customerCards extends Component {
     }
     if (document.forms[id].reportValidity() && !isCardExist) {
       console.log("selectedCard::", selectedCard);
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
         .post(
           "http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" +
@@ -62,6 +63,7 @@ export default class customerCards extends Component {
         selectedCard = card;
       }
     }
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post(
         "http://localhost:3001/api/customerDetails/deleteCustomerCard/?userId=" +
@@ -122,7 +124,7 @@ export default class customerCards extends Component {
 
   async cancelCard() {
     var data = localStorage.getItem("id");
-
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
         "http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" +

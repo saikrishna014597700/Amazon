@@ -80,12 +80,14 @@ export default class SearchProduct extends Component {
       sellerId: this.state.sellerId,
     };
     console.log("payload before search=>", payload);
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/common/search/", payload)
       .then(async (response) => {
         console.log("Pro are::", response);
         let len = response.data.length;
         for (var i = 0; i < len; i++) {
+          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .get(
               `http://localhost:3001/api/seller/profile/${response.data[i].sellerId}`

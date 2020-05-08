@@ -34,6 +34,7 @@ class ProductView extends React.Component {
 
   getProductsBySeller = async () => {
     // localhost: 3001 / api / admin / products - by - seller / 33;
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
         `${Env.host}/api/admin/products-by-seller/${this.props?.location?.sellerId}`
@@ -48,6 +49,7 @@ class ProductView extends React.Component {
           });
           for (var i in res.data) {
             if (res.data[i].sellerId) {
+              axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               await axios
                 .get(
                   `http://localhost:3001/api/seller/profile/${res.data[i].sellerId}`
@@ -60,6 +62,7 @@ class ProductView extends React.Component {
           }
         }
       });
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
         `http://localhost:3001/api/seller/getTotalSalesSumForSeller/${this.props?.location?.sellerId}`
@@ -92,6 +95,7 @@ class ProductView extends React.Component {
       month: this.state.month,
       year: this.state.year,
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post(
         `http://localhost:3001/api/seller/getMonthWiseSalesSum/${this.props?.location?.sellerId}`,

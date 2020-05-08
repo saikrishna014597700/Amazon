@@ -26,6 +26,7 @@ export default class customerAddresses extends Component {
     }
     if(document.forms[id].reportValidity()){
     console.log("selectedAddress::", selectedAddress)
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios.post("http://localhost:3001/api/customerDetails/saveCustomerAddresses/?userId=" + localStorage.getItem("id"), selectedAddress).then((res) => {
 
       console.log("addresses::", res.data)
@@ -45,6 +46,7 @@ export default class customerAddresses extends Component {
         selectedAddress = address;
       }
     }
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerAddress/?userId=" + localStorage.getItem("id"), selectedAddress).then((res) => {
 
       console.log("addresses::", res.data)
@@ -92,6 +94,7 @@ export default class customerAddresses extends Component {
 
     var data = localStorage.getItem("id");
 
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" + data).then((res) => {
 
       console.log("addresses::", res.data)
@@ -105,6 +108,7 @@ export default class customerAddresses extends Component {
   async cancelAddress(){
     var data = localStorage.getItem("id");
 
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios.get("http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" + data).then((res) => {
 
       console.log("addresses::", res.data)

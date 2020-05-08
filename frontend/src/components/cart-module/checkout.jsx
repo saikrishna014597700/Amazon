@@ -29,6 +29,7 @@ export default class checkout extends Component {
   }
 
   async getCart() {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/getCompleteCart/", {
         userId: this.state.userId,
@@ -41,6 +42,7 @@ export default class checkout extends Component {
           if (response.data.length != 0) {
             response.data.forEach((product) => {
               let productId = product.product_id;
+              axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               axios
                 .get(
                   "http://localhost:3001/api/product/getProductDetails/?productId=" +
@@ -143,6 +145,7 @@ export default class checkout extends Component {
       gift: { isGift: false },
       paymentDetails: this.state.selectedCard.cardNo,
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .post("http://localhost:3001/api/cart/saveOrder", data)
       .then(async (response) => {
@@ -151,6 +154,7 @@ export default class checkout extends Component {
           let orderId = response.data;
           localStorage.removeItem("selectedAddress");
           localStorage.removeItem("selectedCard");
+          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .post("http://localhost:3001/api/cart/deleteCompleteCart", {
               userId: this.state.userId,
@@ -165,6 +169,7 @@ export default class checkout extends Component {
           
           await this.state.productDetails.forEach(async (product) => {
             let proCat = "";
+            axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios
             .get(`http://localhost:3001/api/admin/get-product-categories`)
             .then((res) => {
@@ -184,10 +189,12 @@ export default class checkout extends Component {
               productName: product.productName,
               categoryId: proCat
             };
+            axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios.post(
               "http://localhost:3001/api/cart/saveToMapOrder",
               payload
             );
+            axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios.post(
               "http://localhost:3001/api/cart/saveProductAnalytics",
               payload

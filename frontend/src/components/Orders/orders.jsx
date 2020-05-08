@@ -30,15 +30,18 @@ export default class orders extends Component {
     var openresponse
     var Cancelledresponse
     //var sellerId = "123";
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
       .then(async (response) => {
         console.log("response of all orders are::", response);
         response = response
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios.get("http://localhost:3001/api/orders/getOpenOrders/?userId=" + localStorage.getItem("id"))
       .then(async (openresponse) => {
         console.log("Pro are::", openresponse);
         openresponse = openresponse
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios.get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
       .then((Cancelledresponse) => {
         console.log("Cncelled orders are::", Cancelledresponse);
@@ -75,15 +78,18 @@ export default class orders extends Component {
     await axios.post("http://localhost:3001/api/orders/cancelOrder", payload).then(async (res) => {
         console.log('response is::', res)
         alert(res.data)
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios
         .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
         .then(async (response) => {
           console.log("response of all orders are::", response);
           response = response
+          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios.get("http://localhost:3001/api/orders/getOpenOrders/?userId=" + localStorage.getItem("id"))
         .then(async (openresponse) => {
           console.log("Pro are::", openresponse);
           openresponse = openresponse
+          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios.get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
         .then((Cancelledresponse) => {
           console.log("Cncelled orders are::", Cancelledresponse);
