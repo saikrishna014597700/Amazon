@@ -54,6 +54,7 @@ export default class extends Component {
       productId: product._id,
       quantity: quantity,
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/updateCart/", payload)
       .then((res) => {
@@ -66,6 +67,7 @@ export default class extends Component {
   };
 
   async getAllDetails() {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/getCompleteCart/", {
         userId: this.state.userId,
@@ -80,6 +82,7 @@ export default class extends Component {
             response.data.forEach((product) => {
               let productId = product.product_id;
               cartSize = cartSize + parseInt(product.quantity, 10);
+              axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               axios
                 .get(
                   "http://localhost:3001/api/product/getProductDetails/?productId=" +
@@ -116,6 +119,7 @@ export default class extends Component {
   }
 
   async getSaveForLater() {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/getSaveForLater/", {
         userId: this.state.userId,
@@ -126,6 +130,7 @@ export default class extends Component {
           if (response.data.length != 0) {
             response.data.forEach((product) => {
               let productId = product.product_id;
+              axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               axios
                 .get(
                   "http://localhost:3001/api/product/getProductDetails/?productId=" +
@@ -155,7 +160,7 @@ export default class extends Component {
     };
     console.log("in save for later payload=>" + JSON.stringify(payload));
     let isProductPresent = false;
-
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/getSaveForLater/", payload)
       .then((res) => {
@@ -170,6 +175,7 @@ export default class extends Component {
       });
     console.log(isProductPresent);
     if (isProductPresent) {
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
         .post("http://localhost:3001/api/cart/deleteFromCart/", payload)
         .then((res) => {
@@ -185,6 +191,7 @@ export default class extends Component {
         this.getAllDetails();
       });
     } else {
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
         .post("http://localhost:3001/api/cart/postSaveForLater/", payload)
         .then((res) => {
@@ -198,6 +205,7 @@ export default class extends Component {
             localStorage.setItem("cartSize", cartSize - productsave.quantity);
           }
         });
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
         .post("http://localhost:3001/api/cart/deleteFromCart/", payload)
         .then((res) => {
@@ -216,6 +224,7 @@ export default class extends Component {
     console.log("in delete from product=>" + JSON.stringify(product));
     let cartSize = localStorage.getItem("cartSize");
     localStorage.setItem("cartSize", cartSize - product.quantity);
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .post("http://localhost:3001/api/cart/deleteFromCart/", {
         userId: this.state.userId,
@@ -241,6 +250,7 @@ export default class extends Component {
       productId: product._id,
       quantity: 1,
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/addToCart/", payload)
       .then((res) => {
@@ -250,6 +260,7 @@ export default class extends Component {
           localStorage.setItem("cartSize", cartSize);
         }
       });
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/deleteSaveForLater/", payload)
       .then((res) => {});
@@ -264,6 +275,7 @@ export default class extends Component {
       productId: product._id,
       quantity: 1,
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/deleteSaveForLater/", payload)
       .then((res) => {});

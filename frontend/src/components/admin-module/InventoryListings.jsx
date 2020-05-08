@@ -6,6 +6,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
+import { Redirect } from "react-router";
 
 import { Link } from "react-router-dom";
 
@@ -149,6 +150,13 @@ class InventoryListings extends React.Component {
   };
 
   render() {
+
+    let redirectVar = null;
+    if(!localStorage.getItem("id")){
+        redirectVar = <Redirect to= "/login"/>
+    }
+   
+
     let products = "";
     console.log("Abcc", this.state.defaultCatName);
     if (this.state.productsAvailable) {
@@ -249,6 +257,7 @@ class InventoryListings extends React.Component {
 
     return (
       <React.Fragment>
+        {redirectVar}
         <article className="auth-inner4">
           <h3>Inventory Listings</h3>
           {/* <div className="row">InventoryListings</div> */}
