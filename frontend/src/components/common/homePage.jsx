@@ -8,15 +8,15 @@ import StarRatings from "react-star-ratings";
 import StarRatingComponent from "react-star-rating-component";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
-import ClipLoader from 'react-spinners/ClipLoader';
-import { css } from '@emotion/core';
+import ClipLoader from "react-spinners/ClipLoader";
+import { css } from "@emotion/core";
 
 const override = css`
-    display:  block;
-    margin: auto;
-    margin-top:250px;
-    border-color: rgb(254, 190, 98);
-    border: 5px solid rgb(254, 190, 98);
+  display: block;
+  margin: auto;
+  margin-top: 250px;
+  border-color: rgb(254, 190, 98);
+  border: 5px solid rgb(254, 190, 98);
 `;
 import Env from "../../helpers/Env";
 
@@ -35,7 +35,7 @@ export default class HomePage extends Component {
       sellerId: null,
       limit: 10,
       page: 1,
-      loading:true
+      loading: true,
     };
     this.viewSeachResults = this.viewSeachResults.bind(this);
     // this.scroll = this.scroll.bind(this);
@@ -46,8 +46,8 @@ export default class HomePage extends Component {
     });
     let sellerId;
     if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
+      sellerId = localStorage.getItem("id");
+    }
     await this.viewSeachResults(sellerId);
   }
   onStarClick(nextValue, prevValue, name) {
@@ -62,8 +62,8 @@ export default class HomePage extends Component {
   async componentDidMount() {
     var sellerId;
     if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
+      sellerId = localStorage.getItem("id");
+    }
     await this.viewSeachResults(sellerId);
   }
 
@@ -76,8 +76,8 @@ export default class HomePage extends Component {
     });
     var sellerId;
     if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
+      sellerId = localStorage.getItem("id");
+    }
     await this.viewSeachResults(sellerId);
   };
 
@@ -104,26 +104,31 @@ export default class HomePage extends Component {
         let len = response.data.length;
         var json = {};
         for (var i = 0; i < len; i++) {
-
-          if(! json[response.data[i].sellerId]){
-          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-          await axios
-            .get(`${Env.host}/api/seller/profile/${response.data[i].sellerId}`)
-            .then((seller) => {
-             
-             json[response.data[i].sellerId] = seller.data.sellerName;
-              // console.log("each seller name=>" + seller.data.sellerName);
-              response.data[i].sellerName = seller.data.sellerName;
-            });
-        }else{
-          console.log("in map")
-          response.data[i].sellerName = json[response.data[i].sellerId];
+          if (!json[response.data[i].sellerId]) {
+            axios.defaults.headers.common[
+              "authorization"
+            ] = localStorage.getItem("token");
+            await axios
+              .get(
+                `${Env.host}/api/seller/profile/${response.data[i].sellerId}`
+              )
+              .then((seller) => {
+                json[response.data[i].sellerId] = seller.data.sellerName;
+                // console.log("each seller name=>" + seller.data.sellerName);
+                response.data[i].sellerName = seller.data.sellerName;
+              });
+          } else {
+            console.log("in map");
+            response.data[i].sellerName = json[response.data[i].sellerId];
+          }
         }
-      }
+        if (response.data == "") {
+          res.data = [];
+        }
         await this.setState({
           products: response.data,
-          loading:false,
-          sellerId:sellerId
+          loading: false,
+          sellerId: sellerId,
         });
       });
   }
@@ -138,8 +143,8 @@ export default class HomePage extends Component {
     });
     var sellerId;
     if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
+      sellerId = localStorage.getItem("id");
+    }
     await this.viewSeachResults(sellerId);
   };
 
@@ -165,10 +170,10 @@ export default class HomePage extends Component {
         minPrice: -1,
       });
       var sellerId;
-    if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
+      if (localStorage.getItem("role") == "Seller") {
+        sellerId = localStorage.getItem("id");
       }
-    await this.viewSeachResults(sellerId);
+      await this.viewSeachResults(sellerId);
     }
   }
 
@@ -186,8 +191,8 @@ export default class HomePage extends Component {
       });
       let sellerId;
       if (localStorage.getItem("role") == "Seller") {
-        sellerId = localStorage.getItem("id")
-        }
+        sellerId = localStorage.getItem("id");
+      }
       await this.viewSeachResults(sellerId);
     }
   };
@@ -199,8 +204,8 @@ export default class HomePage extends Component {
       });
       let sellerId;
       if (localStorage.getItem("role") == "Seller") {
-        sellerId = localStorage.getItem("id")
-        }
+        sellerId = localStorage.getItem("id");
+      }
       await this.viewSeachResults(sellerId);
     }
   };
@@ -210,19 +215,19 @@ export default class HomePage extends Component {
       limit: e.target.value,
       page: 1,
     });
-    let sellerId="";
+    let sellerId = "";
     if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
+      sellerId = localStorage.getItem("id");
+    }
     await this.viewSeachResults(sellerId);
   };
 
   render() {
     let redirectVar = null;
     if (localStorage.getItem("id")) {
-     console.log("logged in ")
-    }else{
-      console.log("logged out ")
+      console.log("logged in ");
+    } else {
+      console.log("logged out ");
       redirectVar = <Redirect to="/login" />;
     }
     if (this.state.redirect) {
@@ -376,7 +381,6 @@ export default class HomePage extends Component {
             borderColor: "#efefef",
           }}
         >
-       
           <div className="row" style={{ margin: 10 }}>
             <img src={logoPath} style={{ height: "250px" }} />
           </div>
@@ -425,7 +429,7 @@ export default class HomePage extends Component {
           css={override}
           sizeUnit={"px"}
           size={75}
-          color={'#123abc'}
+          color={"#123abc"}
           loading={this.state.loading}
         />
         <div className="row">
@@ -459,7 +463,6 @@ export default class HomePage extends Component {
             <div className="row">
               <div className="col-md-9"></div>
 
-              
               {paginationDiv}
             </div>
           </div>

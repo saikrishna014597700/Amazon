@@ -41,7 +41,9 @@ export default class SellerOrders extends Component {
     var deliveredOrdersTemp;
     var cancelledOrdersTemp;
     var openOrdersTemp;
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .get(`${Env.host}/api/seller/getOrderDetails/${sellerId}`)
       .then((response) => {
@@ -53,29 +55,31 @@ export default class SellerOrders extends Component {
           // });
         }
       });
-      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
-      .get(
-        `${Env.host}/api/seller/getDeliveredOrderDetails/${sellerId}`
-      )
+      .get(`${Env.host}/api/seller/getDeliveredOrderDetails/${sellerId}`)
       .then((response) => {
         if (response.data) {
           console.log("Pro are::2", response.data);
           deliveredOrdersTemp = response.data;
         }
       });
-      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
-      .get(
-        `${Env.host}/api/seller/getCancelledOrderDetails/${sellerId}`
-      )
+      .get(`${Env.host}/api/seller/getCancelledOrderDetails/${sellerId}`)
       .then((response) => {
         if (response.data) {
           console.log("Pro are::3", response.data);
           cancelledOrdersTemp = response.data;
         }
       });
-      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .get(`${Env.host}/api/seller/getOpenOrderDetails/${sellerId}`)
       .then((response) => {
@@ -99,7 +103,9 @@ export default class SellerOrders extends Component {
       prodId: prodId,
       orderId: orderId,
     };
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .post(`${Env.host}/api/orders/cancelOrder`, payload)
       .then(async (res) => {
@@ -241,9 +247,15 @@ export default class SellerOrders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.getProductTrackingDetails(
+                          event,
+                          orderProduct.product._id,
+                          sellerOrder.order._id
+                        )
+                      }
                     >
-                      Loading...
+                      Tracking Details
                     </Button>
                   </th>
                 </tr>
@@ -404,9 +416,15 @@ export default class SellerOrders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.getProductTrackingDetails(
+                          event,
+                          orderProduct.product._id,
+                          sellerOrder.order._id
+                        )
+                      }
                     >
-                      Loading...
+                      Tracking Details
                     </Button>
                   </th>
                 </tr>
@@ -567,9 +585,15 @@ export default class SellerOrders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event)}
+                      onClick={(event) =>
+                        this.getProductTrackingDetails(
+                          event,
+                          orderProduct.product._id,
+                          sellerOrder.order._id
+                        )
+                      }
                     >
-                      Loading...
+                      Tracking Details
                     </Button>
                   </th>
                 </tr>

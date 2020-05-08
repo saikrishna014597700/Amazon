@@ -7,6 +7,7 @@ import $ from "jquery";
 import { Redirect } from "react-router";
 import logo from "./shoe.jpg";
 import { Link } from "react-router-dom";
+import Env from "../../helpers/Env";
 
 export default class ProductTrackingDetails extends Component {
   constructor() {
@@ -35,7 +36,9 @@ export default class ProductTrackingDetails extends Component {
       this.setState({
         productId: productId,
       });
-      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+      axios.defaults.headers.common["authorization"] = localStorage.getItem(
+        "token"
+      );
       axios
         .get(
           `${Env.host}/api/seller/productTrackingDetails/?orderId=${orderId}&productId=${productId}`
@@ -78,7 +81,9 @@ export default class ProductTrackingDetails extends Component {
     const data = {
       trackingStatus: this.state.trackingStatus,
     };
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
       .post(
         `${Env.host}/api/seller/updateSellerTrackingDetails/?orderId=${this.state.orderId}&productId=${this.state.productId}`,

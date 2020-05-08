@@ -23,7 +23,7 @@ let getSellerOrders = async (msg, callback) => {
     FROM map_order_product
     WHERE sellerId = ${msg.sellerId}
     GROUP BY order_Id
-      ORDER BY create_date DESC`,
+      ORDER BY create_date,map_order_product_Id DESC`,
       async (err, sqlResult) => {
         if (sqlResult && sqlResult.length > 0) {
           console.log("2");

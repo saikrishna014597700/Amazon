@@ -16,7 +16,7 @@ let deleteCategory = async (msg, callback) => {
     query(pool, constructedQuery)
       .then(async (sqlResult) => {
         if (sqlResult.length == 0) {
-          await query(pool, deleteQuery).then((result) => {
+          await await query(pool, deleteQuery).then((result) => {
             redisClient.del("categories", function (err, response) {
               if (response == 1) {
                 console.log("Deleted Successfully!");

@@ -25,103 +25,136 @@ export default class orders extends Component {
     };
   }
 
-  async componentDidMount() {
+  viewProduct(id) {
+    this.setState({
+      redirect: `/product/${id}`,
+    });
+  }
 
-    var response
-    var openresponse
-    var Cancelledresponse
+  async componentDidMount() {
+    var response;
+    var openresponse;
+    var Cancelledresponse;
     //var sellerId = "123";
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
-      .get(`${Env.host}/api/orders/getAllOrders/?userId=` + localStorage.getItem("id"))
+      .get(
+        `${Env.host}/api/orders/getAllOrders/?userId=` +
+          localStorage.getItem("id")
+      )
       .then(async (response) => {
         console.log("response of all orders are::", response);
-        response = response
-        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-        await axios.get(`${Env.host}/api/orders/getOpenOrders/?userId=` + localStorage.getItem("id"))
-      .then(async (openresponse) => {
-        console.log("Pro are::", openresponse);
-        openresponse = openresponse
-        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-        await axios.get(`${Env.host}/api/orders/getCancelledOrders/?userId=` + localStorage.getItem("id"))
-      .then((Cancelledresponse) => {
-        console.log("Cncelled orders are::", Cancelledresponse);
-        Cancelledresponse = Cancelledresponse
-        this.setState({
-          orders: response.data,
-          cancelledOrders: Cancelledresponse.data,
-          openOrders: openresponse.data,
-      });
-      });
-        
-      });
-        
-      });
-
-    
-     
-
-      
-  }
-
-  addProduct(e,id){
-      this.setState({
-        redirect: `/product/${id}`
-      })
-  }
-
-  async cancelProduct(e,orderId,prodId){
-    console.log('cancel this prod', prodId ,'from order ', orderId)
-    var payload = {
-        prodId : prodId,
-        orderId:orderId
-    }
-    await axios.post(`${Env.host}/api/orders/cancelOrder`, payload).then(async (res) => {
-        console.log('response is::', res)
-        alert(res.data)
-        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+        response = response;
+        axios.defaults.headers.common["authorization"] = localStorage.getItem(
+          "token"
+        );
         await axios
-        .get(`${Env.host}/api/orders/getAllOrders/?userId=` + localStorage.getItem("id"))
-        .then(async (response) => {
-          console.log("response of all orders are::", response);
-          response = response
-          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-          await axios.get(`${Env.host}/api/orders/getOpenOrders/?userId=` + localStorage.getItem("id"))
-        .then(async (openresponse) => {
-          console.log("Pro are::", openresponse);
-          openresponse = openresponse
-          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-          await axios.get(`${Env.host}/api/orders/getCancelledOrders/?userId=` + localStorage.getItem("id"))
-        .then((Cancelledresponse) => {
-          console.log("Cncelled orders are::", Cancelledresponse);
-          Cancelledresponse = Cancelledresponse
-          this.setState({
-            orders: response.data,
-            cancelledOrders: Cancelledresponse.data,
-            openOrders: openresponse.data,
-        });
-        });
-         });
-        });
-    })
+          .get(
+            `${Env.host}/api/orders/getOpenOrders/?userId=` +
+              localStorage.getItem("id")
+          )
+          .then(async (openresponse) => {
+            console.log("Pro are::", openresponse);
+            openresponse = openresponse;
+            axios.defaults.headers.common[
+              "authorization"
+            ] = localStorage.getItem("token");
+            await axios
+              .get(
+                `${Env.host}/api/orders/getCancelledOrders/?userId=` +
+                  localStorage.getItem("id")
+              )
+              .then((Cancelledresponse) => {
+                console.log("Cncelled orders are::", Cancelledresponse);
+                Cancelledresponse = Cancelledresponse;
+                this.setState({
+                  orders: response.data,
+                  cancelledOrders: Cancelledresponse.data,
+                  openOrders: openresponse.data,
+                });
+              });
+          });
+      });
   }
 
-  
+  addProduct(e, id) {
+    this.setState({
+      redirect: `/product/${id}`,
+    });
+  }
+
+  async cancelProduct(e, orderId, prodId) {
+    console.log("cancel this prod", prodId, "from order ", orderId);
+    var payload = {
+      prodId: prodId,
+      orderId: orderId,
+    };
+    await axios
+      .post(`${Env.host}/api/orders/cancelOrder`, payload)
+      .then(async (res) => {
+        console.log("response is::", res);
+        alert(res.data);
+        axios.defaults.headers.common["authorization"] = localStorage.getItem(
+          "token"
+        );
+        await axios
+          .get(
+            `${Env.host}/api/orders/getAllOrders/?userId=` +
+              localStorage.getItem("id")
+          )
+          .then(async (response) => {
+            console.log("response of all orders are::", response);
+            response = response;
+            axios.defaults.headers.common[
+              "authorization"
+            ] = localStorage.getItem("token");
+            await axios
+              .get(
+                `${Env.host}/api/orders/getOpenOrders/?userId=` +
+                  localStorage.getItem("id")
+              )
+              .then(async (openresponse) => {
+                console.log("Pro are::", openresponse);
+                openresponse = openresponse;
+                axios.defaults.headers.common[
+                  "authorization"
+                ] = localStorage.getItem("token");
+                await axios
+                  .get(
+                    `${Env.host}/api/orders/getCancelledOrders/?userId=` +
+                      localStorage.getItem("id")
+                  )
+                  .then((Cancelledresponse) => {
+                    console.log("Cncelled orders are::", Cancelledresponse);
+                    Cancelledresponse = Cancelledresponse;
+                    this.setState({
+                      orders: response.data,
+                      cancelledOrders: Cancelledresponse.data,
+                      openOrders: openresponse.data,
+                    });
+                  });
+              });
+          });
+      });
+  }
+
   render() {
     if (this.state.redirect) {
       return <Redirect to={this.state.redirect} />;
     }
 
-    
     let cancelledOrders = this.state.cancelledOrders.map((sellerOrder) => {
       console.log("cancelled order", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
         let logoPath;
-        if(orderProduct.product.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = orderProduct.product.productImages[0]
+        if (orderProduct.product.productImages.length === 0) {
+          logoPath =
+            "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        } else {
+          logoPath = orderProduct.product.productImages[0];
         }
 
         return (
@@ -149,15 +182,16 @@ export default class orders extends Component {
                         marginLeft: "20px",
                       }}
                     >
-                      <h5 class="card-title">
-                        {orderProduct.status}
-                      </h5>
+                      <h5 class="card-title">{orderProduct.status}</h5>
                       <p class="card-text">
-                      <Link 
-                      to={{
-                        pathname: `/product/${orderProduct.product._id}`,
-                      }}
-                     > {orderProduct.product.productName}</Link>
+                        <Link
+                          to={{
+                            pathname: `/product/${orderProduct.product._id}`,
+                          }}
+                        >
+                          {" "}
+                          {orderProduct.product.productName}
+                        </Link>
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}
@@ -184,13 +218,15 @@ export default class orders extends Component {
                         height: "50px",
                         float: "right",
                         marginRight: "20px",
+                        marginTop: "15%",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event,orderProduct.product._id)}
+                      onClick={(event) =>
+                        this.viewProduct(orderProduct.product._id)
+                      }
                     >
                       View Product
                     </Button>
-                    
                   </th>
                 </tr>
               </table>
@@ -264,10 +300,11 @@ export default class orders extends Component {
       console.log("open orders placed!!", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         let logoPath;
-        if(orderProduct.product.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = orderProduct.product.productImages[0]
+        if (orderProduct.product.productImages.length === 0) {
+          logoPath =
+            "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        } else {
+          logoPath = orderProduct.product.productImages[0];
         }
         var buttonId = sellerOrder.order._id;
         return (
@@ -295,16 +332,16 @@ export default class orders extends Component {
                         marginLeft: "20px",
                       }}
                     >
-                      <h5 class="card-title">
-                        {orderProduct.status}
-                      </h5>
+                      <h5 class="card-title">{orderProduct.status}</h5>
                       <p class="card-text">
-                      <Link 
-                      to={{
-                        pathname: `/product/${orderProduct.product._id}`,
-                      }}
-                     > {orderProduct.product.productName}</Link>
-                        
+                        <Link
+                          to={{
+                            pathname: `/product/${orderProduct.product._id}`,
+                          }}
+                        >
+                          {" "}
+                          {orderProduct.product.productName}
+                        </Link>
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}
@@ -331,9 +368,12 @@ export default class orders extends Component {
                         height: "50px",
                         float: "right",
                         marginRight: "20px",
+                        marginTop: "15%",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event,orderProduct.product._id)}
+                      onClick={(event) =>
+                        this.viewProduct(orderProduct.product._id)
+                      }
                     >
                       View Product
                     </Button>
@@ -346,8 +386,17 @@ export default class orders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      hidden = {orderProduct.status === "Delivered" || orderProduct.status === "Cancelled"}
-                      onClick={(event) => this.cancelProduct(event,sellerOrder.order._id,orderProduct.product._id)}
+                      hidden={
+                        orderProduct.status === "Delivered" ||
+                        orderProduct.status === "Cancelled"
+                      }
+                      onClick={(event) =>
+                        this.cancelProduct(
+                          event,
+                          sellerOrder.order._id,
+                          orderProduct.product._id
+                        )
+                      }
                     >
                       Cancel Product
                     </Button>
@@ -413,10 +462,11 @@ export default class orders extends Component {
       console.log("all orders placed!!", sellerOrder);
       let orderProducts = sellerOrder.productsArr.map((orderProduct) => {
         let logoPath;
-        if(orderProduct.product.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = orderProduct.product.productImages[0]
+        if (orderProduct.product.productImages.length === 0) {
+          logoPath =
+            "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        } else {
+          logoPath = orderProduct.product.productImages[0];
         }
         var buttonId = sellerOrder.order._id;
         return (
@@ -444,16 +494,16 @@ export default class orders extends Component {
                         marginLeft: "20px",
                       }}
                     >
-                      <h5 class="card-title">
-                        {orderProduct.status}
-                      </h5>
+                      <h5 class="card-title">{orderProduct.status}</h5>
                       <p class="card-text">
-                      <Link 
-                      to={{
-                        pathname: `/product/${orderProduct.product._id}`,
-                      }}
-                     > {orderProduct.product.productName}</Link>
-                        
+                        <Link
+                          to={{
+                            pathname: `/product/${orderProduct.product._id}`,
+                          }}
+                        >
+                          {" "}
+                          {orderProduct.product.productName}
+                        </Link>
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}
@@ -480,9 +530,12 @@ export default class orders extends Component {
                         height: "50px",
                         float: "right",
                         marginRight: "20px",
+                        marginTop: "15%",
                       }}
                       block
-                      onClick={(event) => this.addProduct(event,orderProduct.product._id)}
+                      onClick={(event) =>
+                        this.viewProduct(orderProduct.product._id)
+                      }
                     >
                       View Product
                     </Button>
@@ -495,8 +548,17 @@ export default class orders extends Component {
                         marginRight: "20px",
                       }}
                       block
-                      hidden = {orderProduct.status === "Delivered" || orderProduct.status === "Cancelled"}
-                      onClick={(event) => this.cancelProduct(event,sellerOrder.order._id,orderProduct.product._id)}
+                      hidden={
+                        orderProduct.status === "Delivered" ||
+                        orderProduct.status === "Cancelled"
+                      }
+                      onClick={(event) =>
+                        this.cancelProduct(
+                          event,
+                          sellerOrder.order._id,
+                          orderProduct.product._id
+                        )
+                      }
                     >
                       Cancel Product
                     </Button>

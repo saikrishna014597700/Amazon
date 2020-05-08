@@ -7,6 +7,7 @@ import $ from "jquery";
 import { Redirect } from "react-router";
 import logo from "./shoe.jpg";
 import { Bar, Line, Pie } from "react-chartjs-2";
+import Env from "../../helpers/Env";
 
 export default class SellerReports extends Component {
   constructor() {
@@ -27,7 +28,9 @@ export default class SellerReports extends Component {
     var sellerId = localStorage.getItem("id");
     console.log("componentDidMount");
     // console.log("orderId::", orderId);
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .get(`${Env.host}/api/seller/sellerReports/${sellerId}`)
       .then((response) => {
@@ -83,11 +86,11 @@ export default class SellerReports extends Component {
         });
         console.log("State iss", this.state.chartData);
       });
-      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
-      .get(
-        `${Env.host}/api/seller/getTotalSalesSumForSeller/${sellerId}`
-      )
+      .get(`${Env.host}/api/seller/getTotalSalesSumForSeller/${sellerId}`)
       .then((response) => {
         console.log("Res isss", response.data[0].sales_sum);
         this.setState({
@@ -112,7 +115,9 @@ export default class SellerReports extends Component {
       month: this.state.month,
       year: this.state.year,
     };
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .post(
         `${Env.host}/api/seller/getMonthWiseSalesSum/${localStorage.getItem(

@@ -5,171 +5,178 @@ import "./New folder/profile1.css";
 import "./New folder/profile2.css";
 import "./New folder/profile3.css";
 import "./New folder/profile4.css";
-import {Card,Button} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import { Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
-import {toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import Env from "../../helpers/Env";
 
 class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cname:"",
-      trating:"",
-      treview:"",
+      cname: "",
+      trating: "",
+      treview: "",
       showModal: false,
       logout: false,
-      arr:[]
+      arr: [],
     };
-    this.handleChange=this.handleChange.bind(this)
-    this.savename=this.savename.bind(this)
-    this.handleImageChange=this.handleImageChange.bind(this)
+    this.handleChange = this.handleChange.bind(this);
+    this.savename = this.savename.bind(this);
+    this.handleImageChange = this.handleImageChange.bind(this);
   }
 
-  async uploadPic(){
-    let fileData = new FormData()
-    console.log('fileData in state',this.state.formData)
-    fileData.append("file", this.state.formData)
+  async uploadPic() {
+    let fileData = new FormData();
+    console.log("fileData in state", this.state.formData);
+    fileData.append("file", this.state.formData);
 
     var data = {
-      type : this.state.formData.type,
-      path:  this.state.formData.name
-    }
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    await axios.post("http://localhost:3001/api/file/uploadImage/?userId="+localStorage.getItem("id"),fileData,{
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }}).then((res)=>{
-        localStorage.setItem("imagePath",res.data.Location)
-        console.log("response:",res)
+      type: this.state.formData.type,
+      path: this.state.formData.name,
+    };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    await axios
+      .post(
+        `${Env.host}/api/file/uploadImage/?userId=` +
+          localStorage.getItem("id"),
+        fileData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
+      .then((res) => {
+        localStorage.setItem("imagePath", res.data.Location);
+        console.log("response:", res);
         this.setState({
-          logout:false
-        })
-     })
+          logout: false,
+        });
+      });
   }
 
-  async componentDidMount()
-  {
-    const data=
-    {
-      id: localStorage.getItem("id")
-    }
-    let ra=0
-    let rv=0
-    var k=[]
-    axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
+  async componentDidMount() {
+    const data = {
+      id: localStorage.getItem("id"),
+    };
+    let ra = 0;
+    let rv = 0;
+    var k = [];
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
-    .post("http://localhost:3001/api/auth/userprofile/", data)
-    .then((response) => {
-      var x=response.data
-      console.log("x is",x)
-      
-      for(let i=0;i<x.length;i++)
-      {
-        // k.push(x[i])
-        
-        for(let j=0;j<x[i].reviewAndRatings.length;j++)
-        {
-          if(x[i].reviewAndRatings[j].review && x[i].reviewAndRatings[j].userId==localStorage.getItem("id"))
-          {k.push({"id":x[i]._id,"productName":x[i].productName,"review":x[i].reviewAndRatings[j].review})
-          rv+=1
-          if(x[i].reviewAndRatings[j].rating)
-          ra+=1
+      .post(`${Env.host}/api/auth/userprofile/`, data)
+      .then((response) => {
+        var x = response.data;
+        console.log("x is", x);
+
+        for (let i = 0; i < x.length; i++) {
+          // k.push(x[i])
+
+          for (let j = 0; j < x[i].reviewAndRatings.length; j++) {
+            if (
+              x[i].reviewAndRatings[j].review &&
+              x[i].reviewAndRatings[j].userId == localStorage.getItem("id")
+            ) {
+              k.push({
+                id: x[i]._id,
+                productName: x[i].productName,
+                review: x[i].reviewAndRatings[j].review,
+              });
+              rv += 1;
+              if (x[i].reviewAndRatings[j].rating) ra += 1;
+            }
+          }
         }
-      
-      
-        }
-      }
-      console.log(k)
-      this.setState({
-        trating: ra,
-        treview: rv,
-        arr: k
-      })
-     
-  });
-  console.log("arr",this.state.arr)
-  };
+        console.log(k);
+        this.setState({
+          trating: ra,
+          treview: rv,
+          arr: k,
+        });
+      });
+    console.log("arr", this.state.arr);
+  }
 
   async handleChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
     });
-    console.log(e.target.name," ",e.target.value)
+    console.log(e.target.name, " ", e.target.value);
   }
 
-  async savename()
-  {
-    const data=
-    {
+  async savename() {
+    const data = {
       id: localStorage.getItem("id"),
       name: this.state.name,
-      
-    }
-    localStorage.setItem("name",this.state.name)
-    axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
+    };
+    localStorage.setItem("name", this.state.name);
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
       .post("http://localhost:3001/api/auth/profile/", data)
       .then((response) => {
-        console.log(response)
+        console.log(response);
         this.setState({
           msg: "Updated",
         });
       });
 
-      toast("Wow so easy !");
+    toast("Wow so easy !");
   }
 
-  async handleImageChange(e)  {
+  async handleImageChange(e) {
     this.setState({
-     formData: e.target.files[0],
+      formData: e.target.files[0],
     });
-    console.log(e.target.name," ",e.target.value)
-  };
+    console.log(e.target.name, " ", e.target.value);
+  }
 
   render() {
-
     let redirectVar = null;
-    if(!localStorage.getItem("id")){
-        redirectVar = <Redirect to= "/login"/>
-    }else {
+    if (!localStorage.getItem("id")) {
+      redirectVar = <Redirect to="/login" />;
+    } else {
       if (localStorage.getItem("role") != "Customer") {
         redirectVar = <Redirect to="/login" />;
       }
     }
 
-    let candr= this.state.arr.map((msg)=> 
-    {
+    let candr = this.state.arr.map((msg) => {
       // <p>List of Comments added:</p>
-      return(
-        <div class="card" style={{width:"500px",marginLeft:"500px"}}>
-        <div class="card-header">
-          Comment added on: {msg.productName}
+      return (
+        <div class="card" style={{ width: "500px", marginLeft: "500px" }}>
+          <div class="card-header">Comment added on: {msg.productName}</div>
+          <div class="card-body">
+            <p style={{ fontWeight: "bold" }}>
+              <Link to={"/product/" + msg.id}>{msg.review} </Link>
+            </p>
+          </div>
         </div>
-        <div class="card-body">
-          <p style={{fontWeight:"bold"}}><Link to={"/product/"+msg.id} >{msg.review} </Link></p>
-         
-        </div>
-      </div>
-
-      )
+      );
     });
 
     let profilePath = null;
-    if(localStorage.getItem("imagePath")!="undefined"){
-      profilePath = (<img
-        alt=""
-        src={localStorage.getItem("imagePath")}
-        id="avatar-image"
-      />)
-    }else{
-      console.log('in here')
-      profilePath = (<img
-        alt="AZ"
-        src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-        
-        // id="avatar-image"
-      />)
+    if (localStorage.getItem("imagePath") != "undefined") {
+      profilePath = (
+        <img alt="" src={localStorage.getItem("imagePath")} id="avatar-image" />
+      );
+    } else {
+      console.log("in here");
+      profilePath = (
+        <img
+          alt="AZ"
+          src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
+
+          // id="avatar-image"
+        />
+      );
     }
     return (
       <div>
@@ -221,7 +228,7 @@ class Profile extends Component {
             <div
               data-reactroot
               className="a-section profile-v5-desktop-background"
-              style={{marginTop:"15px"}}
+              style={{ marginTop: "15px" }}
             >
               <div className="a-section profile-v5-desktop">
                 <div
@@ -272,25 +279,34 @@ class Profile extends Component {
                           backgroundImage:
                             'url("//d1k8kvpjaf8geh.cloudfront.net/gp/profile/assets/default_desktop_cover_photo_small-fa94c636796d18ebee73e32e4076d119a52366660d5660b5b2e49f62e036575a.png")',
                           backgroundSize: "contain",
-                          height:"305px"
+                          height: "305px",
                         }}
                       >
-
-                      <div  >
-                     <span style={{marginLeft:"487px",marginTop:"260px"}}>
-                          <input
-                            type="text"
-                            name="name"
-                            width="20rem"
-                            style={{marginTop:"250px"}}
-                            defaultValue={localStorage.getItem("name")}
-                            onChange={this.handleChange}
-                          />
-                          <button className="Amazon" style={{marginTop:"-55px",marginLeft:"690px",width:"60px"}} onClick={this.savename}>Save</button>
+                        <div>
+                          <span
+                            style={{ marginLeft: "487px", marginTop: "260px" }}
+                          >
+                            <input
+                              type="text"
+                              name="name"
+                              width="20rem"
+                              style={{ marginTop: "250px" }}
+                              defaultValue={localStorage.getItem("name")}
+                              onChange={this.handleChange}
+                            />
+                            <button
+                              className="Amazon"
+                              style={{
+                                marginTop: "-55px",
+                                marginLeft: "690px",
+                                width: "60px",
+                              }}
+                              onClick={this.savename}
+                            >
+                              Save
+                            </button>
                           </span>
                         </div>
-                
-                       
                       </div>
                       <div className="a-section">
                         <div className="a-row desktop cover-photo-edit-icon">
@@ -329,14 +345,12 @@ class Profile extends Component {
                                 <label
                                   className="imageUploadLabel"
                                   htmlFor="coverUploadInput"
-                                >
-                                
-                                </label>
+                                ></label>
                               </div>
                             </div>
                           </div>
                         </div>
-                       
+
                         <div
                           className="a-popover-preload"
                           id="a-popover-cover-photo-desktop-crop-popover"
@@ -414,7 +428,6 @@ class Profile extends Component {
                     className="a-section desktop avatar-image-container"
                   >
                     <div className="a-section">
-                     
                       <canvas id="resizingCanvas" />
                       <span
                         className="a-declarative"
@@ -431,7 +444,6 @@ class Profile extends Component {
                             }}
                           >
                             {profilePath}
-
                           </div>
                         </div>
                       </span>
@@ -439,13 +451,28 @@ class Profile extends Component {
                   </div>
                 </div>
                 <hr></hr>
-                <input type="file" name="user_image" accept="image/*" className="form-control" aria-label="Image" aria-describedby="basic-addon1" onChange={this.handleImageChange} style={{width:"250px"}}/>
-                <button className="Amazon" style={{marginLeft:"270px",marginTop:"-50px",width:"90px"}} type="submit" onClick = {(e)=>this.uploadPic()}>
-                                    <b>Update</b>
-                                </button>
-                
-                
-                  
+                <input
+                  type="file"
+                  name="user_image"
+                  accept="image/*"
+                  className="form-control"
+                  aria-label="Image"
+                  aria-describedby="basic-addon1"
+                  onChange={this.handleImageChange}
+                  style={{ width: "250px" }}
+                />
+                <button
+                  className="Amazon"
+                  style={{
+                    marginLeft: "270px",
+                    marginTop: "-50px",
+                    width: "90px",
+                  }}
+                  type="submit"
+                  onClick={(e) => this.uploadPic()}
+                >
+                  <b>Update</b>
+                </button>
               </div>
             </div>
           </div>
@@ -574,9 +601,7 @@ class Profile extends Component {
             top: "0px",
             left: "0px",
           }}
-        >
-          
-        </span>
+        ></span>
         <span
           style={{
             position: "fixed",
@@ -584,26 +609,28 @@ class Profile extends Component {
             top: "0px",
             left: "0px",
           }}
-        >
-        </span>
-        <div class="card" style={{width:"860px",marginLeft:"329.4px"}}>
-  <div class="card-header">
-    Insights
-  </div>
-  <div class="card-body">
-    <table>
-    <tr>
-    <th style={{fontWeight:"bold"}}>  {this.state.trating}  </th>
-    <th style={{fontWeight:"bold"}}>   {this.state.treview}</th>
-</tr>
-    <tr><td><p>Votes</p></td>
-    <td><p>Comments</p> </td></tr>
-    </table>
-  </div>
-</div>
-{/* <p>List of comments:</p> */}
-{candr}
-
+        ></span>
+        <div class="card" style={{ width: "860px", marginLeft: "329.4px" }}>
+          <div class="card-header">Insights</div>
+          <div class="card-body">
+            <table>
+              <tr>
+                <th style={{ fontWeight: "bold" }}> {this.state.trating} </th>
+                <th style={{ fontWeight: "bold" }}> {this.state.treview}</th>
+              </tr>
+              <tr>
+                <td>
+                  <p>Votes</p>
+                </td>
+                <td>
+                  <p>Comments</p>{" "}
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        {/* <p>List of comments:</p> */}
+        {candr}
       </div>
     );
   }

@@ -14,13 +14,20 @@ let addCategory = async (msg, callback) => {
     pool.query(
       `INSERT INTO product_categories (category) VALUES ('${msg.categoryName}');`,
       async (err, sqlResult) => {
-        redisClient.del("categories", function (err, response) {
-          if (response == 1) {
-            console.log("Deleted Successfully!");
-          } else {
-            console.log("Cannot delete");
-          }
-        });
+        try {
+          await redisClient.del("categories", function (err, response) {
+            if (err) {
+              console.log("Redis error inside if", err);
+            }
+            if (response == 1) {
+              console.log("Deleted Successfully!");
+            } else {
+              console.log("Cannot delete");
+            }
+          });
+        } catch (err) {
+          console.log("Redis error::", err);
+        }
         if (sqlResult && sqlResult.length > 0) {
           response.result = sqlResult;
         }
