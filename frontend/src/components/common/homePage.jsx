@@ -43,6 +43,7 @@ export default class HomePage extends Component {
   async sortChange(e) {
     await this.setState({
       sort: e.target.value,
+      loading:true
     });
     let sellerId;
     if (localStorage.getItem("role") == "Seller") {
@@ -73,6 +74,7 @@ export default class HomePage extends Component {
     await this.setState({
       minPrice: minPrice,
       maxPrice: maxPrice,
+      loading:true
     });
     var sellerId;
     if (localStorage.getItem("role") == "Seller") {
@@ -123,7 +125,7 @@ export default class HomePage extends Component {
           }
         }
         if (response.data == "") {
-          res.data = [];
+          response.data = [];
         }
         await this.setState({
           products: response.data,
@@ -140,6 +142,7 @@ export default class HomePage extends Component {
   ratingFilter = async (rating) => {
     await this.setState({
       rating: rating,
+      loading:true
     });
     var sellerId;
     if (localStorage.getItem("role") == "Seller") {
@@ -168,6 +171,7 @@ export default class HomePage extends Component {
         limit: 10,
         maxPrice: -1,
         minPrice: -1,
+        loading:true
       });
       var sellerId;
       if (localStorage.getItem("role") == "Seller") {
@@ -188,6 +192,7 @@ export default class HomePage extends Component {
     if (page > 0) {
       await this.setState({
         page: page,
+        loading:true
       });
       let sellerId;
       if (localStorage.getItem("role") == "Seller") {
@@ -201,6 +206,7 @@ export default class HomePage extends Component {
     if (page > 0) {
       await this.setState({
         page: page,
+        loading:true
       });
       let sellerId;
       if (localStorage.getItem("role") == "Seller") {
@@ -214,6 +220,7 @@ export default class HomePage extends Component {
     await this.setState({
       limit: e.target.value,
       page: 1,
+      loading:true
     });
     let sellerId = "";
     if (localStorage.getItem("role") == "Seller") {
@@ -224,6 +231,7 @@ export default class HomePage extends Component {
 
   render() {
     let redirectVar = null;
+    console.log("loading:::",this.state.loading)
     if (localStorage.getItem("id")) {
       console.log("logged in ");
     } else {
@@ -369,9 +377,8 @@ export default class HomePage extends Component {
             <br />
           </div>
         );
-      }
+      } 
 
-      let divDisplay = "";
       if(!this.state.loading){
         this.overlaydiv.style.display="none";
       }
@@ -432,7 +439,7 @@ export default class HomePage extends Component {
     return (
       <div>
         {redirectVar}
-        <div id = "overlay" ref={ref=>this.overlaydiv=ref} style = {{display:"block"}}>
+        <div id = "overlay" ref={ref=>this.overlaydiv=ref} style = {{display:"block",zIndex:"1",alignItems:"center",alignContent:"center", height:"100%"}}>
         <ClipLoader
           css={override}
           sizeUnit={"px"}

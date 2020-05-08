@@ -32,24 +32,25 @@ export default class Login extends Component {
       await axios
         .post(`${Env.host}/api/auth/signin/`, data)
         .then((response) => {
-          if (response.data == "Invalid Inputs")
+          if (response.data == "Invalid Inputs"){
             this.setState({
               msg: "Invalid Username/password",
               err:1
-            });
+			});
+		}
           else {
             
-            console.log("IDDDD", response.data.id);
+            //console.log("IDDDD", response.data.id);
             localStorage.setItem("id", response.data.id);
             localStorage.setItem("role", response.data.role);
 			localStorage.setItem("name", response.data.name);
-      localStorage.setItem("imagePath", response.data.imagePath);
-      localStorage.setItem("token",response.data.token)
+      		localStorage.setItem("imagePath", response.data.imagePath);
+      		localStorage.setItem("token",response.data.token)
       // var decoded = jwt_decode(action.payload.data.token.split(' ')[1]);
       // localStorage.setItem("user_id", decoded._id);
             this.setState({
-              msg: localStorage.getItem("role"),
-            });
+				msg:""
+			})
             console.log(response.data);
           }
         });
@@ -59,15 +60,17 @@ export default class Login extends Component {
   render() {
     let redirectvar = null;
     let errormsg=null;
-
-    // if (localStorage.getItem("id")) {
-    //   redirectvar = <Redirect to="/home" />;
-    // }
-    // if (this.state.msg == "Customer") 
-    // redirectvar = <Redirect to="/home" />;
+	if(localStorage.getItem("role") === "Admin"){
+		redirectvar = <Redirect to="/inventory-listings" />;
+	}else if (localStorage.getItem("role") === "Seller"){
+		redirectvar = <Redirect to="/homePage" />
+	}else if (localStorage.getItem("role") === "Customer"){
+		console.log("customer logged in ")
+		redirectvar = <Redirect to="/homePage"/>
+	}
    
     	if(this.state.err==1)
-    {
+    	{
     	errormsg= (<div class="a-section a-spacing-base auth-pagelet-container">
     	<div class="a-section">
     		<div id="auth-error-message-box" class="a-box a-alert a-alert-error auth-server-side-message-box a-spacing-base"><div class="a-box-inner a-alert-container"><h4 class="a-alert-heading">Important Message!</h4><i class="a-icon a-icon-alert"></i><div class="a-alert-content">
@@ -80,13 +83,8 @@ export default class Login extends Component {
     	</div>
     </div>)}
     
-	if(localStorage.getItem("role") === "Admin"){
-		redirectvar = <Redirect to="/inventory-listings" />;
-	}else if (localStorage.getItem("role") === "Seller"){
-		redirectvar = <Redirect to="/homePage" />
-	}else if (localStorage.getItem("role") === "Customer"){
-		redirectvar = <Redirect to="/homePage"/>
-	}
+	
+	
 
     return (
       <div>

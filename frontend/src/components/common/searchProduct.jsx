@@ -42,6 +42,7 @@ export default class SearchProduct extends Component {
   async sortChange(e) {
     await this.setState({
       sort: e.target.value,
+      loading:true
     });
     this.viewSeachResults();
   }
@@ -71,6 +72,7 @@ export default class SearchProduct extends Component {
     await this.setState({
       minPrice: minPrice,
       maxPrice: maxPrice,
+      loading:true
     });
     this.viewSeachResults();
   };
@@ -133,7 +135,8 @@ export default class SearchProduct extends Component {
   }
   ratingFilter = async (rating) => {
     await this.setState({
-      rating:rating
+      rating:rating,
+      loading:true
     });
     this.viewSeachResults();
   };
@@ -172,7 +175,8 @@ export default class SearchProduct extends Component {
     let page = this.state.page-1;
     if(page>0){
       await this.setState({
-        page:page
+        page:page,
+        loading:true
       });
       this.viewSeachResults();
     }
@@ -181,7 +185,8 @@ export default class SearchProduct extends Component {
     let page = this.state.page+1;
     if(page>0){
       await this.setState({
-        page:page
+        page:page,
+        loading:true
       });
       this.viewSeachResults();
     }
@@ -190,7 +195,8 @@ export default class SearchProduct extends Component {
   changeLimit = async (e) =>{
     await this.setState({
       limit:e.target.value,
-      page:1
+      page:1,
+      loading:true
     })
     this.viewSeachResults();
   }
@@ -365,6 +371,7 @@ export default class SearchProduct extends Component {
     });
     return (
       <div>
+        <div id = "overlay" ref={ref=>this.overlaydiv=ref} style = {{display:"block",zIndex:"1",alignItems:"center",alignContent:"center", height:"100%"}}>
          <ClipLoader
           css={override}
           sizeUnit={"px"}
@@ -372,6 +379,7 @@ export default class SearchProduct extends Component {
           color={'#123abc'}
           loading={this.state.loading}
         />
+        </div>
         <div className="row">
           <div
             className="col-md-2"

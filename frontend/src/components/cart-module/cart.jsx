@@ -103,6 +103,8 @@ export default class extends Component {
                     res.data[0].sellerId = seller.data._id
                   })
                   products.push(res.data[0]);
+
+                  console.log("productDetails:::::",products)
                   this.setState({
                     productDetails: products,
                     cartPrice: finalPrice,
@@ -234,6 +236,8 @@ export default class extends Component {
         productId: product._id,
       })
       .then((response) => {
+
+        console.log("response")
         if (response.status == 200) {
           // this.getAllDetails();
           sleep(100).then(() => {
@@ -324,7 +328,7 @@ export default class extends Component {
                   <select
                     onChange={(e) => this.quantityChangeHandler(product, e)}
                     style={{ backgroundColor: "#e7eae8", borderRadius: "2px" }}
-                    defaultValue={product.quantity}
+                    value={product.quantity}
                   >
                     <option value="1">1</option>
                     <option value="2">2</option>
