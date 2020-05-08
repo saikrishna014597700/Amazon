@@ -170,7 +170,11 @@ export default class selectCard extends Component {
   }
 
   goToCheckout = async () => {
-    await this.setState({ redirect: `/checkout` });
+    console.log("this card select==",this.state.selectedCard)
+    if(this.state.selectedCard.cardNo)
+      await this.setState({ redirect: `/checkout` });
+    else
+      alert("select a card to continue");
   };
 
   render() {
