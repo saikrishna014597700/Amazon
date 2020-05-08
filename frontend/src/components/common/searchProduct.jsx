@@ -7,6 +7,16 @@ import $ from "jquery";
 import StarRatings from "react-star-ratings";
 import StarRatingComponent from "react-star-rating-component";
 import { Redirect } from "react-router";
+import ClipLoader from 'react-spinners/ClipLoader';
+import { css } from '@emotion/core';
+
+const override = css`
+    display:  block;
+    margin: auto;
+    margin-top:250px;
+    border-color: rgb(254, 190, 98);
+    border: 5px solid rgb(254, 190, 98);
+`;
 
 export default class SearchProduct extends Component {
   constructor() {
@@ -22,7 +32,8 @@ export default class SearchProduct extends Component {
       minPrice: -1,
       sellerId: null,
       limit:10,
-      page:1
+      page:1,
+      loading:true
     };
     this.viewSeachResults = this.viewSeachResults.bind(this);
     // this.scroll = this.scroll.bind(this);
@@ -48,11 +59,7 @@ export default class SearchProduct extends Component {
       searchTerm: this.props.match.params.searchTerm,
       searchCategory: this.props.match.params.searchCategory
     });
-    if (localStorage.getItem("role") == "Seller") {
-      await this.setState({
-        sellerId: localStorage.getItem("id"),
-      });
-    }
+    
     // console.log("here in search==>" + this.state.searchTerm);
     await this.viewSeachResults();
   }
@@ -68,6 +75,11 @@ export default class SearchProduct extends Component {
   };
 
   async viewSeachResults() {
+
+    var sellerId;
+    if (localStorage.getItem("role") == "Seller") {
+      sellerId = localStorage.getItem("id")
+    }
     const payload = {
       searchTerm: this.state.searchTerm,
       searchCategory: this.state.searchCategory,
@@ -77,16 +89,18 @@ export default class SearchProduct extends Component {
       sort: this.state.sort,
       maxPrice: this.state.maxPrice,
       minPrice: this.state.minPrice,
-      sellerId: this.state.sellerId,
+      sellerId: sellerId,
     };
     console.log("payload before search=>", payload);
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/common/search/", payload)
       .then(async (response) => {
-        console.log("Pro are::", response);
+        console.log("Products found are::", response);
         let len = response.data.length;
+        var json = {};
         for (var i = 0; i < len; i++) {
+          if(! json[response.data[i].sellerId]){
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .get(
@@ -96,9 +110,18 @@ export default class SearchProduct extends Component {
               // console.log("each seller name=>" + seller.data.sellerName);
               response.data[i].sellerName = seller.data.sellerName;
             });
+        }else{
+          console.log("in map")
+          response.data[i].sellerName = json[response.data[i].sellerId];
         }
+      }
+      if(response.data === ""){
+        response.data = []
+      }
         await this.setState({
           products: response.data,
+          loading :false,
+          sellerId:sellerId
         });
       });
   }
@@ -279,7 +302,7 @@ export default class SearchProduct extends Component {
         </div>
       </div>
     );
-    let sellerProducts = this.state.products?.map((sellerProduct) => {
+    let sellerProducts = this.state.products.map((sellerProduct) => {
       let logoPath;
         if(sellerProduct.productImages.length === 0){
           logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
@@ -341,6 +364,13 @@ export default class SearchProduct extends Component {
     });
     return (
       <div>
+         <ClipLoader
+          css={override}
+          sizeUnit={"px"}
+          size={75}
+          color={'#123abc'}
+          loading={this.state.loading}
+        />
         <div className="row">
           <div
             className="col-md-2"
