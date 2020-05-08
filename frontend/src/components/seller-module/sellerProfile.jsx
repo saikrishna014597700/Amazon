@@ -10,6 +10,8 @@ import "../profile-module/New folder/profile4.css"
 import "./seller.css";
 import Env from "../../helpers/Env";
 import { Redirect } from "react-router";
+import {Link} from 'react-router-dom'
+import StarRatings from "react-star-ratings";
 
 class SelerProfile extends React.Component {
   constructor(props) {
@@ -25,6 +27,8 @@ class SelerProfile extends React.Component {
       zipCode: "",
       sellerProfile: {},
       editMode: false,
+      products:[],
+      // sellerProducts:[]
     };
     this.handleImageChange=this.handleImageChange.bind(this)
   }
@@ -127,22 +131,32 @@ class SelerProfile extends React.Component {
       });
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    let sellerProducts=null;
     // console.log(this.props.match.params.id)
     this.getSellerProfile(this.props.match.params.id);
+    await axios
+    .get(
+      `${Env.host}/api/admin/products-by-seller/${this.props.match.params.id}`
+    )
+    .then(async (res) => {
+      console.log("products:", res);
+      if(res.data!="No products in this category")
+      {this.setState({
+        products: res.data,
+      });}
+      console.log(this.state.products)
+    });
   }
 
   render() {
 
     let redirectVar = null;
     let butts=null;
+    let sellerProducts=null;
     if(!localStorage.getItem("id")){
         redirectVar = <Redirect to= "/login"/>}
-    // }else{
-    //   if(!localStorage.getItem("role") == "Seller"){
-    //     redirectVar = <Redirect to= "/login"/>
-    //   }
-    // }
+
     if(localStorage.getItem("id")==this.props.match.params.id)
     {
     butts=  ( <div style = {{marginLeft : "300px"}}>
@@ -173,6 +187,72 @@ class SelerProfile extends React.Component {
         id="avatar-image"
         style={{width:"220px",height:"220px",borderRadius:"50%",marginTop:"85px",marginLeft:"20px"}}
       />)
+    }
+
+    if(localStorage.getItem("role")=="Customer")
+    {
+      sellerProducts = this.state.products.map((sellerProduct) => {
+        let logoPath;
+          if(sellerProduct.productImages.length === 0){
+            logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+          }else{
+            logoPath = sellerProduct.productImages[0]
+          }
+        return (
+          <div
+            // className="col-md-3"
+            style={{
+              margin: 5,
+              width:"860px",
+              marginLeft:"300px",
+              border: "1",
+              borderStyle: "solid",
+              borderColor: "#efefef",
+            }}
+          >
+            <div className="row" style={{ margin: 10 }}>
+              <img
+                src={logoPath}
+                style={{ height: "250px" }}
+              />
+            </div>
+            <div
+              className="row"
+              style={{
+                fontWeight: "bold",
+                fontSize: "20",
+                margin: 10,
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+              
+            >
+         <Link to={"/product/"+sellerProduct._id} >   {sellerProduct.productName} </Link> 
+            </div>
+            <div className="row" style={{ margin: 10, width: "100%" }}>
+              <a href={"/sellerProfile/" + sellerProduct.sellerId}>
+                {sellerProduct.sellerName}
+              </a>
+            </div>
+            <div className="row" style={{ margin: 10, textAlign: "center" }}>
+              {sellerProduct.productDesc}
+            </div>
+            <div className="row" style={{ margin: 10, textAlign: "center" }}>
+              ${sellerProduct.price}
+            </div>
+            <div className="row" style={{ margin: 10 }}>
+              <StarRatings
+                rating={sellerProduct.avgRating}
+                starRatedColor="yellow"
+                starDimension="20px"
+                starSpacing="6px"
+                numberOfStars={5}
+                name="rating"
+              />
+            </div>
+          </div>
+        );
+      });
     }
 
     console.log("profilePath::",profilePath)
@@ -328,6 +408,7 @@ class SelerProfile extends React.Component {
              </div>
           </div>
         )}
+        {sellerProducts}
       </div>
     );
   }

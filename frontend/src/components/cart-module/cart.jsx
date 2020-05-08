@@ -54,6 +54,7 @@ export default class extends Component {
       productId: product._id,
       quantity: quantity,
     };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/updateCart/", payload)
       .then((res) => {
@@ -66,6 +67,7 @@ export default class extends Component {
   };
 
   async getAllDetails() {
+    axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/getCompleteCart/", {
         userId: this.state.userId,

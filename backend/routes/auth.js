@@ -113,8 +113,6 @@ router.post("/userprofile",checkAuth, async (req, res) => {
 
   kafka.make_request("userprofile", msg, function (err, results) {
     console.log("Results are",results);
-    if(req.files)
-    console.log("Files here")
     if (err) {
       msg.error = err.data;
       logger.error(msg);

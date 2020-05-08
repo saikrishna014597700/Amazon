@@ -127,6 +127,7 @@ class Navbar extends Component {
       searchTerm: this.state.searchTerm,
       searchCategory: this.state.searchCategory,
     };
+    axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     axios
       .post("http://localhost:3001/api/common/search/", payload)
       .then(async (response) => {
