@@ -81,6 +81,7 @@ export default class AdminReports extends Component {
 
   mostViewedProductsFinal = async () => {
     const date = await this.convert(this?.state?.createdDate);
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(`${Env.host}/api/admin/most-viewed-jobs?date=${date}`)
       .then(async (response) => {
@@ -94,6 +95,7 @@ export default class AdminReports extends Component {
 
   async componentDidMount() {
     console.log("componentDidMount");
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios.get(`${Env.host}/api/admin/reports`).then(async (response) => {
       console.log("Admin Reports are::", response);
       await this.setState({

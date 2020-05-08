@@ -47,6 +47,7 @@ export default class productDescription extends Component {
       });
     }
     // console.log("inside componentdidmount=>" + this.state.productId);
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(
         "http://localhost:3001/api/product/getProductDetails/?productId=" +
@@ -66,6 +67,7 @@ export default class productDescription extends Component {
           selectedImage: defaultPath,
         });
         // console.log("response.data[0].sellerId=>", response.data[0].sellerId);
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios
           .get(
             `http://localhost:3001/api/seller/profile/${response.data[0].sellerId}`
@@ -79,6 +81,7 @@ export default class productDescription extends Component {
         // );
         let reviews = response.data[0].reviewAndRatings;
         await reviews.forEach(async (review) => {
+          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .post(
               "http://localhost:3001/api/customerDetails/getCustomerDetails/?userId=" +
@@ -113,6 +116,7 @@ export default class productDescription extends Component {
     };
     let finalQuantity = this.state.quantity;
     let productExists = false;
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/getCart/", payload)
       .then((response) => {
@@ -135,6 +139,7 @@ export default class productDescription extends Component {
     };
 
     if (!productExists) {
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
         .post("http://localhost:3001/api/cart/addToCart/", payload)
         .then((res) => {
@@ -142,6 +147,7 @@ export default class productDescription extends Component {
           }
         });
     } else {
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
         .post("http://localhost:3001/api/cart/updateCart/", payload)
         .then((res) => {
@@ -158,6 +164,7 @@ export default class productDescription extends Component {
       productName: this.state.product.productName,
     };
     console.log("view count payload=>", this.state.product);
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .post("http://localhost:3001/api/product/updateViewCount", payload)
       .then((response) => {
@@ -185,7 +192,7 @@ export default class productDescription extends Component {
       rating: this.state.newRating,
       review: this.userReview.value,
     };
-
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .post("http://localhost:3001/api/product/addRatingAndReview", payLoad)
       .then(async (response) => {
@@ -197,6 +204,7 @@ export default class productDescription extends Component {
           sleep(3000).then(() => {
             this.reviewSuccess.style.display = "none";
           });
+          axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .get(
               "http://localhost:3001/api/product/getProductDetails/?productId=" +

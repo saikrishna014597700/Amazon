@@ -18,6 +18,7 @@ export default class addressSelect extends Component {
       userId:id
     })
     let userId = id;
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
         "http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" +

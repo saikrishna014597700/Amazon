@@ -42,6 +42,7 @@ class SelerProfile extends React.Component {
       type : this.state.formData.type,
       path:  this.state.formData.name
     }
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios.post("http://localhost:3001/api/file/uploadImage/?userId="+localStorage.getItem("id"),fileData,{
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -104,6 +105,7 @@ class SelerProfile extends React.Component {
       },
     };
     console.log("data before axios put::", data);
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .put(`${Env.host}/api/seller/updateProfile/${this.state.sellerId}`, data)
       .then(async (res) => {
@@ -121,6 +123,7 @@ class SelerProfile extends React.Component {
   };
 
   getSellerProfile = (sellerId) => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(`${Env.host}/api/seller/profile/${sellerId}`)
       .then(async (res) => {
@@ -135,6 +138,7 @@ class SelerProfile extends React.Component {
     let sellerProducts=null;
     // console.log(this.props.match.params.id)
     this.getSellerProfile(this.props.match.params.id);
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
     .get(
       `${Env.host}/api/admin/products-by-seller/${this.props.match.params.id}`

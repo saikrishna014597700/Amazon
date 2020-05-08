@@ -40,6 +40,7 @@ export default class SellerOrders extends Component {
     var deliveredOrdersTemp;
     var cancelledOrdersTemp;
     var openOrdersTemp;
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(`http://localhost:3001/api/seller/getOrderDetails/${sellerId}`)
       .then((response) => {
@@ -51,6 +52,7 @@ export default class SellerOrders extends Component {
           // });
         }
       });
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
         `http://localhost:3001/api/seller/getDeliveredOrderDetails/${sellerId}`
@@ -61,6 +63,7 @@ export default class SellerOrders extends Component {
           deliveredOrdersTemp = response.data;
         }
       });
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
         `http://localhost:3001/api/seller/getCancelledOrderDetails/${sellerId}`
@@ -71,6 +74,7 @@ export default class SellerOrders extends Component {
           cancelledOrdersTemp = response.data;
         }
       });
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(`http://localhost:3001/api/seller/getOpenOrderDetails/${sellerId}`)
       .then((response) => {
@@ -94,6 +98,7 @@ export default class SellerOrders extends Component {
       prodId: prodId,
       orderId: orderId,
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/orders/cancelOrder", payload)
       .then(async (res) => {

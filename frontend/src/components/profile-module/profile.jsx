@@ -35,6 +35,7 @@ class Profile extends Component {
       type : this.state.formData.type,
       path:  this.state.formData.name
     }
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios.post("http://localhost:3001/api/file/uploadImage/?userId="+localStorage.getItem("id"),fileData,{
       headers: {
         'Content-Type': 'multipart/form-data'

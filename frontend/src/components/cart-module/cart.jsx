@@ -94,6 +94,7 @@ export default class extends Component {
                   let price = parseInt(res.data[0].price, 10);
                   finalPrice = finalPrice + price * product.quantity;
                   console.log("in response data=>",res.data[0].sellerId);
+                  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
                   await axios.get(`http://localhost:3001/api/seller/profile/${res.data[0].sellerId}`)
                   .then((seller)=>{
                     res.data[0].sellerName = seller.data.sellerName

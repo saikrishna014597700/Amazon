@@ -24,6 +24,7 @@ class SellerListings extends React.Component {
   };
 
   getAllSellers = () => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(
         `${Env.host}/api/admin/all-sellers?searchTerm=${this.state.searchTerm}`

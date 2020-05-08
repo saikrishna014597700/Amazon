@@ -33,6 +33,7 @@ export default class selectCard extends Component {
   }
 
   async getUserCards() {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
         "http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" +
@@ -46,6 +47,7 @@ export default class selectCard extends Component {
   }
 
   async getCartDetails() {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/cart/getCompleteCart", {
         userId: this.state.userId,
@@ -58,7 +60,7 @@ export default class selectCard extends Component {
           if (response.data.length != 0) {
             response.data.forEach((product) => {
               let productId = product.product_id;
-
+              axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               axios
                 .get(
                   "http://localhost:3001/api/product/getProductDetails/?productId=" +
@@ -133,6 +135,7 @@ export default class selectCard extends Component {
           cvv: this.state.selectedCard.cvv,
         };
 
+        axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios
           .post(
             "http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" +

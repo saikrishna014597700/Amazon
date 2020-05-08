@@ -47,6 +47,7 @@ class InventoryListings extends React.Component {
   };
 
   getCategories = async () => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(`${Env.host}/api/admin/get-product-categories`)
       .then((res) => {
@@ -75,6 +76,7 @@ class InventoryListings extends React.Component {
   }
 
   getProductsByCategory = (categoryId) => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(`${Env.host}/api/admin/products/${categoryId}`)
       .then(async (res) => {
@@ -87,6 +89,7 @@ class InventoryListings extends React.Component {
         } else {
           for (var i in res.data.result) {
             if (res.data.result[i].sellerId) {
+              axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               await axios
                 .get(
                   `http://localhost:3001/api/seller/profile/${res.data.result[i].sellerId}`
@@ -108,6 +111,7 @@ class InventoryListings extends React.Component {
 
   addCategory = () => {
     const categoryData = { categoryName: this.state.categoryName };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .post(`${Env.host}/api/admin/add-category`, categoryData)
       .then(async (res) => {
@@ -117,6 +121,7 @@ class InventoryListings extends React.Component {
   };
 
   deleteCategory = () => {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .delete(
         `${Env.host}/api/admin/delete-category/${this.state?.selectedCategory?.id}`

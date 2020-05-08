@@ -38,6 +38,7 @@ export default class AddProduct extends Component {
   }
 
   async componentDidMount() {
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get("http://localhost:3001/api/admin/get-product-categories")
       .then((res) => {
@@ -72,6 +73,7 @@ export default class AddProduct extends Component {
       category: this.state.category,
       sellerId: localStorage.getItem("id"),
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .post("http://localhost:3001/api/product/addProduct/", payload)
       .then((response) => {
@@ -82,6 +84,7 @@ export default class AddProduct extends Component {
             let fileData = new FormData();
             fileData.append("file", form);
             imagesData.push(fileData);
+            axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios
               .post(
                 "http://localhost:3001/api/file/uploadImages/?productId=" +

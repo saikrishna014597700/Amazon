@@ -35,6 +35,7 @@ export default class ProductTrackingDetails extends Component {
       this.setState({
         productId: productId,
       });
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       axios
         .get(
           `http://localhost:3001/api/seller/productTrackingDetails/?orderId=${orderId}&productId=${productId}`
@@ -77,6 +78,7 @@ export default class ProductTrackingDetails extends Component {
     const data = {
       trackingStatus: this.state.trackingStatus,
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .post(
         `http://localhost:3001/api/seller/updateSellerTrackingDetails/?orderId=${this.state.orderId}&productId=${this.state.productId}`,

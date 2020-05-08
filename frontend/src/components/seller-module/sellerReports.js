@@ -27,6 +27,7 @@ export default class SellerReports extends Component {
     var sellerId = localStorage.getItem("id");
     console.log("componentDidMount");
     // console.log("orderId::", orderId);
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(`http://localhost:3001/api/seller/sellerReports/${sellerId}`)
       .then((response) => {
@@ -82,6 +83,7 @@ export default class SellerReports extends Component {
         });
         console.log("State iss", this.state.chartData);
       });
+      axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
         `http://localhost:3001/api/seller/getTotalSalesSumForSeller/${sellerId}`
@@ -110,6 +112,7 @@ export default class SellerReports extends Component {
       month: this.state.month,
       year: this.state.year,
     };
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post(
         `http://localhost:3001/api/seller/getMonthWiseSalesSum/${localStorage.getItem(

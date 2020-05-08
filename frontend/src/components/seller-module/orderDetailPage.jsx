@@ -20,6 +20,7 @@ export default class OrderDetailsPage extends Component {
   async componentDidMount() {
     var orderId = this.props.match.params.id;
     console.log("orderId::", orderId);
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(
         `http://localhost:3001/api/seller/getParticularOrderDetails/${orderId}`
