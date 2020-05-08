@@ -8,7 +8,7 @@ const { addRatingAndReview } = require("./addRatingAndReview");
 const { updateViewCount } = require('./updateViewCount');
 
 let handle_request = (msg, callback) => {
-  console.log(msg)
+  // console.log(msg)
   if(msg)
   switch (msg.route) {
     case "add_product":

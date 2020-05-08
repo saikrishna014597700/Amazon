@@ -6,9 +6,9 @@ const {getOpenOrders} = require ("./getOpenOrders")
 
 
 let handle_request = (msg, callback) => {
-    console.log('route is::', msg.route)
+    // console.log('route is::', msg.route)
+    if(msg)
   switch (msg.route) {
-    
     case "getAllOrders":
         getOrders(msg, callback);
       break;

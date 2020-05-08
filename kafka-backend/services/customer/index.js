@@ -8,8 +8,9 @@ const { deleteCustomerAddress } = require("./deleteCustomerAddress");
 const { getCustomerDetails } = require("./getCustomerDetails");
 
 let handle_request = (msg, callback) => {
-  console.log(msg)
-  console.log("route::", msg.route);
+  // console.log(msg)
+  // console.log("route::", msg.route);
+  if(msg)
   switch (msg.route) {
     case "getCustomerCards":
       getCustomerCards(msg, callback);
