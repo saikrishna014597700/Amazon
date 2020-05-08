@@ -17,6 +17,7 @@ export default class AddProduct extends Component {
       sellerProducts: [],
       categories: [],
       formData: [],
+      redirect:null
     };
     this.addProduct = this.addProduct.bind(this);
     this.viewAllSellerProducts = this.viewAllSellerProducts.bind(this);
@@ -55,19 +56,12 @@ export default class AddProduct extends Component {
   }
 
   async viewAllSellerProducts(event) {
-    const payload = {
-      sellerId: localStorage.getItem("id"),
-    };
+    
+      this.setState({
+        redirect :"/homePage"
+      })
 
-    axios
-      .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
-      .then((response) => {
-        console.log("Pro are::", response);
-        this.setState({
-          sellerProducts: response.data,
-        });
-        console.log("Pro are::", this.state.sellerProducts);
-      });
+
   }
 
   async addProduct(event) {
@@ -109,6 +103,11 @@ export default class AddProduct extends Component {
   }
 
   render() {
+
+    if (this.state.redirect) {
+      return <Redirect to={this.state.redirect} />;
+    }
+
     let redirectVar = null;
     if (!localStorage.getItem("id")) {
       redirectVar = <Redirect to="/login" />;

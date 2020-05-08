@@ -150,105 +150,69 @@ class InventoryListings extends React.Component {
   };
 
   render() {
-
     let redirectVar = null;
-    if(!localStorage.getItem("id")){
-        redirectVar = <Redirect to= "/login"/>
+    if (!localStorage.getItem("id")) {
+      redirectVar = <Redirect to="/login" />;
     }
-   
 
     let products = "";
     console.log("Abcc", this.state.defaultCatName);
     if (this.state.productsAvailable) {
       console.log("enetered iff in ");
       products = this.state?.products?.map((sellerProduct) => {
+        let logoPath;
+        if (sellerProduct.productImages.length === 0) {
+          logoPath =
+            "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        } else {
+          logoPath = sellerProduct.productImages[0];
+        }
         return (
-          <div className="col-md-3" style={{ margin: 5 }}>
-            <div className="ui card">
-              {/* <div className="image"> */}
-              <div className="row" style={{ margin: 10 }}>
-                {/* <div className="col-md-1" style={{ paddingTop: "50px" }}>
-                  <a
-                    className="prev"
-                    onClick={this.scroll.bind(null, -1, sellerProduct._id)}
-                  >
-                    &#10094;
-                  </a>
-                </div> */}
-                <div className="col-md-8">
-                  <div className="image-container" id={sellerProduct._id}>
-                    <div className="image">
-                      <img
-                        src="https://react.semantic-ui.com/images/avatar/large/matthew.png"
-                        style={{ width: "100%", height: "100%" }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                {/* <div className="col-md-1" style={{ paddingTop: "50px" }}>
-                  <a
-                    className="next"
-                    onClick={this.scroll.bind(null, 1, sellerProduct._id)}
-                  >
-                    &#10095;
-                  </a>
-                </div> */}
-              </div>
-              <div className="content">
-                <div
-                  className="row"
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "20",
-                    margin: 10,
-                    textAlign: "center",
-                  }}
-                >
-                  {sellerProduct.productName}
-                </div>
-                <div
-                  className="row"
-                  style={{ margin: 10, textAlign: "center" }}
-                >
-                  Seller: {sellerProduct.sellerName}
-                </div>
-                <div
-                  className="row"
-                  style={{ margin: 10, textAlign: "center" }}
-                >
-                  {sellerProduct.productDesc}
-                </div>
-                <div
-                  className="row"
-                  style={{ margin: 10, textAlign: "center" }}
-                >
-                  ${sellerProduct.price}
-                </div>
-                {/* <div className="row" style={{ margin: 10 }}>
-                  <StarRatings
-                    rating={this.state.rating}
-                    starRatedColor="yellow"
-                    changeRating={this.changeRating.bind(this)}
-                    starDimension="20px"
-                    starSpacing="6px"
-                    numberOfStars={5}
-                    name="rating"
-                  />
-                </div> */}
-              </div>
-              <hr style={{ height: "2px", backgroundColor: "gray" }}></hr>
-              <div className="extra content">
-                <Link
-                  style={{ fontSize: "15", marginLeft: "70px" }}
-                  to={{
-                    pathname: `/product/${sellerProduct._id}`,
-                  }}
-                >
-                  {" "}
-                  View Product
-                </Link>
-              </div>
-              <br />
+          <div
+            className="col-md-3"
+            style={{
+              margin: 5,
+              broder: "1",
+              borderStyle: "solid",
+              borderColor: "#efefef",
+            }}
+          >
+            <div className="row" style={{ margin: 10 }}>
+              <img src={logoPath} style={{ height: "150px", width: "150px" }} />
+            </div>
+            <div
+              className="row"
+              style={{
+                fontWeight: "bold",
+                fontSize: "20",
+                margin: 10,
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+              onClick={(e) => this.viewProduct(sellerProduct)}
+            >
+              {sellerProduct.productName}
+            </div>
+            <div className="row" style={{ margin: 10, width: "100%" }}>
+              <a href={"/sellerProfile/" + sellerProduct.sellerId}>
+                {sellerProduct.sellerName}
+              </a>
+            </div>
+            <div className="row" style={{ margin: 10, textAlign: "center" }}>
+              {sellerProduct.productDesc}
+            </div>
+            <div className="row" style={{ margin: 10, textAlign: "center" }}>
+              ${sellerProduct.price}
+            </div>
+            <div className="row" style={{ margin: 10 }}>
+              <StarRatings
+                rating={sellerProduct.avgRating}
+                starRatedColor="yellow"
+                starDimension="20px"
+                starSpacing="6px"
+                numberOfStars={5}
+                name="rating"
+              />
             </div>
           </div>
         );
@@ -309,13 +273,17 @@ class InventoryListings extends React.Component {
           </div>
           <div className="row">
             {!!this.state?.productsAvailable && products ? (
-              <div>
-                <br />
-                <h5 style={{ marginLeft: "20px" }}>
+              <div className="row" style={{width:"100%", marginLeft:"15px"}}>
+                
+                {/* <div className="row">
+                  &nbsp;
+                </div> */}
+                <br></br>
+                <h5 style={{ marginLeft: "20px", marginTop:"20px" }}>
                   Selected Category : {this.state.defaultCatName}
                 </h5>
                 <br />
-                <div className="row">{products}</div>
+                <div className="row" style={{width:"100%"}}>{products}</div>
                 <br />
               </div>
             ) : (

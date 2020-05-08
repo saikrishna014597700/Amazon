@@ -119,8 +119,12 @@ export default class selectCard extends Component {
             this.errorDiv.style.display = "none";
           });
           isCardExist = true;
+          
         }
       });
+      if(isCardExist){
+        alert("duplicate card number");
+      }
       if (!isCardExist) {
         var payload = {
           nameOnCard: this.state.selectedCard.name,

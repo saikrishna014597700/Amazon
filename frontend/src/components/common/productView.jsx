@@ -192,77 +192,136 @@ class ProductView extends React.Component {
     );
 
     products = this.state?.products?.map((sellerProduct) => {
-      let logoPath;
+    //   let logoPath;
+    //     if(sellerProduct.productImages.length === 0){
+    //       logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+    //     }else{
+    //       logoPath = sellerProduct.productImages[0]
+    //     }
+    //    return (
+    //     <div className="col-md-3" style={{ margin: 5 }}>
+    //       <div className="ui card">
+    //         {/* <div className="image"> */}
+    //         <div className="row" style={{ margin: 10 }}>
+    //           {/* <div className="col-md-1" style={{ paddingTop: "50px" }}>
+    //               <a
+    //                 className="prev"
+    //                 onClick={this.scroll.bind(null, -1, sellerProduct._id)}
+    //               >
+    //                 &#10094;
+    //               </a>
+    //             </div> */}
+
+    //           <div className="image-container" id={sellerProduct._id}>
+    //             <div className="image">
+    //               <img
+    //                 src={logoPath}
+    //                 style={{ maxWidth: "100%" }}
+    //               />
+    //             </div>
+    //           </div>
+    //         </div>
+    //         <div className="content">
+    //           <div
+    //             className="row"
+    //             style={{
+    //               fontWeight: "bold",
+    //               fontSize: "20",
+    //               margin: 10,
+    //               textAlign: "center",
+    //             }}
+    //           >
+    //             {sellerProduct.productName}
+    //           </div>
+    //           <div className="row" style={{ margin: 10, textAlign: "center" }}>
+    //             Seller: {sellerProduct.sellerName}
+    //           </div>
+    //           <div className="row" style={{ margin: 10, textAlign: "center" }}>
+    //             {sellerProduct.productDesc}
+    //           </div>
+    //           <div className="row" style={{ margin: 10, textAlign: "center" }}>
+    //             ${sellerProduct.price}
+    //           </div>
+    //         </div>
+    //         <hr style={{ height: "2px", backgroundColor: "gray" }}></hr>
+    //         <div className="extra content">
+    //           <Link
+    //             style={{ fontSize: "15", marginLeft: "70px" }}
+    //             to={{
+    //               pathname: `/product/${sellerProduct._id}`,
+    //             }}
+    //           >
+    //             {" "}
+    //             View Product
+    //           </Link>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   );
+    // });
+    // }
+    let logoPath;
         if(sellerProduct.productImages.length === 0){
           logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
         }else{
           logoPath = sellerProduct.productImages[0]
         }
-       return (
-        <div className="col-md-3" style={{ margin: 5 }}>
-          <div className="ui card">
-            {/* <div className="image"> */}
-            <div className="row" style={{ margin: 10 }}>
-              {/* <div className="col-md-1" style={{ paddingTop: "50px" }}>
-                  <a
-                    className="prev"
-                    onClick={this.scroll.bind(null, -1, sellerProduct._id)}
-                  >
-                    &#10094;
-                  </a>
-                </div> */}
-
-              <div className="image-container" id={sellerProduct._id}>
-                <div className="image">
-                  <img
-                    src={logoPath}
-                    style={{ maxWidth: "100%" }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="content">
-              <div
-                className="row"
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "20",
-                  margin: 10,
-                  textAlign: "center",
-                }}
-              >
-                {sellerProduct.productName}
-              </div>
-              <div className="row" style={{ margin: 10, textAlign: "center" }}>
-                Seller: {sellerProduct.sellerName}
-              </div>
-              <div className="row" style={{ margin: 10, textAlign: "center" }}>
-                {sellerProduct.productDesc}
-              </div>
-              <div className="row" style={{ margin: 10, textAlign: "center" }}>
-                ${sellerProduct.price}
-              </div>
-            </div>
-            <hr style={{ height: "2px", backgroundColor: "gray" }}></hr>
-            <div className="extra content">
-              <Link
-                style={{ fontSize: "15", marginLeft: "70px" }}
-                to={{
-                  pathname: `/product/${sellerProduct._id}`,
-                }}
-              >
-                {" "}
-                View Product
-              </Link>
-            </div>
+      return (
+        <div
+          className="col-md-3"
+          style={{
+            margin: 5,
+            broder: "1",
+            borderStyle: "solid",
+            borderColor: "#efefef",
+          }}
+        >
+          <div className="row" style={{ margin: 10 }}>
+            <img
+              src={logoPath}
+              style={{ height: "250px" }}
+            />
+          </div>
+          <div
+            className="row"
+            style={{
+              fontWeight: "bold",
+              fontSize: "20",
+              margin: 10,
+              textAlign: "center",
+              cursor: "pointer",
+            }}
+            onClick={(e) => this.viewProduct(sellerProduct)}
+          >
+            {sellerProduct.productName}
+          </div>
+          <div className="row" style={{ margin: 10, width: "100%" }}>
+            <a href={"/sellerProfile/" + sellerProduct.sellerId}>
+              {sellerProduct.sellerName}
+            </a>
+          </div>
+          <div className="row" style={{ margin: 10, textAlign: "center" }}>
+            {sellerProduct.productDesc}
+          </div>
+          <div className="row" style={{ margin: 10, textAlign: "center" }}>
+            ${sellerProduct.price}
+          </div>
+          <div className="row" style={{ margin: 10 }}>
+            <StarRatings
+              rating={sellerProduct.avgRating}
+              starRatedColor="yellow"
+              starDimension="20px"
+              starSpacing="6px"
+              numberOfStars={5}
+              name="rating"
+            />
           </div>
         </div>
       );
-    });
-    // }
+  });
 
     return (
-      <React.Fragment>
+      <div>
         <div className="auth-inner4">
           <br />
           <h4>Seller : {this.props.location.sellerName}</h4>
@@ -271,9 +330,10 @@ class ProductView extends React.Component {
           <br />
           {monthWiseSalesAmount}
           <h6>Products </h6>
-          {products}
+          <div className="row">{products}</div>
+          
         </div>
-      </React.Fragment>
+      </div>
     );
   }
 }
