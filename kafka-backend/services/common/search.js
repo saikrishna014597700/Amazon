@@ -83,7 +83,7 @@ let search = async (msg, callback) => {
     // .sort(sort)
     // .skip(skip)
     // .limit(limit);
-
+    
     console.log("search results befe:::", products.length);
     var sellers = await Seller.find({
       sellerName: { $regex: msg.searchTerm, $options: "i" },
@@ -104,7 +104,8 @@ let search = async (msg, callback) => {
     //   console.log("pros is =>" + pros.length);
     //   Array.prototype.push.apply(products, pros);
     // });
-
+    if (msg.sellerId) {
+    } else {
     await sellers.reduce(async (promise, seller) => {
       await promise;
       console.log("sellerid is =>", seller);
@@ -122,6 +123,7 @@ let search = async (msg, callback) => {
       console.log("pros is =>" + pros.length);
       Array.prototype.push.apply(products, pros);
     }, Promise.resolve());
+  }
     console.log("search results:::", products.length);
 
     if (skip < products.length && skip + limit < products.length) {

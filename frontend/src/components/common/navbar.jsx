@@ -29,17 +29,18 @@ class Navbar extends Component {
     this.setState({ active: !currentState });
   }
 
-  handleLogout() {
+ async handleLogout() {
     localStorage.removeItem("id");
     localStorage.removeItem("role");
     localStorage.removeItem("name");
     localStorage.removeItem("imagePath");
     localStorage.removeItem("cartSize");
     localStorage.removeItem("token");
-
-    this.setState({
-      redirectVar: <Redirect to="/login" />,
+    console.log("logging you out mate !!")
+    await this.setState({
+      redirect: "/login"
     });
+    console.log("logged  out mate !!")
   }
 
   goToHome = () => {
