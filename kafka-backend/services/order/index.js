@@ -21,7 +21,6 @@ let handle_request = (msg, callback) => {
         getOpenOrders(msg, callback);
         break;
     }
-  }
 };
 
 exports.handle_request = handle_request;
