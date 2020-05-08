@@ -7,6 +7,7 @@ import $ from "jquery";
 import { Redirect } from "react-router";
 import logo from "./shoe.jpg";
 import { Link } from "react-router-dom";
+import Env from "../../helpers/Env";
 
 export default class orders extends Component {
   constructor() {
@@ -32,17 +33,17 @@ export default class orders extends Component {
     //var sellerId = "123";
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
+      .get(`${Env.host}/api/orders/getAllOrders/?userId=` + localStorage.getItem("id"))
       .then(async (response) => {
         console.log("response of all orders are::", response);
         response = response
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-        await axios.get("http://localhost:3001/api/orders/getOpenOrders/?userId=" + localStorage.getItem("id"))
+        await axios.get(`${Env.host}/api/orders/getOpenOrders/?userId=` + localStorage.getItem("id"))
       .then(async (openresponse) => {
         console.log("Pro are::", openresponse);
         openresponse = openresponse
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-        await axios.get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
+        await axios.get(`${Env.host}/api/orders/getCancelledOrders/?userId=` + localStorage.getItem("id"))
       .then((Cancelledresponse) => {
         console.log("Cncelled orders are::", Cancelledresponse);
         Cancelledresponse = Cancelledresponse
@@ -75,22 +76,22 @@ export default class orders extends Component {
         prodId : prodId,
         orderId:orderId
     }
-    await axios.post("http://localhost:3001/api/orders/cancelOrder", payload).then(async (res) => {
+    await axios.post(`${Env.host}/api/orders/cancelOrder`, payload).then(async (res) => {
         console.log('response is::', res)
         alert(res.data)
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios
-        .get("http://localhost:3001/api/orders/getAllOrders/?userId=" + localStorage.getItem("id"))
+        .get(`${Env.host}/api/orders/getAllOrders/?userId=` + localStorage.getItem("id"))
         .then(async (response) => {
           console.log("response of all orders are::", response);
           response = response
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-          await axios.get("http://localhost:3001/api/orders/getOpenOrders/?userId=" + localStorage.getItem("id"))
+          await axios.get(`${Env.host}/api/orders/getOpenOrders/?userId=` + localStorage.getItem("id"))
         .then(async (openresponse) => {
           console.log("Pro are::", openresponse);
           openresponse = openresponse
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-          await axios.get("http://localhost:3001/api/orders/getCancelledOrders/?userId=" + localStorage.getItem("id"))
+          await axios.get(`${Env.host}/api/orders/getCancelledOrders/?userId=` + localStorage.getItem("id"))
         .then((Cancelledresponse) => {
           console.log("Cncelled orders are::", Cancelledresponse);
           Cancelledresponse = Cancelledresponse

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Env from "../../helpers/Env";
 // import { Glyphicon } from 'react-bootstrap';
 
 class Star extends Component {

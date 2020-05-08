@@ -7,6 +7,7 @@ import $ from "jquery";
 import { Redirect } from "react-router";
 import logo from "./shoe.jpg";
 import { Link } from "react-router-dom";
+import Env from "../../helpers/Env";
 
 export default class AdminProductTrackingDetails extends Component {
   constructor() {
@@ -38,7 +39,7 @@ export default class AdminProductTrackingDetails extends Component {
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       axios
         .get(
-          `http://localhost:3001/api/seller/ProductTrackingDetails/?orderId=${orderId}&productId=${productId}`
+          `${Env.host}/api/seller/ProductTrackingDetails/?orderId=${orderId}&productId=${productId}`
         )
         .then((response) => {
           console.log("Pro are::", response.data.products[0].trackingInfo);
@@ -81,7 +82,7 @@ export default class AdminProductTrackingDetails extends Component {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .post(
-        `http://localhost:3001/api/seller/updateSellerTrackingDetails/?orderId=${this.state.orderId}&productId=${this.state.productId}`,
+        `${Env.host}/api/seller/updateSellerTrackingDetails/?orderId=${this.state.orderId}&productId=${this.state.productId}`,
         data
       )
       .then((response) => {

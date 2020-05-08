@@ -5,6 +5,7 @@ import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import "./style.css";
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 export default class customerCards extends Component {
   constructor() {
@@ -41,7 +42,7 @@ export default class customerCards extends Component {
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
         .post(
-          "http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" +
+          `${Env.host}/api/customerDetails/saveCustomerCards/?userId=` +
             localStorage.getItem("id"),
           selectedCard
         )
@@ -66,7 +67,7 @@ export default class customerCards extends Component {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post(
-        "http://localhost:3001/api/customerDetails/deleteCustomerCard/?userId=" +
+        `${Env.host}/api/customerDetails/deleteCustomerCard/?userId=` +
           localStorage.getItem("id"),
         selectedCard
       )
@@ -111,7 +112,7 @@ export default class customerCards extends Component {
     );
     await axios
       .get(
-        "http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" +
+        `${Env.host}/api/customerDetails/getCustomerCards/?userId=` +
           data
       )
       .then((res) => {
@@ -127,7 +128,7 @@ export default class customerCards extends Component {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
-        "http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" +
+        `${Env.host}/api/customerDetails/getCustomerCards/?userId=` +
           data
       )
       .then((res) => {

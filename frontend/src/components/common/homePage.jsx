@@ -18,6 +18,7 @@ const override = css`
     border-color: rgb(254, 190, 98);
     border: 5px solid rgb(254, 190, 98);
 `;
+import Env from "../../helpers/Env";
 
 export default class HomePage extends Component {
   constructor() {
@@ -93,9 +94,11 @@ export default class HomePage extends Component {
       sellerId: sellerId,
     };
     console.log("payload before search=>", payload);
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     await axios
-      .post("http://localhost:3001/api/common/search/", payload)
+      .post(`${Env.host}/api/common/search/`, payload)
       .then(async (response) => {
         console.log("Pro are::", response);
         let len = response.data.length;
@@ -105,9 +108,7 @@ export default class HomePage extends Component {
           if(! json[response.data[i].sellerId]){
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
-            .get(
-              `http://localhost:3001/api/seller/profile/${response.data[i].sellerId}`
-            )
+            .get(`${Env.host}/api/seller/profile/${response.data[i].sellerId}`)
             .then((seller) => {
              
              json[response.data[i].sellerId] = seller.data.sellerName;
@@ -150,11 +151,18 @@ export default class HomePage extends Component {
 
   async componentDidUpdate(prevProps) {
     if (
-      this.props.match.params.searchTerm != prevProps.match.params.searchTerm
+      this.props.match.params.searchTerm != prevProps.match.params.searchTerm ||
+      this.props.match.params.searchCategory !=
+        prevProps.match.params.searchCategory
     ) {
       console.log("here in update=>");
       await this.setState({
         searchTerm: this.props.match.params.searchTerm,
+        searchCategory: this.props.match.params.searchCategory,
+        page: 1,
+        limit: 10,
+        maxPrice: -1,
+        minPrice: -1,
       });
       var sellerId;
     if (localStorage.getItem("role") == "Seller") {
@@ -200,6 +208,7 @@ export default class HomePage extends Component {
   changeLimit = async (e) => {
     await this.setState({
       limit: e.target.value,
+      page: 1,
     });
     let sellerId="";
     if (localStorage.getItem("role") == "Seller") {
@@ -210,7 +219,10 @@ export default class HomePage extends Component {
 
   render() {
     let redirectVar = null;
-    if (!localStorage.getItem("id")) {
+    if (localStorage.getItem("id")) {
+     console.log("logged in ")
+    }else{
+      console.log("logged out ")
       redirectVar = <Redirect to="/login" />;
     }
     if (this.state.redirect) {
@@ -364,7 +376,7 @@ export default class HomePage extends Component {
             borderColor: "#efefef",
           }}
         >
-          {redirectVar}
+       
           <div className="row" style={{ margin: 10 }}>
             <img src={logoPath} style={{ height: "250px" }} />
           </div>
@@ -408,6 +420,7 @@ export default class HomePage extends Component {
     });
     return (
       <div>
+        {redirectVar}
         <ClipLoader
           css={override}
           sizeUnit={"px"}
@@ -445,6 +458,8 @@ export default class HomePage extends Component {
             <br></br>
             <div className="row">
               <div className="col-md-9"></div>
+
+              
               {paginationDiv}
             </div>
           </div>

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 class Home extends Component {
   constructor() {

@@ -7,6 +7,7 @@ import $ from "jquery";
 import { Redirect } from "react-router";
 import logo from "./shoe.jpg";
 import { Link } from "react-router-dom";
+import Env from "../../helpers/Env";
 
 export default class SellerOrders extends Component {
   constructor() {
@@ -42,7 +43,7 @@ export default class SellerOrders extends Component {
     var openOrdersTemp;
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .get(`http://localhost:3001/api/seller/getOrderDetails/${sellerId}`)
+      .get(`${Env.host}/api/seller/getOrderDetails/${sellerId}`)
       .then((response) => {
         console.log("Pro are::1", response.data);
         if (response.data) {
@@ -55,7 +56,7 @@ export default class SellerOrders extends Component {
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
-        `http://localhost:3001/api/seller/getDeliveredOrderDetails/${sellerId}`
+        `${Env.host}/api/seller/getDeliveredOrderDetails/${sellerId}`
       )
       .then((response) => {
         if (response.data) {
@@ -66,7 +67,7 @@ export default class SellerOrders extends Component {
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
-        `http://localhost:3001/api/seller/getCancelledOrderDetails/${sellerId}`
+        `${Env.host}/api/seller/getCancelledOrderDetails/${sellerId}`
       )
       .then((response) => {
         if (response.data) {
@@ -76,7 +77,7 @@ export default class SellerOrders extends Component {
       });
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .get(`http://localhost:3001/api/seller/getOpenOrderDetails/${sellerId}`)
+      .get(`${Env.host}/api/seller/getOpenOrderDetails/${sellerId}`)
       .then((response) => {
         if (response.data) {
           console.log("Pro are::4", response.data);
@@ -100,7 +101,7 @@ export default class SellerOrders extends Component {
     };
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/orders/cancelOrder", payload)
+      .post(`${Env.host}/api/orders/cancelOrder`, payload)
       .then(async (res) => {
         console.log("response is::", res);
         alert(res.data);

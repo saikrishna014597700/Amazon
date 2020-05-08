@@ -7,6 +7,7 @@ import $ from "jquery";
 import { Redirect } from "react-router";
 import logo from "./shoe.jpg";
 import { Link } from "react-router-dom";
+import Env from "../../helpers/Env";
 
 export default class OrderDetailsPage extends Component {
   constructor() {
@@ -23,7 +24,7 @@ export default class OrderDetailsPage extends Component {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(
-        `http://localhost:3001/api/seller/getParticularOrderDetails/${orderId}`
+        `${Env.host}/api/seller/getParticularOrderDetails/${orderId}`
       )
       .then((response) => {
         console.log("Pro are::", response);

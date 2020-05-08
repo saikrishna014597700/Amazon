@@ -8,6 +8,7 @@ var reviewAndRating = new Schema({
   rating: { type: Number },
   createDate: { type: Date },
   updateDate: { type: Date },
+  userName:{type:String}
 });
 
 var products = new Schema({

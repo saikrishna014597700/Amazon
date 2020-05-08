@@ -79,8 +79,8 @@ let search = async (msg, callback) => {
       isDeleted: 0,
       price: { $gte: minPrice, $lte: maxPrice },
       sellerId: { $regex: sellerId, $options: "i" },
-    });
-    // .sort(sort)
+    })
+    .sort(sort);
     // .skip(skip)
     // .limit(limit);
     
