@@ -268,7 +268,7 @@ export default class AdminProductTrackingDetails extends Component {
 
     let editButton;
 
-    if (localStorage.getItem("role") === "Seller") {
+    if (localStorage.getItem("role") === "Admin") {
       editButton = (
         <button
           className="Amazon"

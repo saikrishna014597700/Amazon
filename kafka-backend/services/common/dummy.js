@@ -11,32 +11,25 @@ let dummy = async (msg, callback) => {
   const today = moment();
   try {
     console.log("search term and category", msg);
-
-    // let avgRating = "4.2";
-    // let rating = {
-    //   userId: "22",
-    //   review: "good product!",
-    //   rating: 4.2,
-    // };
-    var products = await Product.find(
+    var products = await Product.deleteMany(
       {
-        productName: { $regex: "", $options: "i" },
+        productName: { $regex: "product", $options: "i" },
       }
     );
 
-    products.forEach( async product =>{
-      var price = 0;
-      if(isNaN(product.price))
-        price = 30;
-      else
-        price = parseInt(product.price);
-      await Product.updateOne(
-        {
-          productName:  product.productName,
-        },
-        {$set:{price:price}}
-      );
-    })
+    // products.forEach( async product =>{
+    //   var price = 0;
+    //   if(isNaN(product.price))
+    //     price = 30;
+    //   else
+    //     price = parseInt(product.price);
+    //   await Product.updateOne(
+    //     {
+    //       productName:  product.productName,
+    //     },
+    //     {$set:{price:price}}
+    //   );
+    // })
 
     // response.result = products.slice(startIndex, startIndex + limit);
     response.status = STATUS_CODE.CREATED_SUCCESSFULLY;

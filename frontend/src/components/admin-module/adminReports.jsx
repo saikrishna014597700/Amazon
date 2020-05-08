@@ -125,7 +125,13 @@ export default class AdminReports extends Component {
     this.state.sellerReports[this.state.graphSelection].map((order) => {
       labels.push(order.name);
       data.push(order.sales);
-      backgroundColor.push("rgba(245, 212, 122)");
+      var dynamicColors = function() {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return "rgb(" + r + "," + g + "," + b + ")";
+     };
+      backgroundColor.push(dynamicColors());
     });
 
     var state = {};
@@ -160,7 +166,13 @@ export default class AdminReports extends Component {
     this.state.sellerReports.top10HighestRated.map((product) => {
       labels.push(product.productName);
       data.push(product.avgRating);
-      backgroundColor.push("rgba(254, 190, 98)");
+      var dynamicColors = function() {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return "rgb(" + r + "," + g + "," + b + ")";
+     };
+      backgroundColor.push(dynamicColors());
     });
 
     var state = {};
@@ -202,7 +214,13 @@ export default class AdminReports extends Component {
       labels.push(product.product_name);
       // labels.push("Hi");
       data.push(product.view_count);
-      backgroundColor.push("rgba(254, 190, 98)");
+      var dynamicColors = function() {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return "rgb(" + r + "," + g + "," + b + ")";
+     };
+      backgroundColor.push(dynamicColors());
     });
 
     var state = {};
@@ -255,6 +273,13 @@ export default class AdminReports extends Component {
               text: "Top 10 products viewed per day",
               fontSize: 25,
             },
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
           }}
         />
       </div>
@@ -269,6 +294,13 @@ export default class AdminReports extends Component {
               text: "Top 10 Most Rated Products",
               fontSize: 25,
             },
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
           }}
         />
       </div>
@@ -287,6 +319,13 @@ export default class AdminReports extends Component {
             //   display: "xx",
             //   position: "yy",
             // },
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
+                }
+              }]
+            }
           }}
         />
       </div>

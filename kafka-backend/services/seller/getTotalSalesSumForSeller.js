@@ -11,9 +11,14 @@ let getTotalSalesSumForSeller = async (msg, callback) => {
   let response = {};
   let err = {};
   const today = moment();
+  var query = `select SUM(product_sales_um) AS sales_sum from product_analytics p
+  join map_order_product m
+ ON p.order_id=m.order_Id and
+ p.product_Id=m.product_Id and m.status!="Cancelled" and p.seller_Id=${msg.sellerId}`;
   try {
     pool.query(
-      `SELECT SUM(product_sales_um) AS sales_sum FROM amazonDB.product_analytics WHERE seller_Id = ${msg.sellerId}`,
+      // `SELECT SUM(product_sales_um) AS sales_sum FROM amazonDB.product_analytics WHERE seller_Id = ${msg.sellerId}`,
+      query,
       async (err, sqlResult) => {
         console.log("From sales sum", sqlResult);
         if (sqlResult && sqlResult.length > 0) {

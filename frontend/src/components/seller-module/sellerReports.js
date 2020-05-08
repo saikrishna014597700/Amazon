@@ -17,6 +17,9 @@ export default class SellerReports extends Component {
       analyticsArrayState: [],
       chartData: [],
       salesSum: "",
+      month: "",
+      year: "",
+      monthlySalesSum: "",
     };
   }
 
@@ -52,10 +55,16 @@ export default class SellerReports extends Component {
         var backgroundColor = [];
         // let report = this.state.sellerReports.map((order) => {});
         this.state.sellerReports.map((order) => {
+          var dynamicColors = function () {
+            var r = Math.floor(Math.random() * 255);
+            var g = Math.floor(Math.random() * 255);
+            var b = Math.floor(Math.random() * 255);
+            return "rgb(" + r + "," + g + "," + b + ")";
+          };
           labels.push(order.product_name);
           // labels.push("Hi");
           data.push(order.product_sales_um);
-          backgroundColor.push("rgba(245, 212, 122)");
+          backgroundColor.push(dynamicColors());
         });
         console.log("backgroundColor", backgroundColor);
         var state = {};
@@ -85,7 +94,40 @@ export default class SellerReports extends Component {
       });
   }
 
-  getChartData() {}
+  async handlemonthlySalesMonth(e) {
+    await this.setState({
+      month: e.target.value,
+    });
+  }
+  async handlemonthlySalesYear(e) {
+    await this.setState({
+      year: e.target.value,
+    });
+  }
+
+  async getMonthWiseSalesSum(e) {
+    const data = {
+      month: this.state.month,
+      year: this.state.year,
+    };
+    await axios
+      .post(
+        `http://localhost:3001/api/seller/getMonthWiseSalesSum/${localStorage.getItem(
+          "id"
+        )}`,
+        data
+      )
+      .then((response) => {
+        console.log("Res isss", response.data);
+        if (response.data == "No sales amount in given range") {
+          alert("No sales amount in given range");
+        } else {
+          this.setState({
+            monthlySalesSum: response.data[0].sales_sum,
+          });
+        }
+      });
+  }
 
   async redirectToProductsPage(event) {
     this.setState({ redirect: `/viewAllsellerOrders` });
@@ -105,9 +147,88 @@ export default class SellerReports extends Component {
         redirectVar = <Redirect to="/login" />;
       }
     }
+
+    let monthWiseSalesAmount = (
+      <div>
+        <table>
+          <tr>
+            <th>Month</th>
+            <th>Year</th>
+            <th></th>
+          </tr>
+          <tr>
+            <td>
+              {" "}
+              <select
+                style={{
+                  width: "200px",
+                  height: "50px",
+                  backgroundColor: "#e7eae8",
+                  borderTopLeftRadius: "5px",
+                  borderBottomLeftRadius: "5px",
+                  fontSize: "16px",
+                }}
+                name="trackingStatus"
+                onChange={(e) => this.handlemonthlySalesMonth(e)}
+              >
+                <option value="">--Select Month--</option>
+                <option value="01">Janaury</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+              </select>
+            </td>
+            <td>
+              <select
+                style={{
+                  width: "200px",
+                  height: "50px",
+                  backgroundColor: "#e7eae8",
+                  borderTopLeftRadius: "5px",
+                  borderBottomLeftRadius: "5px",
+                  fontSize: "16px",
+                }}
+                name="trackingStatus"
+                onChange={(e) => this.handlemonthlySalesYear(e)}
+              >
+                <option value="">--Select Year--</option>
+                <option value="2020">2020</option>
+                <option value="2019">2019</option>
+                <option value="2018">2018</option>
+              </select>
+            </td>
+            <td>
+              <button
+                className="Amazon"
+                style={{
+                  width: "130px",
+                  height: "50px",
+                  "margin-left": "5px",
+                }}
+                onClick={(e) => this.getMonthWiseSalesSum(e)}
+              >
+                Get sales sum
+              </button>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <h6>Monthly Sales Sum : {this.state.monthlySalesSum}</h6>
+        <br />
+      </div>
+    );
+
     let graph = (
       <div>
-        {/* <Bar
+        <Bar
           data={this.state.chartData}
           options={{
             title: {
@@ -115,8 +236,17 @@ export default class SellerReports extends Component {
               text: "Seller Sales Sum Graph",
               fontSize: 25,
             },
+            scales: {
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
           }}
-        /> */}
+        />
 
         <Pie
           data={this.state.chartData}
@@ -216,6 +346,8 @@ export default class SellerReports extends Component {
                 </tr>
               </table>
             </div>
+            <br />
+            {monthWiseSalesAmount}
             <br />
 
             {report}

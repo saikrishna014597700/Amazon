@@ -47,15 +47,17 @@ class ProductView extends React.Component {
             products: res.data,
           });
           for (var i in res.data) {
-            await axios
-              .get(
-                `http://localhost:3001/api/seller/profile/${res.data[i].sellerId}`
-              )
-              .then((seller) => {
-                res.data[i].sellerName = seller.data.sellerName;
-              });
+            if (res.data[i].sellerId) {
+              await axios
+                .get(
+                  `http://localhost:3001/api/seller/profile/${res.data[i].sellerId}`
+                )
+                .then((seller) => {
+                  res.data[i].sellerName = seller.data.sellerName;
+                });
+            }
+            console.log("response after seller name is::", res);
           }
-          console.log("response after seller name is::", res);
         }
       });
     await axios
