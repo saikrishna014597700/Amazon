@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -36,7 +37,7 @@ export default class selectCard extends Component {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
-        "http://localhost:3001/api/customerDetails/getCustomerCards/?userId=" +
+        `${Env.host}/api/customerDetails/getCustomerCards/?userId=` +
           this.state.userId
       )
       .then((res) => {
@@ -49,7 +50,7 @@ export default class selectCard extends Component {
   async getCartDetails() {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/getCompleteCart", {
+      .post(`${Env.host}/api/cart/getCompleteCart`, {
         userId: this.state.userId,
       })
       .then((response) => {
@@ -63,7 +64,7 @@ export default class selectCard extends Component {
               axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               axios
                 .get(
-                  "http://localhost:3001/api/product/getProductDetails/?productId=" +
+                  `${Env.host}/api/product/getProductDetails/?productId=` +
                     productId
                 )
                 .then(async (res) => {
@@ -138,7 +139,7 @@ export default class selectCard extends Component {
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios
           .post(
-            "http://localhost:3001/api/customerDetails/saveCustomerCards/?userId=" +
+            `${Env.host}/api/customerDetails/saveCustomerCards/?userId=` +
               localStorage.getItem("id"),
             payload
           )

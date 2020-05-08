@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import Env from "../../helpers/Env";
 import { Redirect } from "react-router";
 
 const productImage = require("../../utils/product.jpg");
@@ -31,7 +32,7 @@ export default class checkout extends Component {
   async getCart() {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/getCompleteCart/", {
+      .post(`${Env.host}/api/cart/getCompleteCart/`, {
         userId: this.state.userId,
       })
       .then((response) => {
@@ -45,7 +46,7 @@ export default class checkout extends Component {
               axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               axios
                 .get(
-                  "http://localhost:3001/api/product/getProductDetails/?productId=" +
+                  `${Env.host}/api/product/getProductDetails/?productId=` +
                     productId
                 )
                 .then(async (res) => {
@@ -147,7 +148,7 @@ export default class checkout extends Component {
     };
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
-      .post("http://localhost:3001/api/cart/saveOrder", data)
+      .post(`${Env.host}/api/cart/saveOrder`, data)
       .then(async (response) => {
         if (response.status == 201) {
           console.log("saved successfully" + JSON.stringify(response));
@@ -156,7 +157,7 @@ export default class checkout extends Component {
           localStorage.removeItem("selectedCard");
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
-            .post("http://localhost:3001/api/cart/deleteCompleteCart", {
+            .post(`${Env.host}/api/cart/deleteCompleteCart`, {
               userId: this.state.userId,
             })
             .then((response) => {
@@ -171,7 +172,7 @@ export default class checkout extends Component {
             let proCat = "";
             axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios
-            .get(`http://localhost:3001/api/admin/get-product-categories`)
+            .get(`${Env.host}/api/admin/get-product-categories`)
             .then((res) => {
               console.log("response is::", res);
               res.data.map((category)=>{
@@ -191,12 +192,12 @@ export default class checkout extends Component {
             };
             axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios.post(
-              "http://localhost:3001/api/cart/saveToMapOrder",
+              `${Env.host}/api/cart/saveToMapOrder`,
               payload
             );
             axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios.post(
-              "http://localhost:3001/api/cart/saveProductAnalytics",
+              `${Env.host}/api/cart/saveProductAnalytics`,
               payload
             );
           });

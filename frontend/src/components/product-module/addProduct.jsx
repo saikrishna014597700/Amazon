@@ -5,6 +5,7 @@ import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import $ from "jquery";
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 export default class AddProduct extends Component {
   constructor() {
@@ -40,7 +41,7 @@ export default class AddProduct extends Component {
   async componentDidMount() {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .get("http://localhost:3001/api/admin/get-product-categories")
+      .get(`${Env.host}/api/admin/get-product-categories`)
       .then((res) => {
         console.log("response is::", res);
         this.setState({
@@ -75,7 +76,7 @@ export default class AddProduct extends Component {
     };
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
-      .post("http://localhost:3001/api/product/addProduct/", payload)
+      .post(`${Env.host}/api/product/addProduct/`, payload)
       .then((response) => {
         console.log("Response is", response.data);
         if (response.status == 200 && response.data) {
@@ -87,7 +88,7 @@ export default class AddProduct extends Component {
             axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios
               .post(
-                "http://localhost:3001/api/file/uploadImages/?productId=" +
+                `${Env.host}/api/file/uploadImages/?productId=` +
                   response.data,
                 fileData,
                 {

@@ -2,8 +2,10 @@ import React, { Component } from "react";
 import axios from "axios";
 import "./cart.css";
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 const productImage = require("../../utils/product.jpg");
+
 const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 };
@@ -56,7 +58,7 @@ export default class extends Component {
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/updateCart/", payload)
+      .post(`${Env.host}/api/cart/updateCart/`, payload)
       .then((res) => {
         if (res) {
           console.log("response in add to cart =>", JSON.stringify(res));
@@ -69,7 +71,7 @@ export default class extends Component {
   async getAllDetails() {
     axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/getCompleteCart/", {
+      .post(`${Env.host}/api/cart/getCompleteCart/`, {
         userId: this.state.userId,
       })
       .then((response) => {
@@ -85,7 +87,7 @@ export default class extends Component {
               axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               axios
                 .get(
-                  "http://localhost:3001/api/product/getProductDetails/?productId=" +
+                  `${Env.host}/api/product/getProductDetails/?productId=` +
                     productId
                 )
                 .then(async (res) => {
@@ -95,7 +97,7 @@ export default class extends Component {
                   finalPrice = finalPrice + price * product.quantity;
                   console.log("in response data=>",res.data[0].sellerId);
                   axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-                  await axios.get(`http://localhost:3001/api/seller/profile/${res.data[0].sellerId}`)
+                  await axios.get(`${Env.host}/api/seller/profile/${res.data[0].sellerId}`)
                   .then((seller)=>{
                     res.data[0].sellerName = seller.data.sellerName
                     res.data[0].sellerId = seller.data._id
@@ -122,7 +124,7 @@ export default class extends Component {
   async getSaveForLater() {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/getSaveForLater/", {
+      .post(`${Env.host}/api/cart/getSaveForLater/`, {
         userId: this.state.userId,
       })
       .then((response) => {
@@ -134,7 +136,7 @@ export default class extends Component {
               axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               axios
                 .get(
-                  "http://localhost:3001/api/product/getProductDetails/?productId=" +
+                  `${Env.host}/api/product/getProductDetails/?productId=` +
                     productId
                 )
                 .then(async (res) => {
@@ -163,7 +165,7 @@ export default class extends Component {
     let isProductPresent = false;
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/getSaveForLater/", payload)
+      .post(`${Env.host}/api/cart/getSaveForLater/`, payload)
       .then((res) => {
         console.log("in get save on click=>", JSON.stringify(res));
         if (res.data.length != 0) {
@@ -178,7 +180,7 @@ export default class extends Component {
     if (isProductPresent) {
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
-        .post("http://localhost:3001/api/cart/deleteFromCart/", payload)
+        .post(`${Env.host}/api/cart/deleteFromCart/`, payload)
         .then((res) => {
           if (res) {
             let cartSize = localStorage.getItem("cartSize");
@@ -194,7 +196,7 @@ export default class extends Component {
     } else {
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
-        .post("http://localhost:3001/api/cart/postSaveForLater/", payload)
+        .post(`${Env.host}/api/cart/postSaveForLater/`, payload)
         .then((res) => {
           if (res) {
             console.log(
@@ -208,7 +210,7 @@ export default class extends Component {
         });
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
-        .post("http://localhost:3001/api/cart/deleteFromCart/", payload)
+        .post(`${Env.host}/api/cart/deleteFromCart/`, payload)
         .then((res) => {
           if (res) {
             console.log("response in delete from cart =>", JSON.stringify(res));
@@ -227,7 +229,7 @@ export default class extends Component {
     localStorage.setItem("cartSize", cartSize - product.quantity);
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
-      .post("http://localhost:3001/api/cart/deleteFromCart/", {
+      .post(`${Env.host}/api/cart/deleteFromCart/`, {
         userId: this.state.userId,
         productId: product._id,
       })
@@ -253,7 +255,7 @@ export default class extends Component {
     };
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/addToCart/", payload)
+      .post(`${Env.host}/api/cart/addToCart/`, payload)
       .then((res) => {
         if (res) {
           console.log("response in add to cart =>", JSON.stringify(res));
@@ -263,7 +265,7 @@ export default class extends Component {
       });
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/deleteSaveForLater/", payload)
+      .post(`${Env.host}/api/cart/deleteSaveForLater/`, payload)
       .then((res) => {});
     sleep(100).then(() => {
       this.getAllDetails();
@@ -278,7 +280,7 @@ export default class extends Component {
     };
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/deleteSaveForLater/", payload)
+      .post(`${Env.host}/api/cart/deleteSaveForLater/`, payload)
       .then((res) => {});
     sleep(100).then(() => {
       this.getAllDetails();

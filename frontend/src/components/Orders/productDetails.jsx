@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Form, Button, FormGroup } from "react-bootstrap";
+import Env from "../../helpers/Env";
 
 export default class ProductDetails extends Component {
     constructor() {
@@ -43,7 +44,7 @@ export default class ProductDetails extends Component {
             orderId:orderId
         }
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-        await axios.post("http://localhost:3001/api/orders/cancelOrder", payload).then((res) => {
+        await axios.post(`${Env.host}/api/orders/cancelOrder`, payload).then((res) => {
             console.log('response is::', res)
             alert(res.data)
         })

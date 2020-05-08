@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 export default class addressSelect extends Component {
   constructor() {
@@ -21,7 +22,7 @@ export default class addressSelect extends Component {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
-        "http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" +
+        `${Env.host}/api/customerDetails/getCustomerAddresses/?userId=` +
           userId
       )
       .then((res) => {

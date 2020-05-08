@@ -17,6 +17,7 @@ const override = css`
     border-color: rgb(254, 190, 98);
     border: 5px solid rgb(254, 190, 98);
 `;
+import Env from "../../helpers/Env";
 
 export default class SearchProduct extends Component {
   constructor() {
@@ -94,7 +95,7 @@ export default class SearchProduct extends Component {
     console.log("payload before search=>", payload);
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/common/search/", payload)
+      .post(`${Env.host}/api/common/search/`, payload)
       .then(async (response) => {
         console.log("Products found are::", response);
         let len = response.data.length;
@@ -104,7 +105,7 @@ export default class SearchProduct extends Component {
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .get(
-              `http://localhost:3001/api/seller/profile/${response.data[i].sellerId}`
+              `${Env.host}/api/seller/profile/${response.data[i].sellerId}`
             )
             .then((seller) => {
               // console.log("each seller name=>" + seller.data.sellerName);

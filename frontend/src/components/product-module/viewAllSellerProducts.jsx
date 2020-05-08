@@ -6,6 +6,7 @@ import { Card, Icon, Image } from "semantic-ui-react";
 import $ from "jquery";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
+import Env from "../../helpers/Env";
 
 export default class viewAllSellerProducts extends Component {
   constructor(props) {
@@ -38,7 +39,7 @@ export default class viewAllSellerProducts extends Component {
       sellerId: localStorage.getItem("id"),
     };
     axios
-      .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
+      .post(`${Env.host}/api/product/viewAllSellerProducts/`, payload)
       .then((response) => {
         console.log("Pro are::", response);
         this.setState({
@@ -53,7 +54,7 @@ export default class viewAllSellerProducts extends Component {
       sellerId: localStorage.getItem("id"),
     };
     axios
-      .post("http://localhost:3001/api/product/viewAllSellerProducts/", payload)
+      .post(`${Env.host}/api/product/viewAllSellerProducts/`, payload)
       .then((response) => {
         console.log("Pro are::", response);
         this.setState({
@@ -71,7 +72,7 @@ export default class viewAllSellerProducts extends Component {
       category: this.state.category,
     };
     axios
-      .post("http://localhost:3001/api/product/addProduct/", payload)
+      .post(`${Env.host}/api/product/addProduct/`, payload)
       .then((response) => {});
   }
 

@@ -7,6 +7,7 @@ import { Redirect } from "react-router";
 import SearchProduct from "./searchProduct";
 import Glyph from "owp.glyphicons";
 import { Badge } from "react-bootstrap";
+import Env from "../../helpers/Env";
 
 class Navbar extends Component {
   constructor(props) {
@@ -36,10 +37,15 @@ class Navbar extends Component {
     localStorage.removeItem("imagePath");
     localStorage.removeItem("cartSize");
     localStorage.removeItem("token");
+    localStorage.removeItem("selectedAddress");
+    localStorage.removeItem("selectedCard");
+    
+    localStorage.clear();
+
     console.log("logging you out mate !!")
     await this.setState({
       redirect: "/login"
-    });
+    })
     console.log("logged  out mate !!")
   }
 
@@ -95,7 +101,7 @@ class Navbar extends Component {
   async componentDidMount() {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .get("http://localhost:3001/api/admin/get-product-categories")
+      .get(`${Env.host}/api/admin/get-product-categories`)
       .then((response) => {
         console.log("response in navbar==>" + JSON.stringify(response));
         this.setState({
@@ -104,7 +110,7 @@ class Navbar extends Component {
       });
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/getCompleteCart/", {
+      .post(`${Env.host}/api/cart/getCompleteCart/`, {
         userId: this.state.userId,
       })
       .then((response) => {
@@ -130,7 +136,7 @@ class Navbar extends Component {
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     axios
-      .post("http://localhost:3001/api/common/search/", payload)
+      .post(`${Env.host}/api/common/search/`, payload)
       .then(async (response) => {
         console.log("Pro are::", response);
         await this.setState({

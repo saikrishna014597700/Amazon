@@ -13,7 +13,9 @@ let addRatingAndReview = async (msg, callback) => {
       userId: msg.userId,
       rating: msg.rating,
       review: msg.review,
+      userName: msg.userName
     };
+    console.log("review=>",reviewAndRating);
     Product.updateOne(
       { _id: productId },
       { $push: { reviewAndRatings: reviewAndRating } },

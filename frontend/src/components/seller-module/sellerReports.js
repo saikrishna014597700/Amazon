@@ -29,7 +29,7 @@ export default class SellerReports extends Component {
     // console.log("orderId::", orderId);
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .get(`http://localhost:3001/api/seller/sellerReports/${sellerId}`)
+      .get(`${Env.host}/api/seller/sellerReports/${sellerId}`)
       .then((response) => {
         console.log("sellerReports are::", response);
         this.setState({
@@ -86,7 +86,7 @@ export default class SellerReports extends Component {
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .get(
-        `http://localhost:3001/api/seller/getTotalSalesSumForSeller/${sellerId}`
+        `${Env.host}/api/seller/getTotalSalesSumForSeller/${sellerId}`
       )
       .then((response) => {
         console.log("Res isss", response.data[0].sales_sum);
@@ -115,7 +115,7 @@ export default class SellerReports extends Component {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
       .post(
-        `http://localhost:3001/api/seller/getMonthWiseSalesSum/${localStorage.getItem(
+        `${Env.host}/api/seller/getMonthWiseSalesSum/${localStorage.getItem(
           "id"
         )}`,
         data

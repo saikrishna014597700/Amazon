@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import StarRatings from "react-star-ratings";
 import axios from "axios";
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 const productImage = require("../../utils/product.jpg");
 const product2Image = require("../../utils/product2.jpg");
@@ -50,7 +51,7 @@ export default class productDescription extends Component {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
       .get(
-        "http://localhost:3001/api/product/getProductDetails/?productId=" +
+        `${Env.host}/api/product/getProductDetails/?productId=` +
           this.state.productId
       )
       .then(async (response) => {
@@ -70,7 +71,7 @@ export default class productDescription extends Component {
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios
           .get(
-            `http://localhost:3001/api/seller/profile/${response.data[0].sellerId}`
+            `${Env.host}/api/seller/profile/${response.data[0].sellerId}`
           )
           .then((seller) => {
             // console.log("seller Idddd=>", seller);
@@ -84,7 +85,7 @@ export default class productDescription extends Component {
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .post(
-              "http://localhost:3001/api/customerDetails/getCustomerDetails/?userId=" +
+              `${Env.host}/api/customerDetails/getCustomerDetails/?userId=` +
                 review.userId
             )
             .then((res) => {
@@ -118,7 +119,7 @@ export default class productDescription extends Component {
     let productExists = false;
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/cart/getCart/", payload)
+      .post(`${Env.host}/api/cart/getCart/`, payload)
       .then((response) => {
         console.log("in get cart response", response);
         if (response) {
@@ -141,7 +142,7 @@ export default class productDescription extends Component {
     if (!productExists) {
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
-        .post("http://localhost:3001/api/cart/addToCart/", payload)
+        .post(`${Env.host}/api/cart/addToCart/`, payload)
         .then((res) => {
           if (res) {
           }
@@ -149,7 +150,7 @@ export default class productDescription extends Component {
     } else {
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
-        .post("http://localhost:3001/api/cart/updateCart/", payload)
+        .post(`${Env.host}/api/cart/updateCart/`, payload)
         .then((res) => {
           if (res) {
           }
@@ -166,7 +167,7 @@ export default class productDescription extends Component {
     console.log("view count payload=>", this.state.product);
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
-      .post("http://localhost:3001/api/product/updateViewCount", payload)
+      .post(`${Env.host}/api/product/updateViewCount`, payload)
       .then((response) => {
         console.log("view added");
       });
@@ -191,10 +192,11 @@ export default class productDescription extends Component {
       productId: this.state.productId,
       rating: this.state.newRating,
       review: this.userReview.value,
+      userName: localStorage.getItem("name")
     };
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
-      .post("http://localhost:3001/api/product/addRatingAndReview", payLoad)
+      .post(`${Env.host}/api/product/addRatingAndReview`, payLoad)
       .then(async (response) => {
         console.log("the response after adding the review is =>", response);
         if (response.status == 201) {
@@ -207,7 +209,7 @@ export default class productDescription extends Component {
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .get(
-              "http://localhost:3001/api/product/getProductDetails/?productId=" +
+              `${Env.host}/api/product/getProductDetails/?productId=` +
                 this.state.productId
             )
             .then(async (res) => {
@@ -260,7 +262,7 @@ export default class productDescription extends Component {
             }}
           >
             {/* <div className="col-md-1"></div> */}
-            {review.username}
+            {review.userName}
           </div>
           {/* <hr></hr> */}
           <div

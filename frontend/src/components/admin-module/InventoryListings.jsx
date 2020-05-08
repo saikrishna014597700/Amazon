@@ -92,7 +92,7 @@ class InventoryListings extends React.Component {
               axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
               await axios
                 .get(
-                  `http://localhost:3001/api/seller/profile/${res.data.result[i].sellerId}`
+                  `${Env.host}/api/seller/profile/${res.data.result[i].sellerId}`
                 )
                 .then((seller) => {
                   res.data.result[i].sellerName = seller.data.sellerName;

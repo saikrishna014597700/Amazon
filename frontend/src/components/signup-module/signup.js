@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "../login-module/login.css"
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 
 class SignUp extends Component {
@@ -32,7 +33,7 @@ class SignUp extends Component {
       role: this.state.option
     }
     await axios
-      .post("http://localhost:3001/api/auth/signup/", data)
+      .post(`${Env.host}/api/auth/signup/`, data)
       .then((response) => {
         this.setState({
           msg: response.data

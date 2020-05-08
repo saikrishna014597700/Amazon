@@ -43,7 +43,7 @@ class SelerProfile extends React.Component {
       path:  this.state.formData.name
     }
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    await axios.post("http://localhost:3001/api/file/uploadImage/?userId="+localStorage.getItem("id"),fileData,{
+    await axios.post(`${Env.host}/api/file/uploadImage/?userId=`+localStorage.getItem("id"),fileData,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }}).then((res)=>{

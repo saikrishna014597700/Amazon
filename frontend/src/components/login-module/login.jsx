@@ -5,6 +5,7 @@ import axios from "axios";
 import "./login.css";
 import { Redirect } from "react-router";
 const jwt_decode = require('jwt-decode');
+import Env from "../../helpers/Env";
 
 export default class Login extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ export default class Login extends Component {
         password: this.state.password,
       };
       await axios
-        .post("http://localhost:3001/api/auth/signin/", data)
+        .post(`${Env.host}/api/auth/signin/`, data)
         .then((response) => {
           if (response.data == "Invalid Inputs")
             this.setState({

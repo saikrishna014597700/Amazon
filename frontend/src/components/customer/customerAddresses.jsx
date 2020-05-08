@@ -5,6 +5,7 @@ import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import "./style.css"
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 export default class customerAddresses extends Component {
   constructor() {
@@ -27,7 +28,7 @@ export default class customerAddresses extends Component {
     if(document.forms[id].reportValidity()){
     console.log("selectedAddress::", selectedAddress)
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    await axios.post("http://localhost:3001/api/customerDetails/saveCustomerAddresses/?userId=" + localStorage.getItem("id"), selectedAddress).then((res) => {
+    await axios.post(`${Env.host}/api/customerDetails/saveCustomerAddresses/?userId=` + localStorage.getItem("id"), selectedAddress).then((res) => {
 
       console.log("addresses::", res.data)
       this.setState({
@@ -47,13 +48,16 @@ export default class customerAddresses extends Component {
       }
     }
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    await axios.post("http://localhost:3001/api/customerDetails/deleteCustomerAddress/?userId=" + localStorage.getItem("id"), selectedAddress).then((res) => {
+    await axios.post(`${Env.host}/api/customerDetails/deleteCustomerAddress/?userId=` + localStorage.getItem("id"), selectedAddress).then(async (res) => {
 
       console.log("addresses::", res.data)
-      this.setState({
-        addresses: res.data
+      await axios.get(`${Env.host}/api/customerDetails/getCustomerAddresses/?userId=` + localStorage.getItem("id")).then((resp) => {
+      console.log("addresses::", resp.data)
+        this.setState({
+          addresses: resp.data
+        })
       })
-    })
+      })
 
   }
 
@@ -95,7 +99,7 @@ export default class customerAddresses extends Component {
     var data = localStorage.getItem("id");
 
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    await axios.get("http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" + data).then((res) => {
+    await axios.get(`${Env.host}/api/customerDetails/getCustomerAddresses/?userId=` + data).then((res) => {
 
       console.log("addresses::", res.data)
       this.setState({
@@ -109,7 +113,7 @@ export default class customerAddresses extends Component {
     var data = localStorage.getItem("id");
 
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    await axios.get("http://localhost:3001/api/customerDetails/getCustomerAddresses/?userId=" + data).then((res) => {
+    await axios.get(`${Env.host}/api/customerDetails/getCustomerAddresses/?userId=` + data).then((res) => {
 
       console.log("addresses::", res.data)
       this.setState({

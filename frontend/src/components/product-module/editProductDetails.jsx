@@ -5,6 +5,7 @@ import axios from "axios";
 import { Card, Icon, Image } from "semantic-ui-react";
 import $ from "jquery";
 import { Redirect } from "react-router";
+import Env from "../../helpers/Env";
 
 export default class EditProductDetails extends Component {
   constructor() {
@@ -44,13 +45,13 @@ export default class EditProductDetails extends Component {
     };
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .post("http://localhost:3001/api/file/removeProductImage", data)
+      .post(`${Env.host}/api/file/removeProductImage`, data)
       .then(async (res) => {
         console.log("success", res);
         axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
         await axios
           .get(
-            `http://localhost:3001/api/product/getProductDetails/${productId}`
+            `${Env.host}/api/product/getProductDetails/${productId}`
           )
           .then((response) => {
             console.log("Pro are::", response);
@@ -67,7 +68,7 @@ export default class EditProductDetails extends Component {
     var productId = this.props.match.params.id;
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .get(`http://localhost:3001/api/product/getProductDetails/${productId}`)
+      .get(`${Env.host}/api/product/getProductDetails/${productId}`)
       .then((response) => {
         console.log("Pro are::", response);
         this.setState({
@@ -77,7 +78,7 @@ export default class EditProductDetails extends Component {
       });
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     await axios
-      .get("http://localhost:3001/api/admin/get-product-categories")
+      .get(`${Env.host}/api/admin/get-product-categories`)
       .then((res) => {
         console.log("response is::", res);
         this.setState({
@@ -127,7 +128,7 @@ export default class EditProductDetails extends Component {
       };
       axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
       await axios
-        .post("http://localhost:3001/api/product/editProduct/", payload)
+        .post(`${Env.host}/api/product/editProduct/`, payload)
         .then(async (response) => {
           this.state.formData.map(async (form) => {
             let fileData = new FormData();
@@ -136,7 +137,7 @@ export default class EditProductDetails extends Component {
             axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
             await axios
               .post(
-                "http://localhost:3001/api/file/uploadImages/?productId=" +
+                `${Env.host}/api/file/uploadImages/?productId=` +
                   this.props.match.params.id,
                 fileData,
                 {
@@ -152,7 +153,7 @@ export default class EditProductDetails extends Component {
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .get(
-              `http://localhost:3001/api/product/getProductDetails/${this.props.match.params.id}`
+              `${Env.host}/api/product/getProductDetails/${this.props.match.params.id}`
             )
             .then((response) => {
               // alert("Updated successfully");
@@ -176,7 +177,7 @@ export default class EditProductDetails extends Component {
     };
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
     axios
-      .post("http://localhost:3001/api/product/deleteProduct/", payload)
+      .post(`${Env.host}/api/product/deleteProduct/`, payload)
       .then((response) => {
         console.log("Final res is", response);
         this.setState({ redirect: `/viewAllSellerProducts` });

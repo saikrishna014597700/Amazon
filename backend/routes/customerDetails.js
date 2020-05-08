@@ -105,7 +105,7 @@ router.post("/saveCustomerAddresses",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/deleteCustomerAddress",checkAuth, async (req, res) => {
+router.post("/deleteCustomerAddress",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.userId = req.query.userId
   console.log("msg ", msg);
