@@ -77,7 +77,7 @@ router.post("/getCart",checkAuth, async (req, res) => {
   });
 });
 
-router.post("/getCompleteCart", async (req, res) => {
+router.post("/getCompleteCart",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("get complete cart ==> ", req.body);
   msg.route = "get_complete_cart";

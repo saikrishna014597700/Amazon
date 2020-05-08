@@ -11,7 +11,7 @@ const logger = require("../utils/logger");
  * @param req: user_id
  */
 
-router.get("/get-product-categories", async (req, res) => {
+router.get("/get-product-categories",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.route = "get_product_categories";
 

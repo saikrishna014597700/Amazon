@@ -8,16 +8,6 @@ import StarRatings from "react-star-ratings";
 import StarRatingComponent from "react-star-rating-component";
 import { Redirect } from "react-router";
 import { Link } from "react-router-dom";
-import ClipLoader from 'react-spinners/ClipLoader';
-import { css } from '@emotion/core';
-
-const override = css`
-    display:  block;
-    margin: auto;
-    margin-top:250px;
-    border-color: rgb(254, 190, 98);
-    border: 5px solid rgb(254, 190, 98);
-`;
 
 export default class HomePage extends Component {
   constructor() {
@@ -34,7 +24,6 @@ export default class HomePage extends Component {
       sellerId: null,
       limit: 10,
       page: 1,
-      loading:true
     };
     this.viewSeachResults = this.viewSeachResults.bind(this);
     // this.scroll = this.scroll.bind(this);
@@ -43,11 +32,7 @@ export default class HomePage extends Component {
     await this.setState({
       sort: e.target.value,
     });
-    let sellerId;
-    if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
-    await this.viewSeachResults(sellerId);
+    this.viewSeachResults();
   }
   onStarClick(nextValue, prevValue, name) {
     this.setState({ rating: nextValue });
@@ -59,11 +44,12 @@ export default class HomePage extends Component {
   }
 
   async componentDidMount() {
-    var sellerId;
     if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
-    await this.viewSeachResults(sellerId);
+      await this.setState({
+        sellerId: localStorage.getItem("id"),
+      });
+    }
+    await this.viewSeachResults();
   }
 
   priceFilter = async () => {
@@ -73,14 +59,10 @@ export default class HomePage extends Component {
       minPrice: minPrice,
       maxPrice: maxPrice,
     });
-    var sellerId;
-    if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
-    await this.viewSeachResults(sellerId);
+    this.viewSeachResults();
   };
 
-  async viewSeachResults(sellerId) {
+  async viewSeachResults() {
     const payload = {
       searchTerm: this.state.searchTerm,
       searchCategory: this.state.searchCategory,
@@ -90,7 +72,7 @@ export default class HomePage extends Component {
       sort: this.state.sort,
       maxPrice: this.state.maxPrice,
       minPrice: this.state.minPrice,
-      sellerId: sellerId,
+      sellerId: this.state.sellerId,
     };
     console.log("payload before search=>", payload);
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
@@ -99,30 +81,19 @@ export default class HomePage extends Component {
       .then(async (response) => {
         console.log("Pro are::", response);
         let len = response.data.length;
-        var json = {};
         for (var i = 0; i < len; i++) {
-
-          if(! json[response.data[i].sellerId]){
           axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
           await axios
             .get(
               `http://localhost:3001/api/seller/profile/${response.data[i].sellerId}`
             )
             .then((seller) => {
-             
-             json[response.data[i].sellerId] = seller.data.sellerName;
               // console.log("each seller name=>" + seller.data.sellerName);
               response.data[i].sellerName = seller.data.sellerName;
             });
-        }else{
-          console.log("in map")
-          response.data[i].sellerName = json[response.data[i].sellerId];
         }
-      }
         await this.setState({
           products: response.data,
-          loading:false,
-          sellerId:sellerId
         });
       });
   }
@@ -135,11 +106,7 @@ export default class HomePage extends Component {
     await this.setState({
       rating: rating,
     });
-    var sellerId;
-    if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
-    await this.viewSeachResults(sellerId);
+    this.viewSeachResults();
   };
 
   async changeHandlerTerm(e) {
@@ -156,11 +123,7 @@ export default class HomePage extends Component {
       await this.setState({
         searchTerm: this.props.match.params.searchTerm,
       });
-      var sellerId;
-    if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
-    await this.viewSeachResults(sellerId);
+      this.viewSeachResults();
     }
   }
 
@@ -176,11 +139,7 @@ export default class HomePage extends Component {
       await this.setState({
         page: page,
       });
-      let sellerId;
-      if (localStorage.getItem("role") == "Seller") {
-        sellerId = localStorage.getItem("id")
-        }
-      await this.viewSeachResults(sellerId);
+      this.viewSeachResults();
     }
   };
   nextClick = async (e) => {
@@ -189,11 +148,7 @@ export default class HomePage extends Component {
       await this.setState({
         page: page,
       });
-      let sellerId;
-      if (localStorage.getItem("role") == "Seller") {
-        sellerId = localStorage.getItem("id")
-        }
-      await this.viewSeachResults(sellerId);
+      this.viewSeachResults();
     }
   };
 
@@ -201,11 +156,7 @@ export default class HomePage extends Component {
     await this.setState({
       limit: e.target.value,
     });
-    let sellerId="";
-    if (localStorage.getItem("role") == "Seller") {
-      sellerId = localStorage.getItem("id")
-      }
-    await this.viewSeachResults(sellerId);
+    this.viewSeachResults();
   };
 
   render() {
@@ -408,13 +359,6 @@ export default class HomePage extends Component {
     });
     return (
       <div>
-        <ClipLoader
-          css={override}
-          sizeUnit={"px"}
-          size={75}
-          color={'#123abc'}
-          loading={this.state.loading}
-        />
         <div className="row">
           <div
             className="col-md-2"
