@@ -47,7 +47,7 @@ router.post("/signup", async (req, res) => {
   });
 });
 
-router.post("/profile", async (req, res) => {
+router.post("/profile",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req body for profile", req.body);
   console.log("tye",typeof(msg.user_image))
@@ -105,7 +105,7 @@ router.post("/signin", async (req, res) => {
   });
 });
 
-router.post("/userprofile", async (req, res) => {
+router.post("/userprofile",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req body for user profile", req.body);
   msg.route = "user_profile";

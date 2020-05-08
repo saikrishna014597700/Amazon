@@ -9,7 +9,6 @@ import {Card,Button} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import { Redirect } from "react-router";
 import {toast } from 'react-toastify';
-import Env from "../../helpers/Env";
 
 class Profile extends Component {
   constructor(props) {
@@ -37,7 +36,7 @@ class Profile extends Component {
       path:  this.state.formData.name
     }
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    await axios.post(`${Env.host}/api/file/uploadImage/?userId=`+localStorage.getItem("id"),fileData,{
+    await axios.post("http://localhost:3001/api/file/uploadImage/?userId="+localStorage.getItem("id"),fileData,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }}).then((res)=>{
@@ -60,7 +59,7 @@ class Profile extends Component {
     var k=[]
     axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
-    .post(`${Env.host}/api/auth/userprofile/`, data)
+    .post("http://localhost:3001/api/auth/userprofile/", data)
     .then((response) => {
       var x=response.data
       console.log("x is",x)
@@ -71,13 +70,14 @@ class Profile extends Component {
         
         for(let j=0;j<x[i].reviewAndRatings.length;j++)
         {
-          if(x[i].reviewAndRatings[j].review)
-          k.push({"id":x[i]._id,"productName":x[i].productName,"review":x[i].reviewAndRatings[j].review})
-          
-        if(x[i].reviewAndRatings[j].rating)
-        ra+=1
-        if(x[i].reviewAndRatings[j].review)
-        rv+=1
+          if(x[i].reviewAndRatings[j].review && x[i].reviewAndRatings[j].userId==localStorage.getItem("id"))
+          {k.push({"id":x[i]._id,"productName":x[i].productName,"review":x[i].reviewAndRatings[j].review})
+          rv+=1
+          if(x[i].reviewAndRatings[j].rating)
+          ra+=1
+        }
+      
+      
         }
       }
       console.log(k)
@@ -109,7 +109,7 @@ class Profile extends Component {
     localStorage.setItem("name",this.state.name)
     axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
-      .post(`${Env.host}/api/auth/profile/`, data)
+      .post("http://localhost:3001/api/auth/profile/", data)
       .then((response) => {
         console.log(response)
         this.setState({
@@ -586,7 +586,7 @@ class Profile extends Component {
           }}
         >
         </span>
-        <div class="card" style={{width:"500px",marginLeft:"500px"}}>
+        <div class="card" style={{width:"860px",marginLeft:"329.4px"}}>
   <div class="card-header">
     Insights
   </div>

@@ -131,7 +131,7 @@ class SelerProfile extends React.Component {
         this.setState({
           sellerProfile: res.data,
         });
-        localStorage.setItem("name",this.state?.sellerProfile.sellerName)
+        
       });
   };
 
