@@ -13,7 +13,7 @@ const { checkAuth } = require("../utils/passport");
 /**
  * to deactivate an account
  * @param req: user_id
- */ router.post("/getMonthWiseSalesSum/:sellerId",checkAuth, async (req, res) => {
+ */ router.post("/getMonthWiseSalesSum/:sellerId", async (req, res) => {
   let msg = req.body;
   msg.route = "monthwise_total_sales_sum";
   msg.sellerId = req.params.sellerId;
@@ -31,7 +31,7 @@ const { checkAuth } = require("../utils/passport");
   });
 });
 
-router.get("/getTotalSalesSumForSeller/:sellerId", checkAuth,async (req, res) => {
+router.get("/getTotalSalesSumForSeller/:sellerId", async (req, res) => {
   let msg = req.body;
   msg.route = "total_sales_sum";
   msg.sellerId = req.params.sellerId;
@@ -66,7 +66,7 @@ router.get("/getOrderDetails/:sellerId", async (req, res) => {
   });
 });
 
-router.get("/getDeliveredOrderDetails/:sellerId", checkAuth,async (req, res) => {
+router.get("/getDeliveredOrderDetails/:sellerId",async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_Delivered_order_details";
@@ -91,7 +91,7 @@ router.get("/getDeliveredOrderDetails/:sellerId", checkAuth,async (req, res) => 
   });
 });
 
-router.get("/getCancelledOrderDetails/:sellerId",checkAuth, async (req, res) => {
+router.get("/getCancelledOrderDetails/:sellerId", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_Cancelled_order_details";
@@ -116,7 +116,7 @@ router.get("/getCancelledOrderDetails/:sellerId",checkAuth, async (req, res) => 
   });
 });
 
-router.get("/getOpenOrderDetails/:sellerId",checkAuth, async (req, res) => {
+router.get("/getOpenOrderDetails/:sellerId", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_open_order_details";
@@ -141,7 +141,7 @@ router.get("/getOpenOrderDetails/:sellerId",checkAuth, async (req, res) => {
   });
 });
 
-router.post("/updateSellerTrackingDetails", checkAuth,async (req, res) => {
+router.post("/updateSellerTrackingDetails",async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "update_seller_tracking_details";
@@ -164,7 +164,7 @@ router.post("/updateSellerTrackingDetails", checkAuth,async (req, res) => {
   });
 });
 
-router.get("/productTrackingDetails",checkAuth, async (req, res) => {
+router.get("/productTrackingDetails", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "product_tracking_details";
@@ -183,7 +183,7 @@ router.get("/productTrackingDetails",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/getParticularOrderDetails/:orderId",checkAuth, async (req, res) => {
+router.get("/getParticularOrderDetails/:orderId", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_particular_order_details";
@@ -196,7 +196,7 @@ router.get("/getParticularOrderDetails/:orderId",checkAuth, async (req, res) => 
   //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
   //   }
 
-  kafka.make_request("getParticularOrderDetails",checkAuth, msg, function (err, results) {
+  kafka.make_request("getParticularOrderDetails", msg, function (err, results) {
     if (err) {
       msg.error = err.data;
       return res.status(err.status).send(err.data);
@@ -208,7 +208,7 @@ router.get("/getParticularOrderDetails/:orderId",checkAuth, async (req, res) => 
   });
 });
 
-router.get("/sellerReports/:sellerId",checkAuth, async (req, res) => {
+router.get("/sellerReports/:sellerId", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "seller_reports";
@@ -229,7 +229,7 @@ router.get("/sellerReports/:sellerId",checkAuth, async (req, res) => {
   });
 });
 
-router.put("/updateProfile/:sellerId", checkAuth,async (req, res) => {
+router.put("/updateProfile/:sellerId", async (req, res) => {
   let msg = {};
   msg.body = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
@@ -250,7 +250,7 @@ router.put("/updateProfile/:sellerId", checkAuth,async (req, res) => {
   });
 });
 
-router.post("/addAddress/:sellerId",checkAuth, async (req, res) => {
+router.post("/addAddress/:sellerId", async (req, res) => {
   let msg = {};
   msg.body = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
@@ -270,7 +270,7 @@ router.post("/addAddress/:sellerId",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/profile/:sellerId", checkAuth,async (req, res) => {
+router.get("/profile/:sellerId", async (req, res) => {
   let msg = req.body;
   msg.route = "seller_profile";
   msg.sellerId = req.params.sellerId;

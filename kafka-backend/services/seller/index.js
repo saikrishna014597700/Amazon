@@ -15,6 +15,7 @@ const { getSellerProfile } = require("./sellerProfile");
 const { getMonthWiseSalesSum } = require("./getMonthWiseSalesSum");
 
 let handle_request = (msg, callback) => {
+  if(msg!=undefined)
   switch (msg.route) {
     case "get_order_details":
       getSellerOrders(msg, callback);

@@ -12,7 +12,7 @@ const logger = require("../utils/logger");
  * to deactivate an account
  * @param req: user_id
  */
-router.post("/cancelOrder",checkAuth, async (req, res) => {
+router.post("/cancelOrder", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body);
   msg.route = "cancelOrder";
@@ -29,7 +29,7 @@ router.post("/cancelOrder",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/getAllOrders",checkAuth, async (req, res) => {
+router.get("/getAllOrders", async (req, res) => {
     let msg = req.body;
     msg.userId = req.query.userId
     console.log("Req param", req.query.userId);
@@ -47,7 +47,7 @@ router.get("/getAllOrders",checkAuth, async (req, res) => {
     });
   });
 
-  router.get("/getCancelledOrders",checkAuth, async (req, res) => {
+  router.get("/getCancelledOrders", async (req, res) => {
     let msg = req.body;
     msg.userId = req.query.userId
     console.log("Req param", req.query.userId);
@@ -66,7 +66,7 @@ router.get("/getAllOrders",checkAuth, async (req, res) => {
   });
 
 
-  router.get("/getOpenOrders",checkAuth, async (req, res) => {
+  router.get("/getOpenOrders", async (req, res) => {
     let msg = req.body;
     msg.userId = req.query.userId
     console.log("Req param", req.query.userId);

@@ -13,7 +13,7 @@ const logger = require("../utils/logger");
  * @param req: user_id
  */
 
-router.get("/getProductDetails/:productId",checkAuth, async (req, res) => {
+router.get("/getProductDetails/:productId", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_product_details";
@@ -33,7 +33,7 @@ router.get("/getProductDetails/:productId",checkAuth, async (req, res) => {
   });
 });
 
-router.post("/editProduct",checkAuth, async (req, res) => {
+router.post("/editProduct", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "edit_product";
@@ -59,7 +59,7 @@ router.post("/editProduct",checkAuth, async (req, res) => {
   });
 });
 
-router.post("/deleteProduct",checkAuth, async (req, res) => {
+router.post("/deleteProduct", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "delete_product";
@@ -85,7 +85,7 @@ router.post("/deleteProduct",checkAuth, async (req, res) => {
   });
 });
 
-router.post("/addProduct",checkAuth, async (req, res) => {
+router.post("/addProduct", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body);
   msg.route = "add_product";
@@ -104,7 +104,7 @@ router.post("/addProduct",checkAuth, async (req, res) => {
   });
 });
 
-router.post("/viewAllSellerProducts",checkAuth, async (req, res) => {
+router.post("/viewAllSellerProducts", async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body);
   msg.route = "view_seller_products";
@@ -124,7 +124,7 @@ router.post("/viewAllSellerProducts",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/getProductDetails",checkAuth, async (req, res) => {
+router.get("/getProductDetails", async (req, res) => {
   let msg = req.body;
   msg.productId = req.query.productId;
   console.log("request for get product details->", msg);
@@ -144,7 +144,7 @@ router.get("/getProductDetails",checkAuth, async (req, res) => {
 });
 
 
-router.post("/addRatingAndReview", checkAuth,async (req, res) => {
+router.post("/addRatingAndReview",async (req, res) => {
   let msg = req.body;
   console.log("Add Rating and review", req.body);
   msg.route = "add_rating_and_review";
@@ -162,7 +162,7 @@ router.post("/addRatingAndReview", checkAuth,async (req, res) => {
   });
 });
 
-router.post("/updateViewCount",checkAuth, async (req, res) => {
+router.post("/updateViewCount", async (req, res) => {
   let msg = req.body;
   console.log("Update view Count");
   msg.route = "update_view_count";

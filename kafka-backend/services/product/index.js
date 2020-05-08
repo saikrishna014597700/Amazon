@@ -1,4 +1,4 @@
-"use strict";
+// "use strict";
 const { addProduct } = require("./addProduct");
 const { viewAllSellerProducts } = require("./viewAllSellerProducts");
 const { editProduct } = require("./editProduct");
@@ -8,6 +8,8 @@ const { addRatingAndReview } = require("./addRatingAndReview");
 const { updateViewCount } = require('./updateViewCount');
 
 let handle_request = (msg, callback) => {
+  console.log(msg)
+  if(msg)
   switch (msg.route) {
     case "add_product":
       addProduct(msg, callback);

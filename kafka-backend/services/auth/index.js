@@ -5,6 +5,7 @@ const {updatename} =require("./profile")
 const {userprofile}=require("./userprofile")
 
 let handle_request = (msg, callback) => {
+  if(msg)
   switch (msg.route) {
     case "sign_up":
       signup(msg, callback);

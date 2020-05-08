@@ -11,6 +11,7 @@ const { getReports } = require("./getReports");
 const { getMostViewedProducts } = require("./getMostViewedProducts");
 
 let handle_request = (msg, callback) => {
+  if(msg)
   switch (msg.route) {
     case "get_product_categories":
       getProductCategories(msg, callback);

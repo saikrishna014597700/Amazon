@@ -13,6 +13,7 @@ const { saveToMapOrder } = require("./saveToMapOrder");
 const { saveProductAnalytics } = require("./saveProductAnalytics");
 
 let handle_request = (msg, callback) => {
+  if(msg)
   switch (msg.route) {
     case "add_to_cart":
       addToCart(msg, callback);
