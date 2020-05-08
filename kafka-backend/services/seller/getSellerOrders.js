@@ -73,13 +73,18 @@ let getSellerOrders = async (msg, callback) => {
               async (promise, arrayproItem) => {
                 console.log("7");
                 await promise;
-                order.products.forEach((orderTemp) => {
-                  console.log("orderTemp", orderTemp.productId, arrayproItem);
+                // order.products.forEach((orderTemp) => {
+                //   console.log("orderTemp", orderTemp.productId, arrayproItem);
+                //   if (orderTemp.productId == arrayproItem) {
+                //     console.log("Hii");
+                //     prodQuantObj.productTracking = orderTemp;
+                //   }
+                // });
+                await order.products.reduce(async (promise, orderTemp) => {
                   if (orderTemp.productId == arrayproItem) {
-                    console.log("Hii");
                     prodQuantObj.productTracking = orderTemp;
                   }
-                });
+                }, Promise.resolve());
                 console.log("Hii", arrayproItem);
                 var product = await Product.findById(arrayproItem);
                 prodQuantObj.product = product;

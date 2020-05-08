@@ -44,9 +44,9 @@ let getReports = async (msg, callback) => {
       .limit(10);
 
     const OrdersperDay =
-      "SELECT COUNT(DISTINCT order_id) as order_count, create_date \
-    FROM product_analytics \
-    GROUP BY create_date";
+      'SELECT COUNT(DISTINCT order_id) as order_count, create_date \
+    FROM product_analytics  \
+    where order_id!="" GROUP BY create_date';
 
     const top5SellersQuery =
       '	select  x.seller_Id as id, x.name as name, sum(x.product_sales_um) as sales\

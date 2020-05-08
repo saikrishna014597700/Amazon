@@ -28,7 +28,9 @@ export default class AdminOrders extends Component {
 
   async componentDidMount() {
     console.log("ENeterd componentDidMount");
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
       .get(`${Env.host}/api/admin/all-orders?status=${this.state.status}`)
       .then(async (response) => {
@@ -55,7 +57,9 @@ export default class AdminOrders extends Component {
   };
 
   getOrdersBySearch = () => {
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
       .get(
         `${Env.host}/api/admin/orders_by_seller_name?searchTerm=${this.state.searchTerm}`
@@ -68,7 +72,9 @@ export default class AdminOrders extends Component {
   };
 
   getOrdersbyStatus = () => {
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
       .get(`${Env.host}/api/admin/all-orders?status=${this.state.status}`)
       .then(async (response) => {
@@ -98,10 +104,11 @@ export default class AdminOrders extends Component {
       let orderProducts = sellerOrder?.productsArr?.map((orderProduct) => {
         var buttonId = sellerOrder.order._id;
         let logoPath;
-        if(orderProduct.product.productImages.length === 0){
-          logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
-        }else{
-          logoPath = orderProduct.product.productImages[0]
+        if (orderProduct.product.productImages.length === 0) {
+          logoPath =
+            "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+        } else {
+          logoPath = orderProduct.product.productImages[0];
         }
         return (
           <div>
@@ -129,12 +136,17 @@ export default class AdminOrders extends Component {
                       }}
                     >
                       <h5 class="card-title">
-                        Status : {orderProduct.productTracking.status}
+                        Status : {orderProduct.productTracking?.status}
                       </h5>
                       <p class="card-text">
-                        <a href="#" class="card-link">
+                        <Link
+                          to={{
+                            pathname: `/product/${orderProduct.product._id}`,
+                          }}
+                        >
+                          {" "}
                           {orderProduct.product.productName}
-                        </a>
+                        </Link>
                       </p>
                       {/* <p class="card-text">
                         {orderProduct.product.productName}

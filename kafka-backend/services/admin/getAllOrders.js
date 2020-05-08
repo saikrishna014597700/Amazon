@@ -60,7 +60,6 @@ let getAllOrders = async (msg, callback) => {
             orderProductsQuantityArray.push(row.quantity);
             orderProductsIdObj.orderProductsQuantityArray = orderProductsQuantityArray;
           }
-
           ordersProductsIdArray.push(orderProductsIdObj);
         });
 
@@ -73,27 +72,32 @@ let getAllOrders = async (msg, callback) => {
           var order = await Order.findById(arrayItem.orderId);
           // console.log("Order is", order);
           var productsArr = [];
-          var prodQuantObj = {};
+          // var prodQuantObj = {};
           var quantOrder = 0;
+          console.log("Artray", arrayItem.orderProductsIdArray);
           await arrayItem.orderProductsIdArray.reduce(
             async (promise, arrayproItem) => {
+              var product;
+              var prodQuantObj = {};
+              var quantOrder = 0;
               await promise;
-              order.products.forEach((orderTemp) => {
-                console.log("orderTemp", orderTemp.productId, arrayproItem);
+              // order.products.forEach((orderTemp) => {
+              //   if (orderTemp.productId == arrayproItem) {
+              //     prodQuantObj.productTracking = orderTemp;
+              //   }
+              // });
+              await order.products.reduce(async (promise, orderTemp) => {
                 if (orderTemp.productId == arrayproItem) {
-                  console.log("Hii");
                   prodQuantObj.productTracking = orderTemp;
                 }
-              });
-              console.log("Hii", arrayproItem);
+              }, Promise.resolve());
               var product = await Product.findById(arrayproItem);
-              prodQuantObj.product = product;
-              prodQuantObj.quantity =
-                ordersProductsIdArray[orderCount].orderProductsQuantityArray[
-                  quantOrder
-                ];
+              prodQuantObj.product = await product;
+              prodQuantObj.quantity = await ordersProductsIdArray[orderCount]
+                .orderProductsQuantityArray[quantOrder];
+              console.log("prodQuantObj", arrayproItem, prodQuantObj);
               await productsArr.push(prodQuantObj);
-              // console.log("productsssss is", products);
+
               quantOrder++;
             },
             Promise.resolve()
