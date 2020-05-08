@@ -43,13 +43,14 @@ let getReports = async (msg, callback) => {
       .sort({ avgRating: -1 })
       .limit(10);
 
-    const OrdersperDay =
-      'SELECT COUNT(DISTINCT order_id) as order_count, create_date \
+    const OrdersperDay = `SELECT COUNT(DISTINCT order_id) as order_count, create_date \
     FROM product_analytics  \
-    where order_id!="" GROUP BY create_date';
+    where order_id!="" and create_date=\"${msg.date}\"`;
+
+    console.log("OrdersperDay", msg, OrdersperDay);
 
     const top5SellersQuery =
-      '	select  x.seller_Id as id, x.name as name, sum(x.product_sales_um) as sales\
+      ' select  x.seller_Id as id, x.name as name, sum(x.product_sales_um) as sales\
       from (select p.seller_Id,u.name,p.create_date, p.product_sales_um,p.product_Id,m.status from (product_analytics\
       p join  map_order_product m ON p.order_id=m.order_Id and p.product_Id=m.product_Id)  \
       join users  u ON u.id = p.seller_Id \

@@ -55,23 +55,47 @@ export default class AdminReports extends Component {
   };
 
   getOrderCountByDate = async (event) => {
-    const orderCount = this.state.sellerReports.OrdersperDay.filter((order) => {
-      const selectedDate = new Date(this.state.createdDate);
-      let temp = new Date(new Date().setDate(selectedDate.getDate));
-      temp = new Date(temp.setMonth(selectedDate));
-      temp = new Date(temp.setFullYear(temp.setMonth(selectedDate)));
-      if (
-        this.convert(this.state.createdDate) ===
-        this.convert(new Date(order.create_date))
-      ) {
-        console.log("matched order", order);
-        return order.order_count;
-      } else return 0;
-    });
-    console.log("orderCount", orderCount[0]);
-    await this.setState({ orderCount: orderCount[0] });
-    console.log("this.state.orderCount", this.state.orderCount);
-    return orderCount;
+    const date = await this.convert(this?.state?.createdDate);
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios
+      .get(`${Env.host}/api/admin/reports?date=${date}`)
+      .then(async (response) => {
+        console.log(
+          "Admin Reports are:::::::",
+          date,
+          response.data.results.OrdersperDay[0].order_count
+        );
+
+        await this.setState({
+          orderCount: response.data.results.OrdersperDay[0].order_count,
+        });
+
+        // await this.setState({
+        //   sellerReports: response.data.results,
+        // });
+        // this.getChart();
+        // this.MostRatedProducts();
+        // this.getReportingByDate();
+      });
+    // const orderCount = this.state.sellerReports.OrdersperDay.filter((order) => {
+    //   const selectedDate = new Date(this.state.createdDate);
+    //   let temp = new Date(new Date().setDate(selectedDate.getDate));
+    //   temp = new Date(temp.setMonth(selectedDate));
+    //   temp = new Date(temp.setFullYear(temp.setMonth(selectedDate)));
+    //   if (
+    //     this.convert(this.state.createdDate) ===
+    //     this.convert(new Date(order.create_date))
+    //   ) {
+    //     console.log("matched order", order);
+    //     return order.order_count;
+    //   } else return 0;
+    // });
+    // console.log("orderCount", orderCount[0]);
+
+    // console.log("this.state.orderCount", this.state.orderCount);
+    // return orderCount;
   };
 
   getReportingByDate = () => {
@@ -81,7 +105,9 @@ export default class AdminReports extends Component {
 
   mostViewedProductsFinal = async () => {
     const date = await this.convert(this?.state?.createdDate);
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
     axios
       .get(`${Env.host}/api/admin/most-viewed-jobs?date=${date}`)
       .then(async (response) => {
@@ -95,16 +121,21 @@ export default class AdminReports extends Component {
 
   async componentDidMount() {
     console.log("componentDidMount");
-    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
-    axios.get(`${Env.host}/api/admin/reports`).then(async (response) => {
-      console.log("Admin Reports are::", response);
-      await this.setState({
-        sellerReports: response.data.results,
+    const date = await this.convert(this?.state?.createdDate);
+    axios.defaults.headers.common["authorization"] = localStorage.getItem(
+      "token"
+    );
+    axios
+      .get(`${Env.host}/api/admin/reports?date=${date}`)
+      .then(async (response) => {
+        console.log("Admin Reports are::", response);
+        await this.setState({
+          sellerReports: response.data.results,
+        });
+        this.getChart();
+        this.MostRatedProducts();
+        this.getReportingByDate();
       });
-      this.getChart();
-      this.MostRatedProducts();
-      this.getReportingByDate();
-    });
   }
 
   getChart = async () => {
@@ -127,12 +158,12 @@ export default class AdminReports extends Component {
     this.state.sellerReports[this.state.graphSelection].map((order) => {
       labels.push(order.name);
       data.push(order.sales);
-      var dynamicColors = function() {
+      var dynamicColors = function () {
         var r = Math.floor(Math.random() * 255);
         var g = Math.floor(Math.random() * 255);
         var b = Math.floor(Math.random() * 255);
         return "rgb(" + r + "," + g + "," + b + ")";
-     };
+      };
       backgroundColor.push(dynamicColors());
     });
 
@@ -168,12 +199,12 @@ export default class AdminReports extends Component {
     this.state.sellerReports.top10HighestRated.map((product) => {
       labels.push(product.productName);
       data.push(product.avgRating);
-      var dynamicColors = function() {
+      var dynamicColors = function () {
         var r = Math.floor(Math.random() * 255);
         var g = Math.floor(Math.random() * 255);
         var b = Math.floor(Math.random() * 255);
         return "rgb(" + r + "," + g + "," + b + ")";
-     };
+      };
       backgroundColor.push(dynamicColors());
     });
 
@@ -216,12 +247,12 @@ export default class AdminReports extends Component {
       labels.push(product.product_name);
       // labels.push("Hi");
       data.push(product.view_count);
-      var dynamicColors = function() {
+      var dynamicColors = function () {
         var r = Math.floor(Math.random() * 255);
         var g = Math.floor(Math.random() * 255);
         var b = Math.floor(Math.random() * 255);
         return "rgb(" + r + "," + g + "," + b + ")";
-     };
+      };
       backgroundColor.push(dynamicColors());
     });
 
@@ -276,12 +307,14 @@ export default class AdminReports extends Component {
               fontSize: 25,
             },
             scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true
-                }
-              }]
-            }
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
           }}
         />
       </div>
@@ -297,12 +330,14 @@ export default class AdminReports extends Component {
               fontSize: 25,
             },
             scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true
-                }
-              }]
-            }
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
           }}
         />
       </div>
@@ -322,12 +357,14 @@ export default class AdminReports extends Component {
             //   position: "yy",
             // },
             scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true
-                }
-              }]
-            }
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                  },
+                },
+              ],
+            },
           }}
         />
       </div>
@@ -361,10 +398,10 @@ export default class AdminReports extends Component {
               </Form>
               {/* {!!this.state.createdDate ? ( */}
               <div>
-                {!!this.state.orderCount?.order_count ? (
+                {!!this.state.orderCount ? (
                   <h4>
                     The total number of orders made on this date is{" "}
-                    {this.state.orderCount?.order_count}
+                    {this.state.orderCount}
                   </h4>
                 ) : (
                   <h4>The total number of orders made on this date is 0</h4>

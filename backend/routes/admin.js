@@ -27,7 +27,7 @@ router.get("/get-product-categories", async (req, res) => {
   });
 });
 
-router.post("/add-category",checkAuth, async (req, res) => {
+router.post("/add-category", checkAuth, async (req, res) => {
   let msg = req.body;
   msg.route = "add_category";
 
@@ -43,7 +43,7 @@ router.post("/add-category",checkAuth, async (req, res) => {
   });
 });
 
-router.delete("/delete-category/:categoryId",checkAuth, async (req, res) => {
+router.delete("/delete-category/:categoryId", checkAuth, async (req, res) => {
   let msg = req.body;
   msg.categoryId = req.params.categoryId;
   msg.route = "delete_category";
@@ -62,7 +62,7 @@ router.delete("/delete-category/:categoryId",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/products/:categoryId",checkAuth, async (req, res) => {
+router.get("/products/:categoryId", checkAuth, async (req, res) => {
   let msg = req.body;
   msg.categoryId = req.params.categoryId;
   msg.route = "products_by_category";
@@ -81,7 +81,7 @@ router.get("/products/:categoryId",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/all-sellers", checkAuth,async (req, res) => {
+router.get("/all-sellers", checkAuth, async (req, res) => {
   let msg = req.body;
   msg.searchTerm = req.query.searchTerm;
   msg.route = "get_all_sellers";
@@ -100,7 +100,7 @@ router.get("/all-sellers", checkAuth,async (req, res) => {
   });
 });
 
-router.get("/all-orders",checkAuth, async (req, res) => {
+router.get("/all-orders", checkAuth, async (req, res) => {
   let msg = req.body;
   msg.route = "get_all_orders";
   msg.status = req.query.status;
@@ -118,7 +118,7 @@ router.get("/all-orders",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/orders_by_seller_name",checkAuth, async (req, res) => {
+router.get("/orders_by_seller_name", checkAuth, async (req, res) => {
   let msg = req.body;
   msg.route = "orders_by_seller_name";
   msg.searchTerm = req.query.searchTerm;
@@ -137,11 +137,12 @@ router.get("/orders_by_seller_name",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/reports",checkAuth, async (req, res) => {
+router.get("/reports", checkAuth, async (req, res) => {
   let msg = req.body;
   msg.route = "reports";
   msg.searchTerm = req.query.searchTerm;
   msg.status = req.query.status;
+  msg.date = req.query.date;
   kafka.make_request("getReports", msg, function (err, results) {
     if (err) {
       console.log("Errorrr", err);
@@ -156,7 +157,7 @@ router.get("/reports",checkAuth, async (req, res) => {
   });
 });
 
-router.get("/most-viewed-jobs", checkAuth,async (req, res) => {
+router.get("/most-viewed-jobs", checkAuth, async (req, res) => {
   let msg = req.body;
   msg.route = "most_viewed_products";
   msg.searchTerm = req.query.searchTerm;
@@ -175,7 +176,7 @@ router.get("/most-viewed-jobs", checkAuth,async (req, res) => {
   });
 });
 
-router.get("/products-by-seller/:sellerId", checkAuth,async (req, res) => {
+router.get("/products-by-seller/:sellerId", checkAuth, async (req, res) => {
   let msg = req.body;
   msg.route = "products_by_seller";
   msg.sellerId = req.params.sellerId;
