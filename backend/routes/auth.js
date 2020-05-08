@@ -52,8 +52,6 @@ router.post("/profile",checkAuth, async (req, res) => {
   console.log("Req body for profile", req.body);
   console.log("tye",typeof(msg.user_image))
   msg.route = "update_name";
-  if(req.body.files)
-  console.log("Files here")
   kafka.make_request("updatename", msg, function (err, results) {
     console.log("Results are",results);
     if (err) {
@@ -63,6 +61,7 @@ router.post("/profile",checkAuth, async (req, res) => {
     } else {
       msg.status = results.status;
       logger.info(msg);
+      console.log(results.data)
       return res.status(results.status).send(results.data);
       
     }

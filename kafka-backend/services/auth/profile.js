@@ -19,6 +19,7 @@ let updatename = async (msg, callback) => {
         })
         await customerDetails.updateOne({userId:msg.id},{firstName:msg.name})
         response.status = STATUS_CODE.SUCCESS;
+        response.upd= msg.name
         response.data = MESSAGES.CREATE_SUCCESSFUL;
         return callback(null, response);
      

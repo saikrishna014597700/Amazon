@@ -8,6 +8,7 @@ import "./New folder/profile4.css";
 import {Card,Button} from 'react-bootstrap'
 import {Link} from 'react-router-dom'
 import { Redirect } from "react-router";
+import {toast } from 'react-toastify';
 
 class Profile extends Component {
   constructor(props) {
@@ -103,14 +104,18 @@ class Profile extends Component {
       name: this.state.name,
       
     }
+    localStorage.setItem("name",this.state.name)
     axios.defaults.headers.common["authorization"] = localStorage.getItem('token');
     await axios
       .post("http://localhost:3001/api/auth/profile/", data)
       .then((response) => {
+        console.log(response)
         this.setState({
           msg: "Updated",
         });
       });
+
+      toast("Wow so easy !");
   }
 
   async handleImageChange(e)  {
