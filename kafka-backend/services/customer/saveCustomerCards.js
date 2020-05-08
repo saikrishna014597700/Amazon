@@ -13,18 +13,22 @@ let saveCustomerCards = async (msg, callback) => {
   let err = {};
   var cards = []
   const today = moment();
-  if(msg._id = "-1"){
+  console.log("msg._id:::",msg._id)
+  if(msg._id === "-1"){
     console.log("new card");
     msg._id = undefined
   }
+
+  console.log("msg._id:::",msg._id)
   try {
    
-    if(msg._id != undefined){
+    if(msg._id){
     var id = mongoose.Types.ObjectId(msg._id);
     console.log("user Id:::", msg,"id::",id);
 
+    var cardId = mongoose.Types.ObjectId(msg._id);
 
-      await customerDetails.updateOne({userId:parseInt(msg.userId),  customerCards: { $elemMatch: { _id: id} }},
+      await customerDetails.updateOne({userId:parseInt(msg.userId),  customerCards: { $elemMatch: { _id: cardId} }},
         {$set:{"customerCards.$.cardNo": msg.cardNo ,"customerCards.$.nameOnCard": msg.nameOnCard,"customerCards.$.expirationDate": msg.expirationDate,"customerCards.$.cvv": msg.cvv }}).then(async function(res){
             console.log("response in update",res)
             await customerDetails.findOne({userId:msg.userId}).then((res)=>{

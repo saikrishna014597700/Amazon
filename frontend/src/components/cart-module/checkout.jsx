@@ -277,6 +277,12 @@ export default class checkout extends Component {
       </div>
     );
     let productsDiv = this.state.productDetails.map((product, i) => {
+      let logoPath;
+      if(product.productImages.length === 0){
+        logoPath = "https://react.semantic-ui.com/images/avatar/large/matthew.png";
+      }else{
+        logoPath = product.productImages[0]
+      }
       return (
         <div className="row">
           <hr style={{ width: "850px", marginLeft: "18px" }}></hr>
@@ -286,8 +292,8 @@ export default class checkout extends Component {
             <tr>
               <td style={{ width: "20%" }}>
                 <img
-                  src={productImage}
-                  style={{ width: "100%", height: "150px", cursor: "pointer" }}
+                  src={logoPath}
+                  style={{ width: "150px", height: "150px", cursor: "pointer" }}
                   onClick={() => {
                     this.setState({ selectedImage: productImage });
                   }}
