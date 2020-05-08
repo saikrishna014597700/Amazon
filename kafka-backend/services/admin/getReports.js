@@ -49,12 +49,12 @@ let getReports = async (msg, callback) => {
     GROUP BY create_date";
 
     const top5SellersQuery =
-      "select pa.seller_Id as id, u.name as name, sum(pa.product_sales_um) as sales\
-    from product_analytics as pa, \
-    users as u \
-    Where u.id = pa.seller_Id \
-    group by pa.seller_Id \
-    Order by sum(product_sales_um) desc limit 5";
+      '	select  x.seller_Id as id, x.name as name, sum(x.product_sales_um) as sales\
+      from (select p.seller_Id,u.name,p.create_date, p.product_sales_um,p.product_Id,m.status from (product_analytics\
+      p join  map_order_product m ON p.order_id=m.order_Id and p.product_Id=m.product_Id)  \
+      join users  u ON u.id = p.seller_Id \
+       ) as x where x.status!="Cancelled" group by x.seller_Id\
+      Order by sum(x.product_sales_um) desc limit 5;';
 
     const top5UsersQuery =
       "select pa.user_Id as id, u.name as name, sum(pa.product_sales_um) as sales\

@@ -5,6 +5,7 @@
 const query = require("../../utils/query");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const pool = require("../../utils/mysqlConnection");
+const redisClient = require("../../utils/redisConfig");
 
 let deleteCategory = async (msg, callback) => {
   let response = {};
@@ -16,6 +17,13 @@ let deleteCategory = async (msg, callback) => {
       .then(async (sqlResult) => {
         if (sqlResult.length == 0) {
           await query(pool, deleteQuery).then((result) => {
+            redisClient.del("categories", function (err, response) {
+              if (response == 1) {
+                console.log("Deleted Successfully!");
+              } else {
+                console.log("Cannot delete");
+              }
+            });
             response.result = "Deleted successfully";
             response.status = STATUS_CODE.SUCCESS;
             response.data = MESSAGES.DELETE_SUCCESSFUL;

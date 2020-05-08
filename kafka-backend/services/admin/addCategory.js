@@ -4,6 +4,7 @@
 // const redisClient = require("../../utils/redisConfig");
 const { STATUS_CODE, MESSAGES } = require("../../utils/constants");
 const pool = require("../../utils/mysqlConnection");
+const redisClient = require("../../utils/redisConfig");
 
 let addCategory = async (msg, callback) => {
   let response = {};
@@ -13,10 +14,15 @@ let addCategory = async (msg, callback) => {
     pool.query(
       `INSERT INTO product_categories (category) VALUES ('${msg.categoryName}');`,
       async (err, sqlResult) => {
-        console.log("sqlResult::::", sqlResult);
+        redisClient.del("categories", function (err, response) {
+          if (response == 1) {
+            console.log("Deleted Successfully!");
+          } else {
+            console.log("Cannot delete");
+          }
+        });
         if (sqlResult && sqlResult.length > 0) {
           response.result = sqlResult;
-          console.log("response.result::::", response.result);
         }
         response.status = STATUS_CODE.CREATED_SUCCESSFULLY;
         response.data = MESSAGES.CREATE_SUCCESSFUL;
