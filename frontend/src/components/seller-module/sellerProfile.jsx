@@ -49,8 +49,11 @@ class SelerProfile extends React.Component {
       }}).then((res)=>{
         localStorage.setItem("imagePath",res.data.Location)
         console.log("response:",res)
+        let sellerProfile = this.state.sellerProfile
+        sellerProfile.imagePath = res.data.Location
         this.setState({
-          logout:false
+          logout:false,
+          sellerProfile: sellerProfile
         })
      })
   }

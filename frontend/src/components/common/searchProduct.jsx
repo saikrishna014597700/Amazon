@@ -37,6 +37,7 @@ export default class SearchProduct extends Component {
       loading:true
     };
     this.viewSeachResults = this.viewSeachResults.bind(this);
+    //this.overlaydiv = this.overlaydiv.bind(this)
     // this.scroll = this.scroll.bind(this);
   }
   async sortChange(e) {
@@ -78,6 +79,12 @@ export default class SearchProduct extends Component {
   };
 
   async viewSeachResults() {
+    if(!this.state.loading){
+      this.overlaydiv.style.display="none"; 
+    }
+    else{
+      this.overlaydiv.style.display="block";
+    }
 
     var sellerId;
     if (localStorage.getItem("role") == "Seller") {
@@ -120,12 +127,19 @@ export default class SearchProduct extends Component {
       }
       if(response.data === ""){
         response.data = []
+        this.overlaydiv.style.display="none";
       }
         await this.setState({
           products: response.data,
           loading :false,
           sellerId:sellerId
         });
+        if(!this.state.loading){
+          this.overlaydiv.style.display="none";
+        }
+        else{
+          this.overlaydiv.style.display="block";
+        }
       });
   }
   async changeHandler(e) {
@@ -369,6 +383,7 @@ export default class SearchProduct extends Component {
         </div>
       );
     });
+    
     return (
       <div>
         <div id = "overlay" ref={ref=>this.overlaydiv=ref} style = {{display:"block",zIndex:"1",alignItems:"center",alignContent:"center", height:"100%"}}>

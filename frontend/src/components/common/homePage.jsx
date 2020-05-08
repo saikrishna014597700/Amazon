@@ -126,6 +126,7 @@ export default class HomePage extends Component {
         }
         if (response.data == "") {
           response.data = [];
+          this.overlaydiv.style.display="none";
         }
         await this.setState({
           products: response.data,

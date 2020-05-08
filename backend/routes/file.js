@@ -31,7 +31,7 @@ router.post("/uploadImage", upload.single("file"), async (req, res) => {
       const type = "jpg";
       console.log("type:::", type);
       const timestamp = Date.now().toString();
-      const fileName = userId; //`bucketFolder/${timestamp}-lg`;
+      const fileName = userId + "_"+timestamp; //`bucketFolder/${timestamp}-lg`;
       const data = await uploadFileToS3(file.buffer, fileName, type, "user");
 
       pool.query(
