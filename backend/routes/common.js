@@ -7,12 +7,13 @@ const pool = require("../utils/mysqlConnection");
 const { validateAccount } = require("../validations/accountValidations");
 const { STATUS_CODE, MESSAGES } = require("../utils/constants");
 const logger = require("../utils/logger");
+const { checkAuth } = require("../utils/passport");
 
 /**
  * to deactivate an account
  * @param req: user_id
  */
-router.post("/search", async (req, res) => {
+router.post("/search",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("search ==> ", req.body);
   msg.route = "search";
@@ -29,7 +30,7 @@ router.post("/search", async (req, res) => {
     }
   });
 });
-router.post("/createPro", async (req, res) => {
+router.post("/createPro",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("createPro ==> ", req.body);
   msg.route = "createPro";

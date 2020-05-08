@@ -36,7 +36,7 @@ let getSellerProfile = async (msg, callback) => {
         console.log("Seller update response:::", response);
         return callback(null, response);
         });
-         })
+          })
       .catch((err) => {
         console.log("Error occ while updating seller", err);
       });

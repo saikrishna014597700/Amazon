@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const kafka = require("../kafka/client");
 const pool = require("../utils/mysqlConnection");
-// const { checkAuth } = require("../utils/passport");
+const { checkAuth } = require("../utils/passport");
 const { validateAccount } = require("../validations/accountValidations");
 const { STATUS_CODE, MESSAGES } = require("../utils/constants");
 const logger = require("../utils/logger");
@@ -13,18 +13,12 @@ const logger = require("../utils/logger");
  * @param req: user_id
  */
 
-router.get("/getProductDetails/:productId", async (req, res) => {
+router.get("/getProductDetails/:productId",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_product_details";
   msg.productId = req.params.productId;
 
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("getProductDetails", msg, function (err, results) {
     if (err) {
@@ -39,7 +33,7 @@ router.get("/getProductDetails/:productId", async (req, res) => {
   });
 });
 
-router.post("/editProduct", async (req, res) => {
+router.post("/editProduct",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "edit_product";
@@ -65,7 +59,7 @@ router.post("/editProduct", async (req, res) => {
   });
 });
 
-router.post("/deleteProduct", async (req, res) => {
+router.post("/deleteProduct",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "delete_product";
@@ -91,17 +85,11 @@ router.post("/deleteProduct", async (req, res) => {
   });
 });
 
-router.post("/addProduct", async (req, res) => {
+router.post("/addProduct",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body);
   msg.route = "add_product";
 
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("addProduct", msg, function (err, results) {
     if (err) {
@@ -116,17 +104,11 @@ router.post("/addProduct", async (req, res) => {
   });
 });
 
-router.post("/viewAllSellerProducts", async (req, res) => {
+router.post("/viewAllSellerProducts",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body);
   msg.route = "view_seller_products";
 
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("viewAllSellerProducts", msg, function (err, results) {
     if (err) {
@@ -142,7 +124,7 @@ router.post("/viewAllSellerProducts", async (req, res) => {
   });
 });
 
-router.get("/getProductDetails", async (req, res) => {
+router.get("/getProductDetails",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.productId = req.query.productId;
   console.log("request for get product details->", msg);
@@ -162,7 +144,7 @@ router.get("/getProductDetails", async (req, res) => {
 });
 
 
-router.post("/addRatingAndReview", async (req, res) => {
+router.post("/addRatingAndReview", checkAuth,async (req, res) => {
   let msg = req.body;
   console.log("Add Rating and review", req.body);
   msg.route = "add_rating_and_review";
@@ -180,7 +162,7 @@ router.post("/addRatingAndReview", async (req, res) => {
   });
 });
 
-router.post("/updateViewCount", async (req, res) => {
+router.post("/updateViewCount",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Update view Count");
   msg.route = "update_view_count";

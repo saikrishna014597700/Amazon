@@ -128,6 +128,7 @@ class SelerProfile extends React.Component {
         this.setState({
           sellerProfile: res.data,
         });
+        localStorage.setItem("name",this.state?.sellerProfile.sellerName)
       });
   };
 
@@ -238,7 +239,7 @@ class SelerProfile extends React.Component {
               {sellerProduct.productDesc}
             </div>
             <div className="row" style={{ margin: 10, textAlign: "center" }}>
-              ${sellerProduct.price}
+             <h1 style={{fontWeight:"bold"}}> ${sellerProduct.price} </h1>
             </div>
             <div className="row" style={{ margin: 10 }}>
               <StarRatings

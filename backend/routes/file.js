@@ -12,12 +12,14 @@ const multiparty = require('multiparty');
 const fileType = require('file-type');
 const fs = require('fs');
 const Product = require("./../routes/productModel");
+const { checkAuth } = require("../utils/passport");
+
 
 /**
  * to deactivate an account
  * @param req: user_id
  */
-router.post("/uploadImage", async (req, res) => {
+router.post("/uploadImage",checkAuth, async (req, res) => {
   console.log("Req body for add Pr", req.body);
   var userId = req.query.userId
   //var data = await uploadFileToS3(req.body,"users",userId);
@@ -59,7 +61,7 @@ router.post("/uploadImage", async (req, res) => {
 });
 
 
-router.post("/uploadImages", async (req, res) => {
+router.post("/uploadImages",checkAuth, async (req, res) => {
     console.log("Req body for add Pr", req.body);
     var productId = req.query.productId
     //var data = await uploadFileToS3(req.body,"users",userId);
@@ -101,7 +103,7 @@ router.post("/uploadImages", async (req, res) => {
   });
 
 
-  router.post("/removeProductImage", async (req, res) => {
+  router.post("/removeProductImage", checkAuth,async (req, res) => {
     console.log("Req body for add Pr", req.body);
     var productId = req.body.productId
     

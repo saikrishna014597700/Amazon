@@ -7,21 +7,17 @@ const pool = require("../utils/mysqlConnection");
 const { validateAccount } = require("../validations/accountValidations");
 const { STATUS_CODE, MESSAGES } = require("../utils/constants");
 const logger = require("../utils/logger");
+const { checkAuth } = require("../utils/passport");
+
 
 /**
  * to deactivate an account
  * @param req: user_id
- */ router.post("/getMonthWiseSalesSum/:sellerId", async (req, res) => {
+ */ router.post("/getMonthWiseSalesSum/:sellerId",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.route = "monthwise_total_sales_sum";
   msg.sellerId = req.params.sellerId;
 
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("getMonthWiseSalesSum", msg, function (err, results) {
     if (err) {
@@ -35,17 +31,10 @@ const logger = require("../utils/logger");
   });
 });
 
-router.get("/getTotalSalesSumForSeller/:sellerId", async (req, res) => {
+router.get("/getTotalSalesSumForSeller/:sellerId", checkAuth,async (req, res) => {
   let msg = req.body;
   msg.route = "total_sales_sum";
   msg.sellerId = req.params.sellerId;
-
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("getTotalSalesSumForSeller", msg, function (err, results) {
     if (err) {
@@ -65,13 +54,6 @@ router.get("/getOrderDetails/:sellerId", async (req, res) => {
   msg.route = "get_order_details";
   msg.sellerId = req.params.sellerId;
 
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
-
   kafka.make_request("getOrderDetails", msg, function (err, results) {
     if (err) {
       msg.error = err.data;
@@ -84,7 +66,7 @@ router.get("/getOrderDetails/:sellerId", async (req, res) => {
   });
 });
 
-router.get("/getDeliveredOrderDetails/:sellerId", async (req, res) => {
+router.get("/getDeliveredOrderDetails/:sellerId", checkAuth,async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_Delivered_order_details";
@@ -109,7 +91,7 @@ router.get("/getDeliveredOrderDetails/:sellerId", async (req, res) => {
   });
 });
 
-router.get("/getCancelledOrderDetails/:sellerId", async (req, res) => {
+router.get("/getCancelledOrderDetails/:sellerId",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_Cancelled_order_details";
@@ -134,7 +116,7 @@ router.get("/getCancelledOrderDetails/:sellerId", async (req, res) => {
   });
 });
 
-router.get("/getOpenOrderDetails/:sellerId", async (req, res) => {
+router.get("/getOpenOrderDetails/:sellerId",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_open_order_details";
@@ -159,19 +141,13 @@ router.get("/getOpenOrderDetails/:sellerId", async (req, res) => {
   });
 });
 
-router.post("/updateSellerTrackingDetails", async (req, res) => {
+router.post("/updateSellerTrackingDetails", checkAuth,async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "update_seller_tracking_details";
   msg.orderId = req.query.orderId;
   msg.productId = req.query.productId;
 
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("updateSellerTrackingDetails", msg, function (
     err,
@@ -188,19 +164,12 @@ router.post("/updateSellerTrackingDetails", async (req, res) => {
   });
 });
 
-router.get("/productTrackingDetails", async (req, res) => {
+router.get("/productTrackingDetails",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "product_tracking_details";
   msg.orderId = req.query.orderId;
   msg.productId = req.query.productId;
-
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("productTrackingDetails", msg, function (err, results) {
     if (err) {
@@ -214,7 +183,7 @@ router.get("/productTrackingDetails", async (req, res) => {
   });
 });
 
-router.get("/getParticularOrderDetails/:orderId", async (req, res) => {
+router.get("/getParticularOrderDetails/:orderId",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "get_particular_order_details";
@@ -227,7 +196,7 @@ router.get("/getParticularOrderDetails/:orderId", async (req, res) => {
   //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
   //   }
 
-  kafka.make_request("getParticularOrderDetails", msg, function (err, results) {
+  kafka.make_request("getParticularOrderDetails",checkAuth, msg, function (err, results) {
     if (err) {
       msg.error = err.data;
       return res.status(err.status).send(err.data);
@@ -239,18 +208,13 @@ router.get("/getParticularOrderDetails/:orderId", async (req, res) => {
   });
 });
 
-router.get("/sellerReports/:sellerId", async (req, res) => {
+router.get("/sellerReports/:sellerId",checkAuth, async (req, res) => {
   let msg = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "seller_reports";
   msg.sellerId = req.params.sellerId;
 
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
+
 
   kafka.make_request("sellerReports", msg, function (err, results) {
     if (err) {
@@ -265,19 +229,13 @@ router.get("/sellerReports/:sellerId", async (req, res) => {
   });
 });
 
-router.put("/updateProfile/:sellerId", async (req, res) => {
+router.put("/updateProfile/:sellerId", checkAuth,async (req, res) => {
   let msg = {};
   msg.body = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "update_profile";
   msg.sellerId = req.params.sellerId;
 
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("updateProfile", msg, function (err, results) {
     if (err) {
@@ -292,19 +250,12 @@ router.put("/updateProfile/:sellerId", async (req, res) => {
   });
 });
 
-router.post("/addAddress/:sellerId", async (req, res) => {
+router.post("/addAddress/:sellerId",checkAuth, async (req, res) => {
   let msg = {};
   msg.body = req.body;
   console.log("Req ody for add Pr", req.body, req.params);
   msg.route = "add_address";
   msg.sellerId = req.params.sellerId;
-
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("addAddress", msg, function (err, results) {
     if (err) {
@@ -319,17 +270,10 @@ router.post("/addAddress/:sellerId", async (req, res) => {
   });
 });
 
-router.get("/profile/:sellerId", async (req, res) => {
+router.get("/profile/:sellerId", checkAuth,async (req, res) => {
   let msg = req.body;
   msg.route = "seller_profile";
   msg.sellerId = req.params.sellerId;
-
-  //   const { error } = validateAccount(req.body);
-  //   if (error) {
-  //     msg.error = error.details[0].message;
-  //     logger.error(msg);
-  //     return res.status(STATUS_CODE.BAD_REQUEST).send(error.details[0].message);
-  //   }
 
   kafka.make_request("getSellerProfile", msg, function (err, results) {
     if (err) {

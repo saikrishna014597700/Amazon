@@ -12,7 +12,7 @@ const logger = require("../utils/logger");
  * to deactivate an account
  * @param req: user_id
  */
-router.get("/getCustomerCards", async (req, res) => {
+router.get("/getCustomerCards",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.userId = req.query.userId
   console.log("msg ", msg);
@@ -31,7 +31,7 @@ router.get("/getCustomerCards", async (req, res) => {
 });
 
 
-router.post("/saveCustomerCards", async (req, res) => {
+router.post("/saveCustomerCards",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.userId = req.query.userId
   console.log("msg ", msg);
@@ -49,7 +49,7 @@ router.post("/saveCustomerCards", async (req, res) => {
   });
 });
 
-router.post("/deleteCustomerCard", async (req, res) => {
+router.post("/deleteCustomerCard",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.userId = req.query.userId
   console.log("msg ", msg);
@@ -68,7 +68,7 @@ router.post("/deleteCustomerCard", async (req, res) => {
 });
 
 
-router.get("/getCustomerAddresses", async (req, res) => {
+router.get("/getCustomerAddresses",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.userId = req.query.userId
   console.log("msg ", msg);
@@ -87,7 +87,7 @@ router.get("/getCustomerAddresses", async (req, res) => {
 });
 
 
-router.post("/saveCustomerAddresses", async (req, res) => {
+router.post("/saveCustomerAddresses",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.userId = req.query.userId
   console.log("msg ", msg);
@@ -105,7 +105,7 @@ router.post("/saveCustomerAddresses", async (req, res) => {
   });
 });
 
-router.get("/deleteCustomerAddress", async (req, res) => {
+router.get("/deleteCustomerAddress",checkAuth, async (req, res) => {
   let msg = req.body;
   msg.userId = req.query.userId
   console.log("msg ", msg);
@@ -123,7 +123,7 @@ router.get("/deleteCustomerAddress", async (req, res) => {
   });
 });
 
-router.post("/getCustomerDetails", async (req, res) => {
+router.post("/getCustomerDetails", checkAuth,async (req, res) => {
   let msg = req.body;
   msg.userId = req.query.userId
   console.log("msg in get customer details ", msg);
