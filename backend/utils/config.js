@@ -1,21 +1,20 @@
 "use strict";
 const config = {
-  secret: "cmpe273_kafka_passport_mongo",
+  secret: "Your passport secret key",
   frontendURI: "http://localhost:3000",
   kafkaURI: "localhost:2181",
-  mysqlUser: "amazonuser",
-  mysqlPassword: "amazonuser",
-  mysqlHost: "amazondb.cmod13ww0plr.us-east-1.rds.amazonaws.com",
+  mysqlUser: "Your mysqlUser",
+  mysqlPassword: "Your mysqlPassword",
+  mysqlHost: "Your mysqlHost",
   mysqlDatabase: "amazonDB",
-  awsBucket: "amazon-cmpe273",
+  awsBucket: "Your awsBucket",
   // Keys can't be added here because AWS categorizes this as vulnerability.
-  awsAccessKey: "AKIAIVVSEWVULCHONKKA",
-  awsSecretAccessKey: "FHKPCaLsRdCjKrAK42z7hZsMKW+TmvZTRr43nDUf",
+  awsAccessKey: "Your awsAccessKey",
+  awsSecretAccessKey: "Your awsSecretAccessKey",
   awsPermission: "public-read",
-  redisHost: "localhost",
+  redisHost: "Redis host",
   redisPort: 6379,
-  mongoDBURI:
-    "mongodb+srv://amazonuser:amazonuser@amazoncluster-zqunn.mongodb.net/amazonDB?retryWrites=true&w=majority",
+  mongoDBURI: "Your Mongo URI",
 };
 
 module.exports = config;
