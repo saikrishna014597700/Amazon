@@ -1,4 +1,4 @@
-# Amazon Prototype Lab 2 CMPE 273
+# Amazon Prototype CMPE 273
 
 This website was developed solely for educational purposes.
 This change is from kailash
@@ -6,7 +6,7 @@ This change is from kailash
 
 - Run back-end using npm run server command in backend directory
 - Run kafka back-end using node server command in kafka_backend directory
-- Run front-end using npm start command in frontend directory
+- Run front-end using npm start command in frontend directory, Run redis and kafka servers.
 - Run npm install in all the backend,kafka_dbClient,frontend
 - Above step starts development server and opens Amazon Prototype application on http://localhost:3000/ in your default browser
 
