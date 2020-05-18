@@ -1,7 +1,8 @@
 # Amazon Prototype CMPE 273
 
 This website was developed solely for educational purposes.
-This change is from kailash
+Website demo video: https://youtu.be/IIYZZ5UEcQ0
+
 ## How can I run Amazon Prototype?
 
 - Run back-end using npm run server command in backend directory
